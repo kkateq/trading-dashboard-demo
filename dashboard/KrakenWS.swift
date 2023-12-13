@@ -75,8 +75,8 @@ struct BookUpdateRecordResponse: Decodable {
     var checksum: String
 
     enum CodingKeys: String, CodingKey {
-        case bids = "a"
-        case asks = "b"
+        case bids = "b"
+        case asks = "a"
         case checksum = "c"
     }
 }
@@ -100,10 +100,12 @@ enum BookRecordType: String {
     case ask, bid
 }
 
-struct OrderBookRecord {
-    var volume: String
-    var price: String
-    var timestamp: Decimal
+class OrderBookRecord: Identifiable, ObservableObject {
+    var id: UUID
+
+    @Published var volume: String
+    @Published var price: String
+    @Published var timestamp: Decimal
     var type: BookRecordType
 
     init(_ price: String, _ volume: String, _ timestamp: Decimal, _ type: BookRecordType) {
@@ -111,11 +113,12 @@ struct OrderBookRecord {
         self.price = price
         self.timestamp = timestamp
         self.type = type
+        id = UUID()
     }
 }
 
-class OrderBookData: Equatable {
-    var all: OrderedDictionary<String, OrderBookRecord>
+class OrderBookData: ObservableObject, Equatable {
+    @Published var all: OrderedDictionary<Decimal, OrderBookRecord>
     var channelID: Decimal
     var isValid: Bool
 
@@ -124,15 +127,19 @@ class OrderBookData: Equatable {
     }
 
     init(_ response: BookInitialResponse) {
-        all = OrderedDictionary()
-        for ask in response.bookRecord.asks {
-            all[ask.price] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
-        }
-        for bid in response.bookRecord.bids {
-            all[bid.price] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
-        }
         channelID = response.channelID
         isValid = true
+        all = OrderedDictionary()
+        
+        for ask in response.bookRecord.asks {
+            let key = Decimal(string: ask.price)
+            all[key!] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
+        }
+        for bid in response.bookRecord.bids {
+            let key = Decimal(string: bid.price)
+            all[key!] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
+        }
+  
     }
 
     func verifyChecksum(_ checksum: String) {
@@ -143,16 +150,26 @@ class OrderBookData: Equatable {
         for record in records {
             let volume = Decimal(string: record.volume)
             let timestamp = Decimal(string: record.timestamp)
+            let key = Decimal(string: record.price)
             if volume == 0 {
-                all.removeValue(forKey: record.price)
+                all.removeValue(forKey: key!)
             } else {
-                if let prev_record = all[record.price] {
+                if let prev_record = all[key!] {
                     if prev_record.timestamp < timestamp! {
-                        all[record.price] = OrderBookRecord(record.price, record.volume, Decimal(string: record.timestamp)!, type)
+                        all.updateValue(forKey: key!, default: prev_record) { value in
+                            value.volume = record.volume
+                            value.timestamp = timestamp!
+                            value.type=type
+                        }
                     }
+                } else {
+                    all[key!] = OrderBookRecord(record.price, record.volume, Decimal(string: record.timestamp)!, type)
                 }
             }
         }
+        all.sort( by: { $0.key > $1.key})
+        
+        
     }
 
     func update(_ updateResponse: BookUpdateResponse) {
@@ -181,7 +198,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
 
     private var cancellable: AnyCancellable?
 
-    var book: OrderBookData! {
+    @Published var book: OrderBookData! {
         didSet {
             didChange.send()
         }
@@ -226,7 +243,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
                     isSubscribed = true
                     channelID = result.channelID
                 }
-            } else if isSubscribed {
+            } else if isSubscribed && !isBookInitialized {
                 let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
