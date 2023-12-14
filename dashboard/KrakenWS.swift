@@ -6,10 +6,9 @@
 //
 
 import Combine
-import Foundation
-import OrderedCollections
-import Starscream
 import CryptoSwift
+import Foundation
+import Starscream
 
 struct WSStatus: Decodable {
     var event: String = ""
@@ -119,11 +118,28 @@ class OrderBookRecord: Identifiable, ObservableObject {
 }
 
 class OrderBookData: ObservableObject, Equatable {
-    @Published var all: OrderedDictionary<Decimal, OrderBookRecord>
-
+    @Published var all: [Decimal: OrderBookRecord]
+    @Published var bid_keys = [Decimal]()
+    @Published var ask_keys = [Decimal]()
     var channelID: Decimal
     @Published var isValid: Bool
     var depth: Int
+
+    var allList: [OrderBookRecord] {
+        var list: [OrderBookRecord] = []
+        for ask_key in ask_keys.reversed() {
+            if let ask = all[ask_key] {
+                list.append(ask)
+            }
+        }
+        for bid_key in bid_keys {
+            if let bid = all[bid_key] {
+                list.append(bid)
+            }
+        }
+
+        return list
+    }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
         return lhs.channelID == rhs.channelID
@@ -133,8 +149,7 @@ class OrderBookData: ObservableObject, Equatable {
         channelID = response.channelID
         isValid = true
         self.depth = depth
-        all = OrderedDictionary()
-
+        all = [:]
 
         for ask in response.bookRecord.asks {
             let key = Decimal(string: ask.price)!
@@ -151,37 +166,34 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     func verifyChecksum(_ checksum: String) -> Bool {
-        let asks = all.filter({$0.value.type == BookRecordType.ask})
-        let bids = all.filter({$0.value.type == BookRecordType.bid})
-        let ask_top_10_keys = asks.keys.sorted(by: { $0 < $1 })[...9]
-        let bid_top_10_keys = bids.keys.sorted(by: { $0 > $1 })[...9]
+        let ask_top_10_keys = ask_keys[...9]
+        let bid_top_10_keys = bid_keys[...9]
         var str = ""
         for ask_key in ask_top_10_keys {
-            if let ask_entry = asks[ask_key] {
+            if let ask_entry = all[ask_key] {
                 let apr = parseValue(p: ask_entry.price)
                 let apv = parseValue(p: ask_entry.volume)
                 str += apr + apv
             }
         }
         for bid_key in bid_top_10_keys {
-            if let bid_entry = bids[bid_key] {
+            if let bid_entry = all[bid_key] {
                 let bpr = parseValue(p: bid_entry.price)
                 let bpv = parseValue(p: bid_entry.volume)
                 str += bpr + bpv
             }
         }
-        
-        let checksum_str = String(format:"%02X", UInt64(checksum)!).lowercased()
-        let hash = str.crc32()
-        
-        let res = hash == checksum_str
-        
-        if res == false {
-            print ("Book is NOT valid: \(hash) should be \(checksum_str), asks \(asks.count), bids \(bids.count)")
-        }
-        
-        return res
 
+        let checksum_str = String(format: "%02X", UInt64(checksum)!).lowercased()
+        let hash = str.crc32()
+
+        let res = hash == checksum_str
+
+        if res == false {
+            print("Book is NOT valid: \(hash) should be \(checksum_str)")
+        }
+
+        return res
     }
 
     func update_side(_ records: [PriceRecordResponse], _ type: BookRecordType) {
@@ -189,7 +201,7 @@ class OrderBookData: ObservableObject, Equatable {
             let volume = Decimal(string: record.volume)
             let timestamp = Decimal(string: record.timestamp)!
             let key = Decimal(string: record.price)!
-      
+
             if volume == 0 {
                 all.removeValue(forKey: key)
             } else {
@@ -203,10 +215,10 @@ class OrderBookData: ObservableObject, Equatable {
             }
         }
 
-
-
-        self.all.sort(by: { $0.key > $1.key })
-//        self.bids.sort(by: { $0.key > $1.key })
+        let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
+        let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
+        ask_keys = ask_keys_all.count == depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
+        bid_keys = bid_keys_all.count == depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
     }
 
     func update(_ updateResponse: BookUpdateResponse) {
@@ -217,7 +229,7 @@ class OrderBookData: ObservableObject, Equatable {
             update_side(updateResponse.bookRecord.bids, BookRecordType.bid)
         }
 
-        self.isValid = verifyChecksum(updateResponse.bookRecord.checksum)
+        isValid = verifyChecksum(updateResponse.bookRecord.checksum)
     }
 }
 
