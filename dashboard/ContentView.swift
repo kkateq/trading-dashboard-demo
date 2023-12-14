@@ -18,6 +18,7 @@ struct ContentView: View {
                 Text("Connecting ... ")
             }
         }
+        .frame(minWidth: 800, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .center)
         .padding()
     }
 }

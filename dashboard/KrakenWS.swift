@@ -117,7 +117,6 @@ class OrderBookRecord: Identifiable, ObservableObject {
     }
 }
 
-
 struct Stats {
     var totalBidVol: Double
     var totalAskVol: Double
@@ -130,23 +129,17 @@ struct Stats {
         bestAsk = bestA
         bestBid = bestB
     }
-    
+
     var pegValue: Double {
-        get {
-            return (bestBid + bestAsk) / 2
-        }
+        return (bestBid + bestAsk) / 2
     }
-    
+
     var totalAskVolumePerc: Double {
-        get {
-            return round(((totalAskVol / (totalAskVol + totalBidVol)) * 100))
-        }
+        return round((totalAskVol / (totalAskVol + totalBidVol)) * 100)
     }
-    
+
     var totalBidVolumePerc: Double {
-        get {
-            return round(((totalBidVol / (totalAskVol + totalBidVol)) * 100))
-        }
+        return round((totalBidVol / (totalAskVol + totalBidVol)) * 100)
     }
 }
 
@@ -175,26 +168,25 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     var stats: Stats {
-        get {
-            let totalAskVol = ask_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
-            let totalBidVol = bid_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
-            let best_bid = Double(all[bid_keys[0]]!.price)!
-            let best_ask = Double(all[ask_keys[0]]!.price)!
-            
-            return Stats(totalBidVol, totalAskVol, best_bid, best_ask)
-        }
+        let totalAskVol = ask_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
+        let totalBidVol = bid_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
+        let best_bid = Double(all[bid_keys[0]]!.price)!
+        let best_ask = Double(all[ask_keys[0]]!.price)!
+
+        return Stats(totalBidVol, totalAskVol, best_bid, best_ask)
     }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
         return lhs.channelID == rhs.channelID
     }
 
-    init(_ response: BookInitialResponse, _ depth: Int) {
-        channelID = response.channelID
+    init(response: BookInitialResponse, depth: Int) {
+        channelID = 0
         isValid = true
         self.depth = depth
         all = [:]
 
+        channelID = response.channelID
         for ask in response.bookRecord.asks {
             let key = Double(ask.price)!
             all[key] = OrderBookRecord(ask.price, ask.volume, Double(ask.timestamp)!, BookRecordType.ask)
@@ -343,7 +335,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
                 let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
-                    self.data = OrderBookData(result, self.depth)
+                    self.data = OrderBookData(response: result, depth: self.depth)
                 }
                 isBookInitialized = true
             } else if isSubscribed && isBookInitialized {

@@ -12,7 +12,7 @@ struct dashboardApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 800, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .center)
+                
         }
     }
 }
