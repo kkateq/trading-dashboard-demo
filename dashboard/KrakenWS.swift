@@ -150,6 +150,7 @@ class OrderBookData: ObservableObject, Equatable {
     var channelID: Double
     @Published var isValid: Bool
     var depth: Int
+    var pair: String
 
     var allList: [OrderBookRecord] {
         var list: [OrderBookRecord] = []
@@ -170,8 +171,8 @@ class OrderBookData: ObservableObject, Equatable {
     var stats: Stats {
         let totalAskVol = ask_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
         let totalBidVol = bid_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
-        let best_bid = Double(all[bid_keys[0]]!.price)!
-        let best_ask = Double(all[ask_keys[0]]!.price)!
+        let best_bid = bid_keys.count > 0 ? Double(all[bid_keys[0]]!.price)! : 0
+        let best_ask = ask_keys.count > 0 ? Double(all[ask_keys[0]]!.price)! : 0
 
         return Stats(totalBidVol, totalAskVol, best_bid, best_ask)
     }
@@ -180,10 +181,11 @@ class OrderBookData: ObservableObject, Equatable {
         return lhs.channelID == rhs.channelID
     }
 
-    init(response: BookInitialResponse, depth: Int) {
+    init(response: BookInitialResponse, depth: Int, pair: String) {
         channelID = 0
         isValid = true
         self.depth = depth
+        self.pair = pair
         all = [:]
 
         channelID = response.channelID
@@ -335,7 +337,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
                 let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
-                    self.data = OrderBookData(response: result, depth: self.depth)
+                    self.data = OrderBookData(response: result, depth: self.depth, pair: self.pair)
                 }
                 isBookInitialized = true
             } else if isSubscribed && isBookInitialized {

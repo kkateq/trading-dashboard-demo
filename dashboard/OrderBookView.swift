@@ -11,45 +11,58 @@ struct OrderBookView: View {
     @EnvironmentObject var book: OrderBookData
 
     var body: some View {
+        let layout = [
+            GridItem(.fixed(100), spacing: 2),
+            GridItem(.fixed(100), spacing: 2),
+            GridItem(.fixed(100), spacing: 2),
+            GridItem(.fixed(100), spacing: 2),
+            GridItem(.fixed(100), spacing: 2)
+        ]
         VStack {
-            ForEach(book.allList) { record in
-
-                if record.type == BookRecordType.ask {
-                    HStack(spacing: 0) {
-                        Text("").frame(width: 125)
-                        Divider()
-                        Text(record.price).frame(width: 125)
-                        Divider()
-                        Text(record.volume).frame(width: 125).foregroundColor(.pink)
-                    }
-                } else {
-                    HStack(spacing: 0) {
-                        Text(record.volume).frame(width: 125).foregroundColor(.blue)
-                        Divider()
-                        Text(record.price).frame(width: 125)
-                        Divider()
-                        Text("").frame(width: 125)
-                    }
-                }
-                Divider()
-            }
-
-            VStack {
-                HStack {
-                    let bp = "\(book.stats.totalBidVolumePerc) %"
-                    let ap = "\(book.stats.totalAskVolumePerc) %"
-
-                    Text(bp).foregroundColor(.blue)
-                    VStack {
-                        if book.isValid {
-                            Text("Valid").foregroundColor(.green)
+            ScrollView {
+                LazyVGrid(columns: layout, spacing: 2) {
+                    ForEach(book.allList) { record in
+                       
+                        let vol = String(format: "%.0f", round(Double(record.volume)!))
+                        let price = "\(round(10000 * Double(record.price)!) / 10000)"
+                        
+                        if record.type == BookRecordType.ask {
+                            PositionCell(position: "")
+                            EmptyCell()
+                            PriceCell(price: price)
+                            VolumeCell(volume: vol, side: BookRecordType.ask)
+                            PositionCell(position: "")
+                            
                         } else {
-                            Text("Invalid").foregroundColor(.red).font(.caption)
+                            PositionCell(position: "")
+                            VolumeCell(volume: vol, side: BookRecordType.bid)
+                            PriceCell(price: price)
+                            EmptyCell()
+                            PositionCell(position: "")
                         }
                     }
-
-                    Text(ap).foregroundColor(.red)
                 }
+            }.overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(.gray, lineWidth: 2)
+            )
+              
+            LazyVGrid(columns: layout, spacing: 2) {
+                let bp = "\(book.stats.totalBidVolumePerc) %"
+                let ap = "\(book.stats.totalAskVolumePerc) %"
+                Text("\(book.pair)").font(.title3)
+                Text(bp).foregroundColor(.blue)
+                  
+                VStack {
+                    if book.isValid {
+                        Text("Valid").foregroundColor(.green)
+                    } else {
+                        Text("Invalid").foregroundColor(.red)
+                    }
+                }.frame(width: 100)
+                  
+                Text(ap).foregroundColor(.red)
+                Text("Depth: \(book.depth)")
             }
         }
     }
