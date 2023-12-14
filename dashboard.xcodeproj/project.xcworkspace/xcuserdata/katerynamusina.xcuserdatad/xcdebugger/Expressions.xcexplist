@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "OrderBookData.verifyChecksum(_:):KrakenWS.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Decimal(hash)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

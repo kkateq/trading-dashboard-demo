@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import OrderedCollections
 import Starscream
+import CryptoSwift
 
 struct WSStatus: Decodable {
     var event: String = ""
@@ -118,58 +119,96 @@ class OrderBookRecord: Identifiable, ObservableObject {
 }
 
 class OrderBookData: ObservableObject, Equatable {
-    @Published var all: OrderedDictionary<Decimal, OrderBookRecord>
+    @Published var bids: OrderedDictionary<Decimal, OrderBookRecord>
+    @Published var asks: OrderedDictionary<Decimal, OrderBookRecord>
+
     var channelID: Decimal
-    var isValid: Bool
+    @Published var isValid: Bool
+    var depth: Int
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
         return lhs.channelID == rhs.channelID
     }
 
-    init(_ response: BookInitialResponse) {
+    init(_ response: BookInitialResponse, _ depth: Int) {
         channelID = response.channelID
         isValid = true
-        all = OrderedDictionary()
-        
+        self.depth = depth
+        bids = OrderedDictionary()
+        asks = OrderedDictionary()
+
         for ask in response.bookRecord.asks {
-            let key = Decimal(string: ask.price)
-            all[key!] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
+            let key = Decimal(string: ask.price)!
+            asks[key] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
         }
         for bid in response.bookRecord.bids {
-            let key = Decimal(string: bid.price)
-            all[key!] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
+            let key = Decimal(string: bid.price)!
+            bids[key] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
         }
-  
     }
 
-    func verifyChecksum(_ checksum: String) {
-        isValid = true
+    func parseValue(p: String) -> String {
+        return "\(Decimal(string: p.replacingOccurrences(of: ".", with: ""))!)"
+    }
+
+    func verifyChecksum(_ checksum: String) -> Bool {
+        let ask_top_10_keys = asks.keys[...9].sorted(by: { $0 < $1 })
+        let bid_top_10_keys = bids.keys[...9].sorted(by: { $0 > $1 })
+        var str = ""
+        for ask_key in ask_top_10_keys {
+            if let ask_entry = asks[ask_key] {
+                let apr = parseValue(p: ask_entry.price)
+                let apv = parseValue(p: ask_entry.volume)
+                str += apr + apv
+            }
+        }
+        for bid_key in bid_top_10_keys {
+            if let bid_entry = bids[bid_key] {
+                let bpr = parseValue(p: bid_entry.price)
+                let bpv = parseValue(p: bid_entry.volume)
+                str += bpr + bpv
+            }
+        }
+
+        let checksum_str = String(format:"%02X", UInt64(checksum)!).lowercased()
+        let hash = str.crc32()
+        
+        let res = hash == checksum_str
+        print ("\(res): \(hash) should be \(checksum_str)")
+        return res
+
     }
 
     func update_side(_ records: [PriceRecordResponse], _ type: BookRecordType) {
         for record in records {
             let volume = Decimal(string: record.volume)
             let timestamp = Decimal(string: record.timestamp)
-            let key = Decimal(string: record.price)
+            let key = Decimal(string: record.price)!
+            var dict = type == BookRecordType.bid ? bids : asks
             if volume == 0 {
-                all.removeValue(forKey: key!)
+                dict.removeValue(forKey: key)
             } else {
-                if let prev_record = all[key!] {
+                if let prev_record = dict[key] {
                     if prev_record.timestamp < timestamp! {
-                        all.updateValue(forKey: key!, default: prev_record) { value in
+                        dict.updateValue(forKey: key, default: prev_record) { value in
                             value.volume = record.volume
                             value.timestamp = timestamp!
-                            value.type=type
+                            value.type = type
+                            value.price = record.price
                         }
                     }
                 } else {
-                    all[key!] = OrderBookRecord(record.price, record.volume, Decimal(string: record.timestamp)!, type)
+                    dict[key] = OrderBookRecord(record.price, record.volume, Decimal(string: record.timestamp)!, type)
                 }
             }
         }
-        all.sort( by: { $0.key > $1.key})
-        
-        
+
+//                    if dict.count > self.depth {
+//                        dict.removeLast(dict.count - self.depth)
+//                    }
+
+        self.asks.sort(by: { $0.key > $1.key })
+        self.bids.sort(by: { $0.key > $1.key })
     }
 
     func update(_ updateResponse: BookUpdateResponse) {
@@ -180,7 +219,7 @@ class OrderBookData: ObservableObject, Equatable {
             update_side(updateResponse.bookRecord.bids, BookRecordType.bid)
         }
 
-        verifyChecksum(updateResponse.bookRecord.checksum)
+        self.isValid = verifyChecksum(updateResponse.bookRecord.checksum)
     }
 }
 
@@ -227,6 +266,9 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
 
     func parseTextMessage(message: String) {
         do {
+            if message == "{\"event\":\"heartbeat\"}" {
+                return
+            }
             let decoder = JSONDecoder()
             if wsStatus.status == "disconnected" {
                 let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
@@ -247,7 +289,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
                 let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
-                    self.data = OrderBookData(result)
+                    self.data = OrderBookData(result, self.depth)
                 }
                 isBookInitialized = true
             } else if isSubscribed && isBookInitialized {

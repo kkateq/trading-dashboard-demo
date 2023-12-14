@@ -20,6 +20,7 @@
 		34905C452B2A003F00A5A649 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C442B2A003F00A5A649 /* Collections */; };
 		34905C472B2A003F00A5A649 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C462B2A003F00A5A649 /* DequeModule */; };
 		34905C492B2A003F00A5A649 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C482B2A003F00A5A649 /* OrderedCollections */; };
+		34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C4D2B2B05D700A5A649 /* CryptoSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 				34905C452B2A003F00A5A649 /* Collections in Frameworks */,
 				34905C3E2B29C18300A5A649 /* Starscream in Frameworks */,
 				34905C492B2A003F00A5A649 /* OrderedCollections in Frameworks */,
+				34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */,
 				34905C472B2A003F00A5A649 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,6 +166,7 @@
 				34905C442B2A003F00A5A649 /* Collections */,
 				34905C462B2A003F00A5A649 /* DequeModule */,
 				34905C482B2A003F00A5A649 /* OrderedCollections */,
+				34905C4D2B2B05D700A5A649 /* CryptoSwift */,
 			);
 			productName = dashboard;
 			productReference = 34905C0C2B29C12A00A5A649 /* dashboard.app */;
@@ -240,6 +243,7 @@
 			packageReferences = (
 				34905C3C2B29C18300A5A649 /* XCRemoteSwiftPackageReference "Starscream" */,
 				34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = 34905C0D2B29C12A00A5A649 /* Products */;
 			projectDirPath = "";
@@ -612,6 +616,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -634,6 +646,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		34905C4D2B2B05D700A5A649 /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
