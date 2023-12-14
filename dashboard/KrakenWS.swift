@@ -12,18 +12,18 @@ import Starscream
 
 struct WSStatus: Decodable {
     var event: String = ""
-    var connectionID: Decimal = 0
+    var connectionID: Double = 0
     var status: String = "disconnected"
     var version: String = ""
 }
 
 struct Subscription: Decodable {
-    var depth: Decimal
+    var depth: Double
     var name: String
 }
 
 struct ChannelSubscriptionStatus: Decodable {
-    var channelID: Decimal
+    var channelID: Double
     var channelName: String
     var event: String
     var pair: String
@@ -56,13 +56,13 @@ struct BookRecordResponse: Decodable {
 
 struct BookInitialResponse: Decodable {
     var bookRecord: BookRecordResponse! = nil
-    var channelID: Decimal = 0
+    var channelID: Double = 0
     var pair: String
     var channelName: String
 
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        channelID = try container.decode(Decimal.self)
+        channelID = try container.decode(Double.self)
         bookRecord = try container.decode(BookRecordResponse.self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
@@ -83,13 +83,13 @@ struct BookUpdateRecordResponse: Decodable {
 
 struct BookUpdateResponse: Decodable {
     var bookRecord: BookUpdateRecordResponse! = nil
-    var channelID: Decimal = 0
+    var channelID: Double = 0
     var pair: String
     var channelName: String
 
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        channelID = try container.decode(Decimal.self)
+        channelID = try container.decode(Double.self)
         bookRecord = try container.decode(BookUpdateRecordResponse.self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
@@ -105,10 +105,10 @@ class OrderBookRecord: Identifiable, ObservableObject {
 
     var volume: String
     var price: String
-    var timestamp: Decimal
+    var timestamp: Double
     var type: BookRecordType
 
-    init(_ price: String, _ volume: String, _ timestamp: Decimal, _ type: BookRecordType) {
+    init(_ price: String, _ volume: String, _ timestamp: Double, _ type: BookRecordType) {
         self.volume = volume
         self.price = price
         self.timestamp = timestamp
@@ -117,11 +117,44 @@ class OrderBookRecord: Identifiable, ObservableObject {
     }
 }
 
+
+struct Stats {
+    var totalBidVol: Double
+    var totalAskVol: Double
+    var bestBid: Double
+    var bestAsk: Double
+
+    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double) {
+        totalBidVol = totalBidVolume
+        totalAskVol = totalAskVolume
+        bestAsk = bestA
+        bestBid = bestB
+    }
+    
+    var pegValue: Double {
+        get {
+            return (bestBid + bestAsk) / 2
+        }
+    }
+    
+    var totalAskVolumePerc: Double {
+        get {
+            return round(((totalAskVol / (totalAskVol + totalBidVol)) * 100))
+        }
+    }
+    
+    var totalBidVolumePerc: Double {
+        get {
+            return round(((totalBidVol / (totalAskVol + totalBidVol)) * 100))
+        }
+    }
+}
+
 class OrderBookData: ObservableObject, Equatable {
-    @Published var all: [Decimal: OrderBookRecord]
-    @Published var bid_keys = [Decimal]()
-    @Published var ask_keys = [Decimal]()
-    var channelID: Decimal
+    @Published var all: [Double: OrderBookRecord]
+    @Published var bid_keys = [Double]()
+    @Published var ask_keys = [Double]()
+    var channelID: Double
     @Published var isValid: Bool
     var depth: Int
 
@@ -141,6 +174,17 @@ class OrderBookData: ObservableObject, Equatable {
         return list
     }
 
+    var stats: Stats {
+        get {
+            let totalAskVol = ask_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
+            let totalBidVol = bid_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
+            let best_bid = Double(all[bid_keys[0]]!.price)!
+            let best_ask = Double(all[ask_keys[0]]!.price)!
+            
+            return Stats(totalBidVol, totalAskVol, best_bid, best_ask)
+        }
+    }
+
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
         return lhs.channelID == rhs.channelID
     }
@@ -152,12 +196,12 @@ class OrderBookData: ObservableObject, Equatable {
         all = [:]
 
         for ask in response.bookRecord.asks {
-            let key = Decimal(string: ask.price)!
-            all[key] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
+            let key = Double(ask.price)!
+            all[key] = OrderBookRecord(ask.price, ask.volume, Double(ask.timestamp)!, BookRecordType.ask)
         }
         for bid in response.bookRecord.bids {
-            let key = Decimal(string: bid.price)!
-            all[key] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
+            let key = Double(bid.price)!
+            all[key] = OrderBookRecord(bid.price, bid.volume, Double(bid.timestamp)!, BookRecordType.bid)
         }
     }
 
@@ -198,9 +242,9 @@ class OrderBookData: ObservableObject, Equatable {
 
     func update_side(_ records: [PriceRecordResponse], _ type: BookRecordType) {
         for record in records {
-            let volume = Decimal(string: record.volume)
-            let timestamp = Decimal(string: record.timestamp)!
-            let key = Decimal(string: record.price)!
+            let volume = Double(record.volume)
+            let timestamp = Double(record.timestamp)!
+            let key = Double(record.price)!
 
             if volume == 0 {
                 all.removeValue(forKey: key)
@@ -238,7 +282,7 @@ class KrakenWS: WebSocketDelegate, ObservableObject {
     @Published var isConnected = false
     @Published var isSubscribed = false
     @Published var isBookInitialized = false
-    var channelID: Decimal = 0
+    var channelID: Double = 0
     var pair: String = ""
     var depth: Int = 10
     @Published var data: OrderBookData! = nil

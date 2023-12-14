@@ -17,23 +17,23 @@ struct OrderBookView: View {
             ForEach(book.allList) { record in
                 if record.type == BookRecordType.ask {
                     HStack(spacing: 10) {
-                        Spacer().frame(width: 12)
+                      
                         Text("").frame(width: 125)
                         Divider()
                         Text(record.price).frame(width: 125)
                         Divider()
                         Text(record.volume).frame(width: 125).foregroundColor(.red)
-                        Spacer().frame(width: 12)
+                        
                     }
                 } else  {
                     HStack(spacing: 10) {
-                        Spacer().frame(width: 12)
+                    
                         Text(record.volume).frame(width: 125).foregroundColor(.green)
                         Divider()
                         Text(record.price).frame(width: 125)
                         Divider()
                         Text("").frame(width: 125)
-                        Spacer().frame(width: 12)
+                     
                     }
                 }
             }
@@ -45,6 +45,15 @@ struct OrderBookView: View {
                     Text("Invalid").foregroundColor(.red)
                 }
             }
+            VStack {
+                HStack {
+                    let bp = "\(book.stats.totalBidVolumePerc) %"
+                    let ap = "\(book.stats.totalAskVolumePerc) %"
+                    Text(bp).foregroundColor(.blue)
+                    Spacer()
+                    Text(ap).foregroundColor(.red)
+                }
+            }
             Spacer()
         }
     }
@@ -52,6 +61,8 @@ struct OrderBookView: View {
 
 struct OrderBook_Previews: PreviewProvider {
     static var previews: some View {
-        OrderBookView()
+        let book = OrderBookData("MATIC/USD", 10)
+        
+        OrderBookView().environmentObject(book)
     }
 }
