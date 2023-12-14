@@ -104,9 +104,9 @@ enum BookRecordType: String {
 class OrderBookRecord: Identifiable, ObservableObject {
     var id: UUID
 
-    @Published var volume: String
-    @Published var price: String
-    @Published var timestamp: Decimal
+    var volume: String
+    var price: String
+    var timestamp: Decimal
     var type: BookRecordType
 
     init(_ price: String, _ volume: String, _ timestamp: Decimal, _ type: BookRecordType) {
@@ -119,8 +119,7 @@ class OrderBookRecord: Identifiable, ObservableObject {
 }
 
 class OrderBookData: ObservableObject, Equatable {
-    @Published var bids: OrderedDictionary<Decimal, OrderBookRecord>
-    @Published var asks: OrderedDictionary<Decimal, OrderBookRecord>
+    @Published var all: OrderedDictionary<Decimal, OrderBookRecord>
 
     var channelID: Decimal
     @Published var isValid: Bool
@@ -134,16 +133,16 @@ class OrderBookData: ObservableObject, Equatable {
         channelID = response.channelID
         isValid = true
         self.depth = depth
-        bids = OrderedDictionary()
-        asks = OrderedDictionary()
+        all = OrderedDictionary()
+
 
         for ask in response.bookRecord.asks {
             let key = Decimal(string: ask.price)!
-            asks[key] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
+            all[key] = OrderBookRecord(ask.price, ask.volume, Decimal(string: ask.timestamp)!, BookRecordType.ask)
         }
         for bid in response.bookRecord.bids {
             let key = Decimal(string: bid.price)!
-            bids[key] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
+            all[key] = OrderBookRecord(bid.price, bid.volume, Decimal(string: bid.timestamp)!, BookRecordType.bid)
         }
     }
 
@@ -152,8 +151,10 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     func verifyChecksum(_ checksum: String) -> Bool {
-        let ask_top_10_keys = asks.keys[...9].sorted(by: { $0 < $1 })
-        let bid_top_10_keys = bids.keys[...9].sorted(by: { $0 > $1 })
+        let asks = all.filter({$0.value.type == BookRecordType.ask})
+        let bids = all.filter({$0.value.type == BookRecordType.bid})
+        let ask_top_10_keys = asks.keys.sorted(by: { $0 < $1 })[...9]
+        let bid_top_10_keys = bids.keys.sorted(by: { $0 > $1 })[...9]
         var str = ""
         for ask_key in ask_top_10_keys {
             if let ask_entry = asks[ask_key] {
@@ -169,12 +170,16 @@ class OrderBookData: ObservableObject, Equatable {
                 str += bpr + bpv
             }
         }
-
+        
         let checksum_str = String(format:"%02X", UInt64(checksum)!).lowercased()
         let hash = str.crc32()
         
         let res = hash == checksum_str
-        print ("\(res): \(hash) should be \(checksum_str)")
+        
+        if res == false {
+            print ("Book is NOT valid: \(hash) should be \(checksum_str), asks \(asks.count), bids \(bids.count)")
+        }
+        
         return res
 
     }
@@ -182,33 +187,26 @@ class OrderBookData: ObservableObject, Equatable {
     func update_side(_ records: [PriceRecordResponse], _ type: BookRecordType) {
         for record in records {
             let volume = Decimal(string: record.volume)
-            let timestamp = Decimal(string: record.timestamp)
+            let timestamp = Decimal(string: record.timestamp)!
             let key = Decimal(string: record.price)!
-            var dict = type == BookRecordType.bid ? bids : asks
+      
             if volume == 0 {
-                dict.removeValue(forKey: key)
+                all.removeValue(forKey: key)
             } else {
-                if let prev_record = dict[key] {
-                    if prev_record.timestamp < timestamp! {
-                        dict.updateValue(forKey: key, default: prev_record) { value in
-                            value.volume = record.volume
-                            value.timestamp = timestamp!
-                            value.type = type
-                            value.price = record.price
-                        }
+                if let prev_record = all[key] {
+                    if prev_record.timestamp < timestamp {
+                        all[key] = OrderBookRecord(record.price, record.volume, timestamp, type)
                     }
                 } else {
-                    dict[key] = OrderBookRecord(record.price, record.volume, Decimal(string: record.timestamp)!, type)
+                    all[key] = OrderBookRecord(record.price, record.volume, timestamp, type)
                 }
             }
         }
 
-//                    if dict.count > self.depth {
-//                        dict.removeLast(dict.count - self.depth)
-//                    }
 
-        self.asks.sort(by: { $0.key > $1.key })
-        self.bids.sort(by: { $0.key > $1.key })
+
+        self.all.sort(by: { $0.key > $1.key })
+//        self.bids.sort(by: { $0.key > $1.key })
     }
 
     func update(_ updateResponse: BookUpdateResponse) {
