@@ -9,15 +9,15 @@ import SwiftUI
 
 struct OrderBookView: View {
     @EnvironmentObject var book: OrderBookData
-
+    
+    let layout = [
+        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2)
+    ]
     var body: some View {
-        let layout = [
-            GridItem(.fixed(100), spacing: 2),
-            GridItem(.fixed(100), spacing: 2),
-            GridItem(.fixed(100), spacing: 2),
-            GridItem(.fixed(100), spacing: 2),
-            GridItem(.fixed(100), spacing: 2)
-        ]
         VStack {
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {
@@ -44,12 +44,12 @@ struct OrderBookView: View {
                 }
             }.overlay(
                 RoundedRectangle(cornerRadius: 5)
-                    .stroke(.gray, lineWidth: 2)
-            )
+                    .stroke(.gray, lineWidth: 1))
               
             LazyVGrid(columns: layout, spacing: 2) {
                 let bp = "\(book.stats.totalBidVolumePerc) %"
                 let ap = "\(book.stats.totalAskVolumePerc) %"
+               
                 Text("\(book.pair)").font(.title3)
                 Text(bp).foregroundColor(.blue)
                   
@@ -65,6 +65,11 @@ struct OrderBookView: View {
                 Text("Depth: \(book.depth)")
             }
         }
+        .frame(width: 530)
+        .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(.gray, lineWidth: 2)
+        )
     }
 }
 

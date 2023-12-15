@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
-    
+
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             VStack {
                 if kraken_ws.book != nil {
                     OrderBookView().environmentObject(kraken_ws.book)
@@ -19,12 +19,10 @@ struct ContentView: View {
                     Text("Connecting ... ")
                 }
             }
-            VStack {
-                OrdersView()
-                PositionsView()
-            }
+
+            OrderForm(pair: "MATIC/USD")
         }
-        .frame(minWidth: 800, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
+        .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
         .padding()
     }
 }

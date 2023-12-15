@@ -256,8 +256,8 @@ class OrderBookData: ObservableObject, Equatable {
 
         let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
         let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
-        ask_keys = ask_keys_all.count == depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
-        bid_keys = bid_keys_all.count == depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
+        ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
+        bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
     }
 
     func update(_ updateResponse: BookUpdateResponse) {
