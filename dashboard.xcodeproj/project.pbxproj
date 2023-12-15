@@ -16,7 +16,7 @@
 		34905C2E2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C2D2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift */; };
 		34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3A2B29C14A00A5A649 /* OrderBookView.swift */; };
 		34905C3E2B29C18300A5A649 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C3D2B29C18300A5A649 /* Starscream */; };
-		34905C402B29C1A100A5A649 /* KrakenWS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3F2B29C1A100A5A649 /* KrakenWS.swift */; };
+		34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3F2B29C1A100A5A649 /* Krakenbook.swift */; };
 		34905C452B2A003F00A5A649 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C442B2A003F00A5A649 /* Collections */; };
 		34905C472B2A003F00A5A649 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C462B2A003F00A5A649 /* DequeModule */; };
 		34905C492B2A003F00A5A649 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C482B2A003F00A5A649 /* OrderedCollections */; };
@@ -59,7 +59,7 @@
 		34905C2B2B29C12D00A5A649 /* dashboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardUITests.swift; sourceTree = "<group>"; };
 		34905C2D2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		34905C3A2B29C14A00A5A649 /* OrderBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookView.swift; sourceTree = "<group>"; };
-		34905C3F2B29C1A100A5A649 /* KrakenWS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenWS.swift; sourceTree = "<group>"; };
+		34905C3F2B29C1A100A5A649 /* Krakenbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Krakenbook.swift; sourceTree = "<group>"; };
 		34905C532B2B5B9E00A5A649 /* VolumeCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeCellView.swift; sourceTree = "<group>"; };
 		34905C552B2B604500A5A649 /* PriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCell.swift; sourceTree = "<group>"; };
 		34905C572B2B648400A5A649 /* EmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 				34905C0F2B29C12A00A5A649 /* dashboardApp.swift */,
 				34905C112B29C12A00A5A649 /* ContentView.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
-				34905C3F2B29C1A100A5A649 /* KrakenWS.swift */,
+				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
 				34905C592B2B64B800A5A649 /* PositionCell.swift */,
@@ -313,7 +313,7 @@
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* VolumeCellView.swift in Sources */,
-				34905C402B29C1A100A5A649 /* KrakenWS.swift in Sources */,
+				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

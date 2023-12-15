@@ -159,6 +159,7 @@ class OrderBookData: ObservableObject, Equatable {
                 list.append(ask)
             }
         }
+        
         for bid_key in bid_keys {
             if let bid = all[bid_key] {
                 list.append(bid)
@@ -271,7 +272,7 @@ class OrderBookData: ObservableObject, Equatable {
     }
 }
 
-class KrakenWS: WebSocketDelegate, ObservableObject {
+class Krakenbook: WebSocketDelegate, ObservableObject {
     var socket: WebSocket!
     @Published var isConnected = false
     @Published var isSubscribed = false

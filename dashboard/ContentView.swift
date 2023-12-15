@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var kraken_ws = KrakenWS("MATIC/USD", 25)
+    @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
     
     var body: some View {
         HStack {
