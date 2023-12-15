@@ -12,6 +12,23 @@
          contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
       </ContextState>
       <ContextState
+         contextName = "Manager.handleOrdersResponse(result:):Manager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "orders[&quot;open&quot;]! as String">
+            </PersistentString>
+            <PersistentString
+               value = "order">
+            </PersistentString>
+            <PersistentString
+               value = "dict">
+            </PersistentString>
+            <PersistentString
+               value = "result.success">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "OrderBookData.verifyChecksum(_:):KrakenWS.swift">
          <PersistentStrings>
             <PersistentString

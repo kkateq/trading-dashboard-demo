@@ -8,19 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
+//    @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
+    @StateObject var manager = Manager()
 
     var body: some View {
         HStack(alignment: .top) {
             VStack {
-                if kraken_ws.book != nil {
-                    OrderBookView().environmentObject(kraken_ws.book)
-                } else {
+//                if kraken_ws.book != nil {
+////                    OrderBookView().environmentObject(kraken_ws.book)
+//                } else {
                     Text("Connecting ... ")
-                }
+//                }
             }
 
-            OrderForm(pair: "MATIC/USD")
+            OrderForm().environmentObject(manager)
         }
         .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
         .padding()

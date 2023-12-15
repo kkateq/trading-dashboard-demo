@@ -29,6 +29,11 @@
 		34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5D2B2B684700A5A649 /* PositionsView.swift */; };
 		34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5F2B2C4A1800A5A649 /* OrderForm.swift */; };
 		34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C612B2C53F700A5A649 /* ButtonStyles.swift */; };
+		34905C642B2C6A0D00A5A649 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C632B2C6A0D00A5A649 /* Manager.swift */; };
+		34905C672B2C7E6800A5A649 /* Kraken+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C662B2C7E6800A5A649 /* Kraken+Types.swift */; };
+		34905C692B2C7E9300A5A649 /* Kraken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C682B2C7E9300A5A649 /* Kraken.swift */; };
+		34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C6A2B2C7EA700A5A649 /* KrakenNetwork.swift */; };
+		34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C6C2B2C7EE000A5A649 /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +75,11 @@
 		34905C5D2B2B684700A5A649 /* PositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionsView.swift; sourceTree = "<group>"; };
 		34905C5F2B2C4A1800A5A649 /* OrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderForm.swift; sourceTree = "<group>"; };
 		34905C612B2C53F700A5A649 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		34905C632B2C6A0D00A5A649 /* Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
+		34905C662B2C7E6800A5A649 /* Kraken+Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kraken+Types.swift"; sourceTree = "<group>"; };
+		34905C682B2C7E9300A5A649 /* Kraken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kraken.swift; sourceTree = "<group>"; };
+		34905C6A2B2C7EA700A5A649 /* KrakenNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenNetwork.swift; sourceTree = "<group>"; };
+		34905C6C2B2C7EE000A5A649 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,12 +135,14 @@
 		34905C0E2B29C12A00A5A649 /* dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				34905C652B2C7E5300A5A649 /* krakenAPI */,
 				34905C0F2B29C12A00A5A649 /* dashboardApp.swift */,
 				34905C112B29C12A00A5A649 /* ContentView.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
+				34905C632B2C6A0D00A5A649 /* Manager.swift */,
 				34905C592B2B64B800A5A649 /* PositionCell.swift */,
 				34905C532B2B5B9E00A5A649 /* VolumeCellView.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
@@ -167,6 +179,17 @@
 				34905C2D2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift */,
 			);
 			path = dashboardUITests;
+			sourceTree = "<group>";
+		};
+		34905C652B2C7E5300A5A649 /* krakenAPI */ = {
+			isa = PBXGroup;
+			children = (
+				34905C662B2C7E6800A5A649 /* Kraken+Types.swift */,
+				34905C682B2C7E9300A5A649 /* Kraken.swift */,
+				34905C6A2B2C7EA700A5A649 /* KrakenNetwork.swift */,
+				34905C6C2B2C7EE000A5A649 /* Utils.swift */,
+			);
+			path = krakenAPI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,14 +338,19 @@
 				34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
+				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34905C5A2B2B64B800A5A649 /* PositionCell.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
+				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* VolumeCellView.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
+				34905C692B2C7E9300A5A649 /* Kraken.swift in Sources */,
+				34905C642B2C6A0D00A5A649 /* Manager.swift in Sources */,
+				34905C672B2C7E6800A5A649 /* Kraken+Types.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct OrderForm: View {
-    var pair: String
 //    var onCancelAllOrders : () -> Void
 //    var onCloseAllPositions: () -> Void
 //    var onFlattenAllPositions: () -> Void
@@ -40,7 +39,7 @@ struct OrderForm: View {
                 VStack {
                     Spacer()
                     HStack {
-                        Text(pair)
+                        Text("MATIC/USD")
                             .font(.title3)
                         Spacer()
                         Text("$ 0.90")
@@ -110,7 +109,7 @@ struct OrderForm: View {
                     }
                 }
                 HStack {
-                    Text("Orders")
+                    OrdersView()
                 }
                 HStack {
                     Text("Positions")
@@ -162,6 +161,6 @@ struct OrderForm: View {
 
 struct OrderForm_Previews: PreviewProvider {
     static var previews: some View {
-        OrderForm(pair: "MATIC/USD")
+        OrderForm()
     }
 }
