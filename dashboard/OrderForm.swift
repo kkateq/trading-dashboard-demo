@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct OrderForm: View {
-//    var onCancelAllOrders : () -> Void
-//    var onCloseAllPositions: () -> Void
-//    var onFlattenAllPositions: () -> Void
-//    var onBuyMarket: () -> Void
-//    var onSellMarket: () -> Void
+    var pegValue: Double
     @State private var volume: Double = 10.0
     @State private var isEditing = false
     @State private var scaleInOut = true
+    @StateObject var manager = Manager()
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -23,144 +20,146 @@ struct OrderForm: View {
         return formatter
     }()
 
-    let layout = [
-        GridItem(.fixed(30), spacing: 5),
-        GridItem(.fixed(100), spacing: 5),
-        GridItem(.fixed(100), spacing: 5),
-        GridItem(.fixed(150), spacing: 5, alignment: .center),
-        GridItem(.fixed(150), spacing: 5, alignment: .center),
-        GridItem(.fixed(550), spacing: 5, alignment: .bottom),
-     
-    ]
-
     var body: some View {
-        HStack {
-            LazyHGrid(rows: layout, alignment: .top) {
-                VStack {
+        VStack {
+            VStack {
+                HStack {
+                    Text("MATIC/USD")
+                        .font(.title3)
                     Spacer()
-                    HStack {
-                        Text("MATIC/USD")
-                            .font(.title3)
-                        Spacer()
-                        Text("$ 0.90")
-                            .foregroundColor(.blue)
-                            .font(.title3)
+                    Text("$ 0.90")
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                }
+            }.padding()
+            VStack(alignment: .leading) {
+                TextField("", value: $volume, formatter: formatter)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                Toggle("Scale In/Out", isOn: $scaleInOut)
+                    .toggleStyle(.checkbox)
+            }.padding(.leading)
+                .padding(.trailing)
+            VStack {
+                HStack {
+                    VStack {
+                        Button(action: {}) {
+                            HStack {
+                                Text("Sell Market")
+                            }.frame(width: 100, height: 50)
+                                .foregroundColor(Color.white)
+                                .background(Color.gray)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .imageScale(.large)
+                        }.buttonStyle(PlainButtonStyle())
+                        Button(action: {}) {
+                            HStack {
+                                Text("Buy Market")
+                            }.frame(width: 100, height: 50)
+                                .foregroundColor(Color.white)
+                                .background(Color.gray)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .imageScale(.large)
+                        }.buttonStyle(PlainButtonStyle())
+                    }
+                    VStack {
+                        Button(action: {}) {
+                            HStack {
+                                Text("Sell Ask")
+                            }.frame(width: 100, height: 50)
+                                .foregroundColor(Color.white)
+                                .background(Color.red)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .imageScale(.large)
+                        }.buttonStyle(PlainButtonStyle())
+                        Button(action: {}) {
+                            HStack {
+                                Text("Buy Bid")
+                            }.frame(width: 100, height: 50)
+                                .foregroundColor(Color.white)
+                                .background(Color.green)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .imageScale(.large)
+                        }.buttonStyle(PlainButtonStyle())
                     }
                 }
-                VStack(alignment: .leading) {
-                    TextField("", value: $volume, formatter: formatter)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        
-                    Slider(
-                        value: $volume,
-                        in: 0 ... 100,
-                        onEditingChanged: { editing in
-                            isEditing = editing
-                        }
-                    )
-                        
-                    Toggle("Scale In/Out", isOn: $scaleInOut)
-                        .toggleStyle(.checkbox)
-                }
-                    
-                VStack {
-                    Spacer()
+            }.padding(.top)
+                .padding(.bottom)
+
+         
+            VStack {
+                Button(action: {
+                    //                            Task {
+                    //                                await manager.fl
+                    //                            }
+                }) {
                     HStack {
-                        VStack {
-                            Button(action: {}) {
-                                HStack {
-                                    Text("Sell Market")
-                                }.frame(width: 90, height: 50)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.gray)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                            Button(action: {}) {
-                                HStack {
-                                    Text("Buy Market")
-                                }.frame(width: 90, height: 50)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.gray)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                        }
-                        VStack {
-                            Button(action: {}) {
-                                HStack {
-                                    Text("Sell Ask")
-                                }.frame(width: 90, height: 50)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.red)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                            Button(action: {}) {
-                                HStack {
-                                    Text("Buy Bid")
-                                }.frame(width: 90, height: 50)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.green)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                        }
-                    }
-                }
-                HStack {
-                    OrdersView()
-                }
-                HStack {
-                    Text("Positions")
-                }
-                    
-                VStack(alignment: .trailing) {
-                    Button(action: {}) {
-                        HStack {
-                            Image(systemName: "lightbulb.fill")
-                            Text("Flatten Positions")
-                        }.frame(width: 180, height: 50)
-                            .foregroundColor(Color.white)
-                            .background(Color.teal)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .imageScale(.large)
-                    }.buttonStyle(PlainButtonStyle())
-                    Button(action: {}) {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                            Text("Delete Orders")
-                        }.frame(width: 180, height: 50)
-                            .foregroundColor(Color.white)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .imageScale(.large)
-                    }.buttonStyle(PlainButtonStyle())
-                    Button(action: {}) {
-                        HStack {
-                            Image(systemName: "power.circle.fill")
-                            
-                            Text("Close Everything")
-                        }
-                        .frame(width: 180, height: 50)
+                        Image(systemName: "lightbulb.fill")
+                        Text("Flatten Positions")
+                    }.frame(width: 210, height: 50)
                         .foregroundColor(Color.white)
-                        .background(Color.black)
-                        .imageScale(.large)
+                        .background(Color.teal)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
-                    }.buttonStyle(PlainButtonStyle())
-                }
+                        .imageScale(.large)
+                }.buttonStyle(PlainButtonStyle())
+                Button(action: {
+                    Task {
+                        await manager.cancelAllOrders()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "trash.fill")
+                        Text("Cancel Orders")
+                    }.frame(width: 210, height: 50)
+                        .foregroundColor(Color.white)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .imageScale(.large)
+                }.buttonStyle(PlainButtonStyle())
+                Button(action: {
+                    Task {
+                        //                                await manager.
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "power.circle.fill")
+                        Text("Close Positions")
+                    }
+                    .frame(width: 210, height: 50)
+                    .foregroundColor(Color.white)
+                    .background(Color.black)
+                    .imageScale(.large)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                }.buttonStyle(PlainButtonStyle())
+            }.padding(.top)
+                .padding(.bottom)
+            
+            VStack {
+                
+                OrdersView(orders: manager.orders, onCancelOrder: manager.cancelOrder, onRefreshOrders: manager.refetchOpenOrders)
             }
-        }
-        .padding([.trailing, .leading], 5)
-        .overlay(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(.gray, lineWidth: 2)
-        )
+            .padding(.top)
+           
+            
+            VStack {
+                
+                PositionsView(positions: manager.positions, pegValue: pegValue, onClosePositionMarket: manager.closePositionMarket, onFlattenPosition: manager.flattenPosition, onRefreshPositions: manager.refetchOpenPositions)
+                
+            }
+            
+            LogView()
+
+            Spacer()
+        }.frame(maxWidth: 220, maxHeight: .infinity)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(.gray, lineWidth: 2)
+            )
     }
 }
 
 struct OrderForm_Previews: PreviewProvider {
     static var previews: some View {
-        OrderForm()
+        OrderForm(pegValue: 0)
     }
 }

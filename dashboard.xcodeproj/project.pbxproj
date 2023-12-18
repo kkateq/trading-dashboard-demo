@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34066F4C2B309E3B0090C78A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4B2B309E3B0090C78A /* LogView.swift */; };
 		34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C0F2B29C12A00A5A649 /* dashboardApp.swift */; };
 		34905C122B29C12A00A5A649 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C112B29C12A00A5A649 /* ContentView.swift */; };
 		34905C142B29C12C00A5A649 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34905C132B29C12C00A5A649 /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		34066F4B2B309E3B0090C78A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		34905C0C2B29C12A00A5A649 /* dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C0F2B29C12A00A5A649 /* dashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardApp.swift; sourceTree = "<group>"; };
 		34905C112B29C12A00A5A649 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
 				34905C632B2C6A0D00A5A649 /* Manager.swift */,
 				34905C592B2B64B800A5A649 /* PositionCell.swift */,
+				34066F4B2B309E3B0090C78A /* LogView.swift */,
 				34905C532B2B5B9E00A5A649 /* VolumeCellView.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34905C5F2B2C4A1800A5A649 /* OrderForm.swift */,
@@ -344,6 +347,7 @@
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,
+				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* VolumeCellView.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,

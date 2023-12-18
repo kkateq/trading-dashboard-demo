@@ -364,7 +364,7 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
                 channelID = 0
                 print("websocket is disconnected: \(reason) with code: \(code)")
             case .text(let string):
-                print("Received text: \(string)")
+//                print("Received text: \(string)")
                 parseTextMessage(message: string)
             case .binary(let data):
                 print("Received data: \(data.count)")

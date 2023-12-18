@@ -8,35 +8,77 @@
 import SwiftUI
 
 struct OrdersView: View {
-    @EnvironmentObject var manager: Manager
+    var orders: [OrderResponse]
+    var onCancelOrder: (String) async -> Void
+    var onRefreshOrders: () async -> Void
     
     let layout = [
-        GridItem(.fixed(100), spacing: 2),
-        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(160), spacing: 1),
+        GridItem(.fixed(30), spacing: 1, alignment: .trailing),
     ]
     var body: some View {
-        VStack {
-            LazyVGrid(columns: layout) {
-                ForEach(manager.orders) { order in
-                    Text(order.order)
-                        .foregroundColor(order.type == "sell" ? .red : .green)
-                    Button(action: {}) {
-                        HStack {
-                            Image(systemName: "xmark.fill")
-                        }.frame(width: 30, height: 30)
-                            .foregroundColor(Color.white)
-                            .background(Color.teal)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .imageScale(.large)
-                    }.buttonStyle(PlainButtonStyle())
-                }
+        VStack(alignment: .leading, spacing: 2) {
+            Divider()
+            
+            HStack {
+                Text("Orders")
+                    .font(.caption)
+                Spacer()
+                Button(action: {
+                    Task {
+                        await onRefreshOrders()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(Color.gray)
+                        
+                    }.frame(width: 20, height: 20)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .imageScale(.large)
+                }.buttonStyle(PlainButtonStyle())
+                
             }
-        }
+            
+            ScrollView {
+                if orders.count > 0 {
+                    LazyVGrid(columns: layout) {
+                        ForEach(orders) { order in
+                            Text(order.order)
+                                .foregroundColor(order.type == "sell" ? .red : .green)
+                                .font(.caption2)
+                            Button(action: {
+                                Task {
+                                    await onCancelOrder(order.txid)
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "trash.square.fill")
+                                        .foregroundColor(Color.gray)
+                                    
+                                }.frame(width: 20, height: 20)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    .imageScale(.large)
+                            }.buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                } else {
+                    Text("No orders")
+                }
+                Divider()
+            }
+        }.frame(width: 200, height: 200, alignment: .leading)
     }
 }
 
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
-        OrdersView()
+        let o1 = OrderResponse(txid: "d", order: "sell MATIC/USD @ 0.7998 limit", type: "sell")
+        let o2 = OrderResponse(txid: "d", order: "buy MATIC/USD @ 0.7998 limit", type: "buy")
+        let o3 = OrderResponse(txid: "d", order: "sell MATIC/USD @ 0.7998 limit", type: "sell")
+        let testOrders: [OrderResponse] = [o1, o2, o3]
+        
+        OrdersView(orders: testOrders, onCancelOrder: { print("\($0) is being cancelled")},
+                   onRefreshOrders: { print("Refreshing orders")})
     }
 }
