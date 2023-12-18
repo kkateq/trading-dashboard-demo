@@ -5,7 +5,10 @@
 //  Created by km on 15/12/2023.
 //
 
+import Combine
+import CryptoSwift
 import Foundation
+import Starscream
 
 struct TokenResponse: Decodable {
     var token: String
@@ -51,7 +54,14 @@ struct PositionResponse: Identifiable {
     var time: Double
 }
 
-class Manager: ObservableObject {
+class Manager: ObservableObject, WebSocketDelegate {
+    private var socket: WebSocket!
+    @Published var isConnected = false
+    @Published var isOwnTradesSubscribed = false
+    @Published var isOpenOrdersSubscribed = false
+    @Published var wsStatus: WSStatus = .init()
+    let didChange = PassthroughSubject<Void, Never>()
+
     private var apiKey: String = "YAdPx+LZ+YPxoABmeEdTI+LOe6JlcA9E8w0TI6eW8OiOwQpOQBH0rsnS"
     private var apiSecret: String = "GNsZ3sUrNz+/ZoeLpbAvQzN1f/kRgkftCR/9+kIXXMrLl/KLRQnM1Ml1nWtRJep/06WjOmcz7sk5ezaxr/nUyQ=="
     private var socket_token: String = ""
@@ -59,41 +69,153 @@ class Manager: ObservableObject {
     @Published var orders: [OrderResponse] = []
     @Published var positions: [PositionResponse] = []
 
+    private var auth_token: String = ""
+
     init() {
         let credentials = Kraken.Credentials(apiKey: apiKey, privateKey: apiSecret)
 
         kraken = Kraken(credentials: credentials)
 
         Task {
+            await get_auth_token()
             await refetchOpenOrders()
             await refetchOpenPositions()
         }
     }
 
-    func buyMarket(pair: String, vol: Double, scaleInOut: Bool) async {
-    
-        
+    func subscribeOwnTrades() {
+        if isConnected && !isOwnTradesSubscribed && auth_token != "" {
+            let msg = "{\"event\":\"subscribe\", \"subscription\":{ \"name\":\"ownTrades\", \"token\": \"\(auth_token)\"}}"
+            socket.write(string: msg)
+        }
     }
-    
-    func sellMarket(pair: String, vol: Double, scaleInOut: Bool) async {
-        
+
+    func subscribeOpenOrders() {
+        if isConnected && !isOpenOrdersSubscribed && auth_token != "" {
+            let msg = "{\"event\":\"subscribe\", \"subscription\":{ \"name\":\"openOrders\", \"token\": \"\(auth_token)\"}}"
+            socket.write(string: msg)
+        }
     }
-    
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool) async {
-        
+
+    func parseTextMessage(message: String) {
+        do {
+            if message == "{\"event\":\"heartbeat\"}" {
+                return
+            }
+            let decoder = JSONDecoder()
+            if wsStatus.status == "disconnected" {
+                let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
+
+                if result.status == "online" {
+                    if !isOwnTradesSubscribed {
+                        subscribeOwnTrades()
+                    }
+                    if !isOpenOrdersSubscribed {
+                        subscribeOpenOrders()
+                    }
+                }
+
+                wsStatus = result
+
+            } else if !isOpenOrdersSubscribed || !isOwnTradesSubscribed {
+                let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
+
+                if result.status == "subscribed" {
+                    if result.channelName == "ownTrades" {
+                        isOwnTradesSubscribed = true
+                    } else if result.channelName == "openOrders" {
+                        isOpenOrdersSubscribed = true
+                    }
+                }
+            } else {
+                if message.contains("openOrders") {
+                    Task {
+                        await refetchOpenOrders()
+                    }
+                } else if message.contains("ownTrades") {
+                    Task {
+                        await refetchOpenPositions()
+                    }
+                }
+            }
+        } catch {
+            print("error is \(error.localizedDescription)")
+        }
     }
-    
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool) async {
-        
+
+    func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
+        switch event {
+        case .connected(let headers):
+            isConnected = true
+            print("websocket is connected: \(headers)")
+        case .disconnected(let reason, let code):
+            isConnected = false
+            isOwnTradesSubscribed = false
+            isOpenOrdersSubscribed = false
+            print("websocket is disconnected: \(reason) with code: \(code)")
+        case .text(let string):
+//                print("Received text: \(string)")
+            parseTextMessage(message: string)
+        case .binary(let data):
+            print("Received data: \(data.count)")
+        case .ping:
+            break
+        case .pong:
+            break
+        case .viabilityChanged:
+            break
+        case .reconnectSuggested:
+            break
+        case .cancelled:
+            isConnected = false
+        case .error(let error):
+            isConnected = false
+            handleError(error)
+        case .peerClosed:
+            break
+        }
     }
-    
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
-        
+
+    func handleError(_ error: Error?) {
+        if let e = error as? WSError {
+            print("websocket encountered an error: \(e.message)")
+        } else if let e = error {
+            print("websocket encountered an error: \(e.localizedDescription)")
+        } else {
+            print("websocket encountered an error")
+        }
     }
-    
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
-        
+
+    func get_auth_token() async {
+        if auth_token == "" {
+            let result = await kraken.getToken()
+            switch result {
+            case .success(let message):
+                if let token = message["token"] as? String {
+                    auth_token = token
+                    var request = URLRequest(url: URL(string: "wss://ws-auth.kraken.com")!)
+                    request.timeoutInterval = 5
+                    socket = WebSocket(request: request)
+                    socket.delegate = self
+                    socket.connect()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
+
+    func buyMarket(pair: String, vol: Double, scaleInOut: Bool) async {}
+
+    func sellMarket(pair: String, vol: Double, scaleInOut: Bool) async {}
+
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool) async {}
+
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool) async {}
+
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {}
+
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {}
 
     func cancelAllOrders() async {
         let result = await kraken.cancelAllOrders()
@@ -126,13 +248,13 @@ class Manager: ObservableObject {
     func flattenPosition(refid: String) async {
         print("Flattening position \(refid)")
     }
-    
+
     func flattenAllPositions() async {
         for position in positions {
             await flattenPosition(refid: position.refid)
         }
     }
-    
+
     func closeAllPositions() async {
         for position in positions {
             await closePositionMarket(refid: position.refid)
@@ -197,5 +319,9 @@ class Manager: ObservableObject {
         case .failure(let error):
             print(error)
         }
+    }
+
+    deinit {
+        socket.disconnect()
     }
 }

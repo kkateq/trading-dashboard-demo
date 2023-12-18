@@ -86,6 +86,10 @@ public struct Kraken {
     public func systemStatus() async -> KrakenNetwork.KrakenResult {
         await request.getRequest(with: "SystemStatus")
     }
+    
+    public func getToken() async -> KrakenNetwork.KrakenResult {
+        await request.postRequest(with: "GetWebSocketsToken")
+    }
 
     // MARK: Assets
 

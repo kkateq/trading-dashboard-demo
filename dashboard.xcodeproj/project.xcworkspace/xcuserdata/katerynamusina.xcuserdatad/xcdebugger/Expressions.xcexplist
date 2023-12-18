@@ -6,25 +6,39 @@
          contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
-         contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
-      </ContextState>
-      <ContextState
          contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
       </ContextState>
       <ContextState
          contextName = "Manager.handleOrdersResponse(result:):Manager.swift">
          <PersistentStrings>
             <PersistentString
-               value = "orders[&quot;open&quot;]! as String">
+               value = "order">
             </PersistentString>
             <PersistentString
-               value = "order">
+               value = "orders[&quot;open&quot;]! as String">
             </PersistentString>
             <PersistentString
                value = "dict">
             </PersistentString>
             <PersistentString
                value = "result.success">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.get_auth_token():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.subscribeOwnTrades():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.parseTextMessage(message:):Manager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "result.status">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

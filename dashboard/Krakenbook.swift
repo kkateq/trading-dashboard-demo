@@ -18,15 +18,15 @@ struct WSStatus: Decodable {
 }
 
 struct Subscription: Decodable {
-    var depth: Double
+    var depth: Double?
     var name: String
 }
 
 struct ChannelSubscriptionStatus: Decodable {
-    var channelID: Double
+    var channelID: Double?
     var channelName: String
     var event: String
-    var pair: String
+    var pair: String?
     var status: String
     var subscription: Subscription
 }
@@ -159,7 +159,7 @@ class OrderBookData: ObservableObject, Equatable {
                 list.append(ask)
             }
         }
-        
+
         for bid_key in bid_keys {
             if let bid = all[bid_key] {
                 list.append(bid)
@@ -228,9 +228,9 @@ class OrderBookData: ObservableObject, Equatable {
 
         let res = hash == checksum_str
 
-        if res == false {
-            print("Book is NOT valid: \(hash) should be \(checksum_str)")
-        }
+//        if res == false {
+//            print("Book is NOT valid: \(hash) should be \(checksum_str)")
+//        }
 
         return res
     }
@@ -332,7 +332,7 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
                 let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
                 if result.status == "subscribed" && result.channelName == "book-\(depth)" && result.pair == pair {
                     isSubscribed = true
-                    channelID = result.channelID
+                    channelID = result.channelID!
                 }
             } else if isSubscribed && !isBookInitialized {
                 let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
@@ -394,5 +394,9 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
         } else {
             print("websocket encountered an error")
         }
+    }
+
+    deinit {
+        socket.disconnect()
     }
 }
