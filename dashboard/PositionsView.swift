@@ -8,12 +8,8 @@
 import SwiftUI
 
 struct PositionsView: View {
-    var positions: [PositionResponse]
-    var pegValue: Double
-    var onClosePositionMarket: (String) async -> Void
-    var onFlattenPosition: (String) async -> Void
-    var onRefreshPositions: () async -> Void
-    
+    @StateObject var manager = Manager()
+
     let layout = [
         GridItem(.fixed(60), spacing: 1),
         GridItem(.fixed(30), spacing: 1),
@@ -22,25 +18,17 @@ struct PositionsView: View {
         GridItem(.fixed(30), spacing: 1, alignment: .trailing),
     ]
     
-    func getPL(vol: Double, cost: Double, type: String) -> Double {
-        let currentPrice = vol * pegValue
-        let pl = type == "sell" ? cost - currentPrice : currentPrice - cost
-        
-        return pl
-    }
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Divider()
             
             HStack {
-                
                 Text("Positions")
                     .font(.caption)
                 Spacer()
                 Button(action: {
                     Task {
-                        await onRefreshPositions()
+                        await manager.refetchOpenPositions()
                     }
                 }) {
                     HStack {
@@ -51,52 +39,85 @@ struct PositionsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         .imageScale(.large)
                 }.buttonStyle(PlainButtonStyle())
-                
             }
             
             ScrollView {
-                if positions.count > 0 {
-                    LazyVGrid(columns: layout) {
-                        ForEach(positions) { position in
-                            let pl = getPL(vol: position.vol, cost: position.cost, type: position.type)
-                            
-                            Text(position.pair).font(.caption2)
-                            Text(position.type)
-                                .foregroundColor(position.type == "sell" ? .red : .green)
-                                .font(.caption2)
-                            
-                            Text("\(String(format: "%.1f", pl))$")
-                                .foregroundColor(pl < 0 ? .red : .green)
-                                .font(.caption2)
-                            
+                if manager.positions.count > 0 {
+                    VStack {
+                        LazyVGrid(columns: layout) {
+                            ForEach(manager.positions) { position in
+                              
+                                Text(position.pair).font(.caption2)
+                                Text(position.type)
+                                    .foregroundColor(position.type == "sell" ? .red : .green)
+                                    .font(.caption2)
+                                
+                                Text("\(position.net)$")
+                                    .foregroundColor(position.net.starts(with: "-") ? .red : .green)
+                                    .font(.caption2)
+                                
+                                Button(action: {
+                                    Task {
+                                        await manager.flattenPosition(refid: position.refid)
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "rectangle.portrait.and.arrow.right.fill")
+                                    }.frame(width: 20, height: 20)
+                                        .foregroundColor(Color.white)
+                                        .background(Color.teal)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                        .imageScale(.medium)
+                                }.buttonStyle(PlainButtonStyle())
+                                Button(action: {
+                                    Task {
+                                        await manager.closePositionMarket(refid: position.refid)
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "xmark")
+                                    }.frame(width: 20, height: 20)
+                                        .foregroundColor(Color.white)
+                                        .background(Color.orange)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                        .imageScale(.medium)
+                                }.buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        
+                        VStack {
                             Button(action: {
                                 Task {
-                                    await onFlattenPosition(position.refid)
+                                    await manager.flattenAllPositions()
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: "rectangle.portrait.and.arrow.right.fill")
-                                }.frame(width: 20, height: 20)
+                                    Image(systemName: "lightbulb.fill")
+                                    Text("Flatten Positions")
+                                }.frame(width: 190, height: 30)
                                     .foregroundColor(Color.white)
                                     .background(Color.teal)
                                     .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.medium)
+                                    .imageScale(.large)
                             }.buttonStyle(PlainButtonStyle())
+                               
                             Button(action: {
                                 Task {
-                                    await onClosePositionMarket(position.refid)
+                                    await manager.closeAllPositions()
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: "xmark")
-                                }.frame(width: 20, height: 20)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.orange)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.medium)
+                                    Image(systemName: "power.circle.fill")
+                                    Text("Close Positions")
+                                }
+                                .frame(width: 190, height: 30)
+                                .foregroundColor(Color.white)
+                                .background(Color.black)
+                                .imageScale(.large)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
                             }.buttonStyle(PlainButtonStyle())
-                            
-                        }
+                        }.padding(.top)
+                            .padding(.bottom)
                     }
                 }
                 else {
@@ -110,11 +131,6 @@ struct PositionsView: View {
 
 struct PositionsView_Previews: PreviewProvider {
     static var previews: some View {
-//        let p1 = PositionResponse(refid: "sd", vol: 10.0, cost: 8.0, pair: "MATIC/USD", type: "sell", entryPrice: 10.0)
-//        let p2 = PositionResponse(refid: "sd2", vol: 10.0, cost: 8.0, pair: "MATIC/USD", type: "buy", entryPrice: 10.0)
-//
-//        let testPositions:[PositionResponse] = [p1, p2]
-        
-        PositionsView(positions: [], pegValue: 0.9889, onClosePositionMarket: { print("Closing position \($0)")}, onFlattenPosition: { print("Flattening position \($0)")}, onRefreshPositions: { print("Refreshing positions")} )
+        PositionsView()
     }
 }

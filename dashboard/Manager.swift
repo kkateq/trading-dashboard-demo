@@ -70,68 +70,29 @@ class Manager: ObservableObject {
         }
     }
 
-    func handleOrdersResponse(result: KrakenNetwork.KrakenResult) {
-        var new_orders: [OrderResponse] = []
-
-        switch result {
-        case .success(let orders):
-
-            if let openOrders = orders["open"] {
-                let dict = openOrders as? [String: AnyObject]
-                for (key, value) in dict! {
-                    if let descr = value["descr"] {
-                        if let ordertype = value["type"] {
-                            if let descrDict = descr as? [String: AnyObject] {
-                                if let order = descrDict["order"] {
-                                    new_orders.append(OrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
-                                }
-                            }
-                        }
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    self.orders = new_orders
-                }
-            }
-
-        case .failure(let error):
-            print(error)
-        }
+    func buyMarket(pair: String, vol: Double, scaleInOut: Bool) async {
+    
+        
     }
-
-    func handlePositionsResponse(result: KrakenNetwork.KrakenResult) {
-        var new_positions: [PositionResponse] = []
-
-        switch result {
-        case .success(let positions):
-            if let openOrders = positions["result"] {
-                let dict = openOrders as? [String: AnyObject]
-                for (key, value) in dict! {
-                    print(key)
-                    if let pair = value["pair"] as? String,
-                       let t = value["type"] as? String,
-                       let vol = value["vol"] as? Double,
-                       let cost = value["cost"] as? Double,
-                       let net = value["net"] as? String,
-                       let ordertype = value["ordertype"] as? String,
-                       let fee = value["fee"] as? Double,
-                       let v = value["value"] as? Double,
-                       let tm = value["time"] as? Double
-                    {
-                        let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
-                        new_positions.append(pos)
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    self.positions = new_positions
-                }
-            }
-
-        case .failure(let error):
-            print(error)
-        }
+    
+    func sellMarket(pair: String, vol: Double, scaleInOut: Bool) async {
+        
+    }
+    
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool) async {
+        
+    }
+    
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool) async {
+        
+    }
+    
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
+        
+    }
+    
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
+        
     }
 
     func cancelAllOrders() async {
@@ -164,6 +125,18 @@ class Manager: ObservableObject {
 
     func flattenPosition(refid: String) async {
         print("Flattening position \(refid)")
+    }
+    
+    func flattenAllPositions() async {
+        for position in positions {
+            await flattenPosition(refid: position.refid)
+        }
+    }
+    
+    func closeAllPositions() async {
+        for position in positions {
+            await closePositionMarket(refid: position.refid)
+        }
     }
 
     func refetchOpenPositions() async {

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct OrderForm: View {
     var pegValue: Double
+    var bestBid: Double
+    var bestAsk: Double
+    @State private var pair: String = "MATIC/USD"
     @State private var volume: Double = 10.0
     @State private var isEditing = false
     @State private var scaleInOut = true
@@ -24,8 +27,13 @@ struct OrderForm: View {
         VStack {
             VStack {
                 HStack {
-                    Text("MATIC/USD")
-                        .font(.title3)
+                    Picker("", selection: $pair) {
+                        ForEach(["MATIC/USD"], id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
                     Spacer()
                     Text("$ 0.90")
                         .foregroundColor(.blue)
@@ -43,7 +51,11 @@ struct OrderForm: View {
             VStack {
                 HStack {
                     VStack {
-                        Button(action: {}) {
+                        Button(action: {
+                            Task {
+                                await manager.buyMarket(pair:pair, vol:volume, scaleInOut: scaleInOut)
+                            }
+                        }) {
                             HStack {
                                 Text("Sell Market")
                             }.frame(width: 100, height: 50)
@@ -86,67 +98,15 @@ struct OrderForm: View {
             }.padding(.top)
                 .padding(.bottom)
 
-         
             VStack {
-                Button(action: {
-                    //                            Task {
-                    //                                await manager.fl
-                    //                            }
-                }) {
-                    HStack {
-                        Image(systemName: "lightbulb.fill")
-                        Text("Flatten Positions")
-                    }.frame(width: 210, height: 50)
-                        .foregroundColor(Color.white)
-                        .background(Color.teal)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .imageScale(.large)
-                }.buttonStyle(PlainButtonStyle())
-                Button(action: {
-                    Task {
-                        await manager.cancelAllOrders()
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "trash.fill")
-                        Text("Cancel Orders")
-                    }.frame(width: 210, height: 50)
-                        .foregroundColor(Color.white)
-                        .background(Color.blue)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .imageScale(.large)
-                }.buttonStyle(PlainButtonStyle())
-                Button(action: {
-                    Task {
-                        //                                await manager.
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "power.circle.fill")
-                        Text("Close Positions")
-                    }
-                    .frame(width: 210, height: 50)
-                    .foregroundColor(Color.white)
-                    .background(Color.black)
-                    .imageScale(.large)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                }.buttonStyle(PlainButtonStyle())
-            }.padding(.top)
-                .padding(.bottom)
-            
-            VStack {
-                
-                OrdersView(orders: manager.orders, onCancelOrder: manager.cancelOrder, onRefreshOrders: manager.refetchOpenOrders)
+                OrdersView(orders: manager.orders, onCancelOrder: manager.cancelOrder, onCancelAllOrders: manager.cancelAllOrders, onRefreshOrders: manager.refetchOpenOrders)
             }
             .padding(.top)
-           
-            
+
             VStack {
-                
-                PositionsView(positions: manager.positions, pegValue: pegValue, onClosePositionMarket: manager.closePositionMarket, onFlattenPosition: manager.flattenPosition, onRefreshPositions: manager.refetchOpenPositions)
-                
+                PositionsView()
             }
-            
+
             LogView()
 
             Spacer()
@@ -160,6 +120,6 @@ struct OrderForm: View {
 
 struct OrderForm_Previews: PreviewProvider {
     static var previews: some View {
-        OrderForm(pegValue: 0)
+        OrderForm(pegValue: 0, bestBid: 0, bestAsk: 0)
     }
 }

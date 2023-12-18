@@ -16,7 +16,7 @@ struct ContentView: View {
             VStack {
                 if kraken_ws.book != nil {
 //                    OrderBookView().environmentObject(kraken_ws.book)
-                    OrderForm(pegValue: kraken_ws.book.stats.pegValue).environmentObject(manager)
+                    OrderForm(pegValue: kraken_ws.book.stats.pegValue, bestBid: kraken_ws.book.stats.bestBid, bestAsk: kraken_ws.book.stats.bestAsk).environmentObject(manager)
                 } else {
                     Text("Connecting ... ")
                 }
