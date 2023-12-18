@@ -397,6 +397,8 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
     }
 
     deinit {
-        socket.disconnect()
+        if socket != nil {
+            socket.disconnect()
+        }
     }
 }

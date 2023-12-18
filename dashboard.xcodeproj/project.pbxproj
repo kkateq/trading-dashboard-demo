@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		34066F4C2B309E3B0090C78A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4B2B309E3B0090C78A /* LogView.swift */; };
+		34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4E2B30DDDC0090C78A /* LogManager.swift */; };
 		34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C0F2B29C12A00A5A649 /* dashboardApp.swift */; };
 		34905C122B29C12A00A5A649 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C112B29C12A00A5A649 /* ContentView.swift */; };
 		34905C142B29C12C00A5A649 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34905C132B29C12C00A5A649 /* Assets.xcassets */; };
@@ -56,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		34066F4B2B309E3B0090C78A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		34066F4E2B30DDDC0090C78A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		34905C0C2B29C12A00A5A649 /* dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C0F2B29C12A00A5A649 /* dashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardApp.swift; sourceTree = "<group>"; };
 		34905C112B29C12A00A5A649 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -114,6 +116,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34066F4D2B30DDC60090C78A /* log */ = {
+			isa = PBXGroup;
+			children = (
+				34066F4E2B30DDDC0090C78A /* LogManager.swift */,
+			);
+			path = log;
+			sourceTree = "<group>";
+		};
 		34905C032B29C12A00A5A649 = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +147,7 @@
 		34905C0E2B29C12A00A5A649 /* dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				34066F4D2B30DDC60090C78A /* log */,
 				34905C652B2C7E5300A5A649 /* krakenAPI */,
 				34905C0F2B29C12A00A5A649 /* dashboardApp.swift */,
 				34905C112B29C12A00A5A649 /* ContentView.swift */,
@@ -344,6 +355,7 @@
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34905C5A2B2B64B800A5A649 /* PositionCell.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,
+				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,

@@ -139,7 +139,7 @@ class Manager: ObservableObject, WebSocketDelegate {
                 }
             }
         } catch {
-            print("error is \(error.localizedDescription)")
+            LogManager.shared.error("error is \(error.localizedDescription)")
         }
     }
 
@@ -147,17 +147,18 @@ class Manager: ObservableObject, WebSocketDelegate {
         switch event {
         case .connected(let headers):
             isConnected = true
-            print("websocket is connected: \(headers)")
+            LogManager.shared.info("websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             isConnected = false
             isOwnTradesSubscribed = false
             isOpenOrdersSubscribed = false
-            print("websocket is disconnected: \(reason) with code: \(code)")
+            LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
 //                print("Received text: \(string)")
+            
             parseTextMessage(message: string)
         case .binary(let data):
-            print("Received data: \(data.count)")
+            LogManager.shared.info("Received data: \(data.count)")
         case .ping:
             break
         case .pong:
@@ -178,11 +179,11 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     func handleError(_ error: Error?) {
         if let e = error as? WSError {
-            print("websocket encountered an error: \(e.message)")
+            LogManager.shared.error("websocket encountered an error: \(e.message)")
         } else if let e = error {
-            print("websocket encountered an error: \(e.localizedDescription)")
+            LogManager.shared.error("websocket encountered an error: \(e.localizedDescription)")
         } else {
-            print("websocket encountered an error")
+            LogManager.shared.error("websocket encountered an error")
         }
     }
 
@@ -200,7 +201,7 @@ class Manager: ObservableObject, WebSocketDelegate {
                     socket.connect()
                 }
             case .failure(let error):
-                print(error)
+                LogManager.shared.error(error.localizedDescription)
             }
         }
     }
@@ -225,7 +226,7 @@ class Manager: ObservableObject, WebSocketDelegate {
                 await refetchOpenOrders()
             }
         case .failure(let error):
-            print(error)
+            LogManager.shared.error(error.localizedDescription)
         }
     }
 
@@ -237,16 +238,16 @@ class Manager: ObservableObject, WebSocketDelegate {
                 await refetchOpenOrders()
             }
         case .failure(let error):
-            print(error)
+            LogManager.shared.error(error.localizedDescription)
         }
     }
 
     func closePositionMarket(refid: String) async {
-        print("Closing position \(refid)")
+        LogManager.shared.error("Closing position \(refid)")
     }
 
     func flattenPosition(refid: String) async {
-        print("Flattening position \(refid)")
+        LogManager.shared.error("Flattening position \(refid)")
     }
 
     func flattenAllPositions() async {
@@ -269,7 +270,7 @@ class Manager: ObservableObject, WebSocketDelegate {
             if let openOrders = positions["result"] {
                 let dict = openOrders as? [String: AnyObject]
                 for (key, value) in dict! {
-                    print(key)
+        
                     if let pair = value["pair"] as? String,
                        let t = value["type"] as? String,
                        let vol = value["vol"] as? Double,
@@ -289,7 +290,7 @@ class Manager: ObservableObject, WebSocketDelegate {
             }
 
         case .failure(let error):
-            print(error)
+            LogManager.shared.error(error.localizedDescription)
         }
     }
 
@@ -317,11 +318,13 @@ class Manager: ObservableObject, WebSocketDelegate {
             }
 
         case .failure(let error):
-            print(error)
+            LogManager.shared.error(error.localizedDescription)
         }
     }
 
     deinit {
-        socket.disconnect()
+        if socket != nil {
+            socket.disconnect()
+        }
     }
 }
