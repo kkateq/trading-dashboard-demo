@@ -9,7 +9,10 @@ import SwiftUI
 
 struct PositionsView: View {
     @EnvironmentObject var manager: Manager
-
+    @EnvironmentObject var book: OrderBookData
+    var useREST: Bool
+    var validate: Bool
+    
     let layout = [
         GridItem(.fixed(60), spacing: 1),
         GridItem(.fixed(30), spacing: 1),
@@ -59,7 +62,7 @@ struct PositionsView: View {
                                     
                                     Button(action: {
                                         Task {
-                                            await manager.flattenPosition(refid: position.refid)
+                                            await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
                                         }
                                     }) {
                                         HStack {
@@ -72,7 +75,7 @@ struct PositionsView: View {
                                     }.buttonStyle(PlainButtonStyle())
                                     Button(action: {
                                         Task {
-                                            await manager.closePositionMarket(refid: position.refid)
+                                            await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
                                         }
                                     }) {
                                         HStack {
@@ -89,7 +92,7 @@ struct PositionsView: View {
                             VStack {
                                 Button(action: {
                                     Task {
-                                        await manager.flattenAllPositions()
+                                        await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
                                     }
                                 }) {
                                     HStack {
@@ -104,7 +107,7 @@ struct PositionsView: View {
                                 
                                 Button(action: {
                                     Task {
-                                        await manager.closeAllPositions()
+                                        await manager.closeAllPositions(useREST: useREST, validate: validate)
                                     }
                                 }) {
                                     HStack {
@@ -133,6 +136,6 @@ struct PositionsView: View {
 
 struct PositionsView_Previews: PreviewProvider {
     static var previews: some View {
-        PositionsView()
+        PositionsView(useREST: true, validate: true)
     }
 }

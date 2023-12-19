@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct OrdersView: View {
-    var orders: [OrderResponse]!
-    var onCancelOrder: (String) async -> Void
-    var onCancelAllOrders: () async -> Void
-    var onRefreshOrders: () async -> Void
+    @EnvironmentObject var manager: Manager
+    var useREST: Bool
+
     
  
     var body: some View {
@@ -24,7 +23,7 @@ struct OrdersView: View {
                 Spacer()
                 Button(action: {
                     Task {
-                        await onRefreshOrders()
+                        await manager.refetchOpenOrders()
                     }
                 }) {
                     HStack {
@@ -39,11 +38,11 @@ struct OrdersView: View {
             }.padding([.bottom], 5)
             
             ScrollView {
-                if let ordersList = orders {
+                if let ordersList = manager.orders {
                     if ordersList.count > 0 {
                         VStack{
                            
-                                ForEach(orders) { order in
+                                ForEach(ordersList) { order in
                                     HStack {
                                         Text(order.order)
                                             .foregroundColor(order.order.starts(with: "sell") ? Color("Red") : Color("Green") )
@@ -51,7 +50,8 @@ struct OrdersView: View {
                                         Spacer()
                                         Button(action: {
                                             Task {
-                                                await onCancelOrder(order.txid)
+                                                await manager.cancelOrder(txid: order.txid, useREST: useREST)
+                                                await manager.refetchOpenOrders()
                                             }
                                         }) {
                                             HStack {
@@ -67,7 +67,8 @@ struct OrdersView: View {
                             
                             Button(action: {
                                 Task {
-                                    await onCancelAllOrders()
+                                    await manager.cancelAllOrders(useREST: useREST)
+                                    await manager.refetchOpenOrders()
                                 }
                             }) {
                                 HStack {
@@ -92,13 +93,6 @@ struct OrdersView: View {
 
 struct OrdersView_Previews: PreviewProvider {
     static var previews: some View {
-        let o1 = OrderResponse(txid: "d", order: "sell MATIC/USD @ 0.7998 limit", type: "sell")
-        let o2 = OrderResponse(txid: "d", order: "buy MATIC/USD @ 0.7998 limit", type: "buy")
-        let o3 = OrderResponse(txid: "d", order: "sell MATIC/USD @ 0.7998 limit", type: "sell")
-        let testOrders: [OrderResponse] = [o1, o2, o3]
-        
-        OrdersView(orders: testOrders, onCancelOrder: { print("\($0) is being cancelled")},
-                   onCancelAllOrders: { print("Refreshing orders")},
-                   onRefreshOrders: { print("Refreshing orders")})
+        OrdersView(useREST: true)
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct AskCell: View {
     var volume: String
     var price: String
-    var onSellLimit: (String, String) async -> Void
+    var onSellLimit: (String) async -> Void
 
     @State var isHover = false
    
@@ -22,7 +22,7 @@ struct AskCell: View {
     var body: some View {
         Button(action: {
             Task {
-                await onSellLimit(volume, price)
+                await onSellLimit(price)
             }
         }) {
             Text(volume)
@@ -39,6 +39,6 @@ struct AskCell: View {
 
 struct AskCell_Previews: PreviewProvider {
     static var previews: some View {
-        AskCell(volume: "100", price: "0.999", onSellLimit: { print("\($0) sell \($1)") })
+        AskCell(volume: "100", price: "0.999", onSellLimit: { print("\($0) ") })
     }
 }

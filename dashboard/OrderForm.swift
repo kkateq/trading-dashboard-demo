@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct OrderForm: View {
-    @State private var volume: Double = 10.0
-    @State private var isEditing = false
-    @State private var scaleInOut = true
-    @State private var validate = true
-    @State private var useRest = false
+    @Binding  var volume: Double
+    @Binding  var scaleInOut: Bool
+    @Binding  var validate: Bool
+    @Binding  var useRest: Bool
+    
     @EnvironmentObject var manager: Manager
     @EnvironmentObject var book: OrderBookData
 
@@ -21,7 +21,6 @@ struct OrderForm: View {
         formatter.numberStyle = .decimal
         return formatter
     }()
-    
 
     var body: some View {
         VStack {
@@ -105,19 +104,18 @@ struct OrderForm: View {
                 .padding(.bottom)
 
             VStack {
-                OrdersView(orders: manager.orders, onCancelOrder: manager.cancelOrder, onCancelAllOrders: manager.cancelAllOrders, onRefreshOrders: manager.refetchOpenOrders)
+                OrdersView(useREST: useRest)
             }
             .padding(.top)
 
             VStack {
-                PositionsView()
+                PositionsView(useREST: useRest, validate: validate)
             }
 
             VStack {
-                
                 LogView()
 
-                HStack(){
+                HStack {
                     if manager.isConnected {
                         Image(systemName: "wifi")
                             .foregroundColor(Color.green)
@@ -156,8 +154,11 @@ struct OrderForm: View {
     }
 }
 
-struct OrderForm_Previews: PreviewProvider {
-    static var previews: some View {
-        OrderForm()
-    }
-}
+//struct OrderForm_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let vol = 10
+//        let sc = false
+//        
+//        OrderForm(volume: 2, scaleInOut: false, validate: true, useRest: false)
+//    }
+//}

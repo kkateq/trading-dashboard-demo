@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct OrderBookView: View {
+
+    @Binding var volume: Double
+    @Binding  var scaleInOut: Bool
+    @Binding  var validate: Bool
+    @Binding  var useRest: Bool
+    
     @EnvironmentObject var book: OrderBookData
     @EnvironmentObject var manager: Manager
-    
-    @State private var scaleInOut = true
-    @State private var validate = true
     
     let layout = [
         GridItem(.fixed(100), spacing: 2),
@@ -22,12 +25,12 @@ struct OrderBookView: View {
         GridItem(.fixed(100), spacing: 2)
     ]
     
-    func sellLimit(vol: String, price: String) async -> Void {
-        await manager.sellLimit(pair: book.pair, vol: Double(vol)!, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+    func sellLimit(price: String) async {
+        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
     }
     
-    func buyLimit(vol: String, price: String) async -> Void {
-        await manager.buyLimit(pair: book.pair, vol: Double(vol)!, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+    func buyLimit(price: String) async {
+        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
     }
     
     var body: some View {
@@ -48,9 +51,7 @@ struct OrderBookView: View {
                 Text("Depth: \(book.depth)")
             }
             ScrollView {
-               
                 LazyVGrid(columns: layout, spacing: 2) {
-          
                     ForEach(book.allList) { record in
                        
                         let vol = String(format: "%.0f", round(Double(record.volume)!))
@@ -75,17 +76,6 @@ struct OrderBookView: View {
             }.overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
-              
-            VStack {
-                HStack {
-                    Toggle("Validate orders", isOn: $validate)
-                        .toggleStyle(.checkbox)
-                    Spacer()
-                    Toggle("Scale In/Out", isOn: $scaleInOut)
-                        .toggleStyle(.checkbox)
-                }
-            }.padding([.trailing, .leading, .bottom], 4)
-           
         }
         .frame(width: 530)
         .overlay(
@@ -95,8 +85,8 @@ struct OrderBookView: View {
     }
 }
 
-struct OrderBook_Previews: PreviewProvider {
-    static var previews: some View {
-        OrderBookView()
-    }
-}
+//struct OrderBook_Previews: PreviewProvider {
+//    static var previews: some View {
+//        OrderBookView(volume: 2, scaleInOut: false, validate: true, useRest: false)
+//    }
+//}

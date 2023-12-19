@@ -97,7 +97,6 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-
     init() {
         let credentials = Kraken.Credentials(apiKey: apiKey, privateKey: apiSecret)
 
@@ -105,7 +104,6 @@ class Manager: ObservableObject, WebSocketDelegate {
 
         orders = []
         positions = []
-
 
         ordersCancellable = AnyCancellable($ordersData
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -195,7 +193,7 @@ class Manager: ObservableObject, WebSocketDelegate {
             DispatchQueue.main.async {
                 self.isConnected = true
             }
-           
+
             LogManager.shared.info("websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             DispatchQueue.main.async {
@@ -316,7 +314,8 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func cancelAllOrders() async {
+    internal func cancelAllOrdersREST() async {
+        LogManager.shared.action("Cancelling all orders via REST")
         let result = await kraken.cancelAllOrders()
         switch result {
         case .success(let message):
@@ -328,7 +327,22 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func cancelOrder(txid: String) async {
+    internal func cancelAllOrdersWS() async {
+        LogManager.shared.action("Cancelling all orders via websocket...")
+        let msg = "{ \"event\": \"cancelAll\", \"token\": \"\(auth_token)\"}"
+        socket.write(string: msg)
+        LogManager.shared.action(msg)
+    }
+
+    func cancelAllOrders(useREST: Bool) async {
+        if useREST {
+            await cancelAllOrdersREST()
+        } else if isConnected {
+            await cancelAllOrdersWS()
+        }
+    }
+
+    internal func cancelOrderREST(txid: String) async {
         let result = await kraken.cancelOrder(txid: txid)
         switch result {
         case .success(let message):
@@ -340,23 +354,103 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func closePositionMarket(refid: String) async {
-        LogManager.shared.error("Closing position \(refid)")
+    internal func cancelOrderWS(txid: String) async {
+        LogManager.shared.action("Cancelling orders via websocket...")
+        let msg = "{ \"event\": \"cancelOrder\", \"token\": \"\(auth_token)\", \"txid\": \([txid])}"
+        socket.write(string: msg)
+        LogManager.shared.action(msg)
     }
 
-    func flattenPosition(refid: String) async {
-        LogManager.shared.error("Flattening position \(refid)")
-    }
-
-    func flattenAllPositions() async {
-        for position in positions {
-            await flattenPosition(refid: position.refid)
+    func cancelOrder(txid: String, useREST: Bool) async {
+        if useREST {
+            await cancelOrderREST(txid: txid)
+        } else if isConnected {
+            await cancelOrderWS(txid: txid)
         }
     }
 
-    func closeAllPositions() async {
+    func closePositionMarketWS(refid: String, validate: Bool) async {
+        LogManager.shared.error("Closing position using websocket \(refid)")
+
+        if let position = positions.first(where: { $0.refid == refid }) {
+            if position.type == "sell" {
+                await buyMarket(pair: position.pair, vol: position.vol, scaleInOut: true, validate: validate)
+            } else {
+                await sellMarket(pair: position.pair, vol: position.vol, scaleInOut: true, validate: validate)
+            }
+        }
+    }
+
+    func closePositionMarketREST(refid: String, validate: Bool) async {
+        LogManager.shared.error("Closing position using REST \(refid)")
+
+        if let position = positions.first(where: { $0.refid == refid }) {
+            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, validate: validate, reduce_only: true)
+            switch result {
+            case .success(let message):
+                if let _ = message["result"] {
+                    await refetchOpenPositions()
+                }
+            case .failure(let error):
+                LogManager.shared.error(error.localizedDescription)
+            }
+        }
+    }
+
+    func closePositionMarket(refid: String, useREST: Bool, validate: Bool) async {
+        if useREST {
+            await closePositionMarketREST(refid: refid, validate: validate)
+        } else {
+            await closePositionMarketWS(refid: refid, validate: validate)
+        }
+    }
+
+    func flattenPositionREST(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
+        LogManager.shared.error("Flattening position using REST \(refid)")
+
+        if let position = positions.first(where: { $0.refid == refid }) {
+            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, validate: validate, reduce_only: true)
+            switch result {
+            case .success(let message):
+                if let _ = message["result"] {
+                    await refetchOpenPositions()
+                }
+            case .failure(let error):
+                LogManager.shared.error(error.localizedDescription)
+            }
+        }
+    }
+
+    func flattenPositionWS(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
+        LogManager.shared.error("Flattening position using websocket \(refid)")
+        
+        if let position = positions.first(where: { $0.refid == refid }) {
+            if position.type == "sell" {
+                await buyBid(pair: position.pair, vol: position.vol, best_bid: best_bid, scaleInOut: true, validate: validate)
+            } else {
+                await sellAsk(pair: position.pair, vol: position.vol, best_ask: best_ask, scaleInOut: true, validate: validate)
+            }
+            
+        }
+    }
+
+    func flattenPosition(refid: String, best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
+        if useREST {
+            await flattenPositionREST(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
+        } else {
+            await flattenPositionWS(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
+        }
+    }
+
+    func flattenAllPositions(best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
         for position in positions {
-            await closePositionMarket(refid: position.refid)
+            await flattenPosition(refid: position.refid, best_bid: best_bid, best_ask: best_ask, useREST: useREST, validate: validate)
+        }
+    }
+
+    func closeAllPositions(useREST: Bool, validate: Bool) async {
+        for position in positions {
+            await closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
         }
     }
 
