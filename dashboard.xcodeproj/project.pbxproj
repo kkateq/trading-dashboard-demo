@@ -10,6 +10,7 @@
 		34066F4C2B309E3B0090C78A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4B2B309E3B0090C78A /* LogView.swift */; };
 		34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4E2B30DDDC0090C78A /* LogManager.swift */; };
 		34066F512B31A8200090C78A /* AskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F502B31A8200090C78A /* AskCell.swift */; };
+		34066F532B31B4B30090C78A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F522B31B4B30090C78A /* HomeView.swift */; };
 		34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C0F2B29C12A00A5A649 /* dashboardApp.swift */; };
 		34905C122B29C12A00A5A649 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C112B29C12A00A5A649 /* ContentView.swift */; };
 		34905C142B29C12C00A5A649 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34905C132B29C12C00A5A649 /* Assets.xcassets */; };
@@ -60,6 +61,7 @@
 		34066F4B2B309E3B0090C78A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		34066F4E2B30DDDC0090C78A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		34066F502B31A8200090C78A /* AskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskCell.swift; sourceTree = "<group>"; };
+		34066F522B31B4B30090C78A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		34905C0C2B29C12A00A5A649 /* dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C0F2B29C12A00A5A649 /* dashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardApp.swift; sourceTree = "<group>"; };
 		34905C112B29C12A00A5A649 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				34905C652B2C7E5300A5A649 /* krakenAPI */,
 				34905C0F2B29C12A00A5A649 /* dashboardApp.swift */,
 				34905C112B29C12A00A5A649 /* ContentView.swift */,
+				34066F522B31B4B30090C78A /* HomeView.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
@@ -366,6 +369,7 @@
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */,
+				34066F532B31B4B30090C78A /* HomeView.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 				34905C692B2C7E9300A5A649 /* Kraken.swift in Sources */,

@@ -8,36 +8,28 @@
 import SwiftUI
 
 struct OrderForm: View {
-    var pegValue: Double
-    var bestBid: Double
-    var bestAsk: Double
-    @State private var pair: String = "MATIC/USD"
     @State private var volume: Double = 10.0
     @State private var isEditing = false
     @State private var scaleInOut = true
     @State private var validate = true
     @State private var useRest = false
-    @StateObject var manager = Manager()
+    @EnvironmentObject var manager: Manager
+    @EnvironmentObject var book: OrderBookData
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter
     }()
+    
 
     var body: some View {
         VStack {
             VStack {
                 HStack {
-                    Picker("", selection: $pair) {
-                        ForEach(["MATIC/USD"], id: \.self) {
-                            Text($0)
-                        }
-                    }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
+                    Text(book.pair)
                     Spacer()
-                    Text("\(volume * pegValue, specifier: "%.2f")$")
+                    Text("\(volume * book.stats.pegValue, specifier: "%.2f")$")
                         .foregroundColor(.black)
                         .font(.title3)
                 }
@@ -55,7 +47,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellMarket(pair: pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+                                await manager.sellMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -68,7 +60,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyMarket(pair: pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+                                await manager.buyMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -83,7 +75,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellAsk(pair: pair, vol: volume, best_ask: bestAsk, scaleInOut: scaleInOut, validate: validate)
+                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -96,7 +88,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyBid(pair: pair, vol: volume, best_bid: bestBid, scaleInOut: scaleInOut, validate: validate)
+                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -166,6 +158,6 @@ struct OrderForm: View {
 
 struct OrderForm_Previews: PreviewProvider {
     static var previews: some View {
-        OrderForm(pegValue: 0, bestBid: 0, bestAsk: 0)
+        OrderForm()
     }
 }

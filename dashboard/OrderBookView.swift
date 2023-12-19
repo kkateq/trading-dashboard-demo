@@ -32,6 +32,7 @@ struct OrderBookView: View {
     
     var body: some View {
         VStack {
+            
             ScrollView {
                 let bp = "\(book.stats.totalBidVolumePerc) %"
                 let ap = "\(book.stats.totalAskVolumePerc) %"

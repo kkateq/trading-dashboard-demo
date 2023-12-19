@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PositionsView: View {
-    @StateObject var manager = Manager()
+    @EnvironmentObject var manager: Manager
 
     let layout = [
         GridItem(.fixed(60), spacing: 1),

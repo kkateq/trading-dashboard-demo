@@ -13,7 +13,7 @@ struct AskCell: View {
     var onSellLimit: (String, String) async -> Void
 
     @State var isHover = false
-    @StateObject var manager = Manager()
+   
 
     var hoverColor: Color {
         return isHover ? Color("AskHover") : .white

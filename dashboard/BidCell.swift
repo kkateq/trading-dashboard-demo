@@ -9,7 +9,6 @@ import SwiftUI
 
 struct BidCell: View {
     var volume: String
-    @StateObject var manager = Manager()
     @State var isHover = false
     var price: String
     var onBuyLimit: (String, String) async -> Void
