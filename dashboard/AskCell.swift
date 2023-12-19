@@ -10,7 +10,7 @@ import SwiftUI
 struct AskCell: View {
     var volume: String
     var price: String
-    var onSellLimit: (String, String) -> Void
+    var onSellLimit: (String, String) async -> Void
 
     @State var isHover = false
     @StateObject var manager = Manager()
@@ -22,7 +22,7 @@ struct AskCell: View {
     var body: some View {
         Button(action: {
             Task {
-                onSellLimit(volume, price)
+                await onSellLimit(volume, price)
             }
         }) {
             Text(volume)

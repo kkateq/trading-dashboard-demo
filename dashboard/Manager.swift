@@ -73,8 +73,8 @@ class Manager: ObservableObject, WebSocketDelegate {
     @Published var isOpenOrdersSubscribed = false
     @Published var wsStatus: WSStatus = .init()
 
-    private var apiKey: String = "YAdPx+LZ+YPxoABmeEdTI+LOe6JlcA9E8w0TI6eW8OiOwQpOQBH0rsnS"
-    private var apiSecret: String = "GNsZ3sUrNz+/ZoeLpbAvQzN1f/kRgkftCR/9+kIXXMrLl/KLRQnM1Ml1nWtRJep/06WjOmcz7sk5ezaxr/nUyQ=="
+    private var apiKey: String = "AlzaknI1O2d0SUrox8+mG0rCTqeftlzljly2PFdqNUTQcSOkS9mDa30y"
+    private var apiSecret: String = "YPscpvwDwcHa37pAH8ttN4GiWfi8LVo6wDNVGyE1qbBHxosAmCjZCM1aURKHKFSMqMaLDxP7uvUPVmo7hLoQwA=="
     private var socket_token: String = ""
     private var kraken: Kraken
     @Published var ordersData: [OrderResponse] = []

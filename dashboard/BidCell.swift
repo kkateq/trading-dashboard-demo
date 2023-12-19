@@ -12,7 +12,7 @@ struct BidCell: View {
     @StateObject var manager = Manager()
     @State var isHover = false
     var price: String
-    var onBuyLimit: (String, String) -> Void
+    var onBuyLimit: (String, String) async -> Void
     
     var hoverColor: Color {
         return isHover ? Color("BidHover") : .white
@@ -21,7 +21,7 @@ struct BidCell: View {
     var body: some View {
         Button(action: {
             Task {
-                onBuyLimit(volume, price)
+                await onBuyLimit(volume, price)
             }
         }) {
             Text(volume)

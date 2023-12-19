@@ -9,6 +9,8 @@ import SwiftUI
 
 struct OrderBookView: View {
     @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var manager: Manager
+    
     @State private var scaleInOut = true
     @State private var validate = true
     
@@ -20,12 +22,12 @@ struct OrderBookView: View {
         GridItem(.fixed(100), spacing: 2)
     ]
     
-    func sellLimit(vol: String, price: String) -> Void {
-        
+    func sellLimit(vol: String, price: String) async -> Void {
+        await manager.sellLimit(pair: book.pair, vol: Double(vol)!, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
     }
     
-    func buyLimit(vol: String, price: String) -> Void {
-        
+    func buyLimit(vol: String, price: String) async -> Void {
+        await manager.buyLimit(pair: book.pair, vol: Double(vol)!, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
     }
     
     var body: some View {
