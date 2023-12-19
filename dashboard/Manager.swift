@@ -49,18 +49,22 @@ struct AddOrderEvent: Decodable {
 }
 
 struct PositionResponse: Identifiable, Equatable {
-    var id: UUID = .init()
+    var id: UUID = UUID()
     var refid: String
     var pair: String
     var type: String
-    var vol: Double
-    var cost: Double
+    var vol: String
+    var cost: String
     var net: String
     var ordertype: String
-    var fee: Double
-    var value: Double
+    var fee: String
+    var value: String
     var time: Double
 }
+
+var PAIRS_ISO_NAMES = [
+    "MATICUSD":"MATIC/USD"
+]
 
 class Manager: ObservableObject, WebSocketDelegate {
     let didOrdersChange = PassthroughSubject<Void, Never>()
@@ -259,56 +263,57 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false) -> String {
+    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false, leverage: Int = 1) -> String {
         let reduce_only = positions.count > 0 ? scaleInOut : false
-        let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pair)\", \"price\": \"\(price)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\"}"
+        let pairName = pair.contains("/") ? pair : PAIRS_ISO_NAMES[pair]
+        let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(price)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage)\"}"
 
         return msg
     }
 
-    func buyMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
+    func buyMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
+    func sellMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool) async {
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool) async {
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
@@ -369,23 +374,23 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func closePositionMarketWS(refid: String, validate: Bool) async {
+    func closePositionMarketWS(refid: String, validate: Bool, leverage: Int) async {
         LogManager.shared.error("Closing position using websocket \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyMarket(pair: position.pair, vol: position.vol, scaleInOut: true, validate: validate)
+                await buyMarket(pair: position.pair, vol: Double(position.vol)!, scaleInOut: true, validate: validate, leverage: leverage)
             } else {
-                await sellMarket(pair: position.pair, vol: position.vol, scaleInOut: true, validate: validate)
+                await sellMarket(pair: position.pair, vol: Double(position.vol)!, scaleInOut: true, validate: validate, leverage: leverage)
             }
         }
     }
 
-    func closePositionMarketREST(refid: String, validate: Bool) async {
+    func closePositionMarketREST(refid: String, validate: Bool, leverage: Int) async {
         LogManager.shared.error("Closing position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
-            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, validate: validate, reduce_only: true)
+            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
                 if let _ = message["result"] {
@@ -397,19 +402,19 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func closePositionMarket(refid: String, useREST: Bool, validate: Bool) async {
+    func closePositionMarket(refid: String, useREST: Bool, validate: Bool, leverage: Int) async {
         if useREST {
-            await closePositionMarketREST(refid: refid, validate: validate)
+            await closePositionMarketREST(refid: refid, validate: validate, leverage: leverage)
         } else {
-            await closePositionMarketWS(refid: refid, validate: validate)
+            await closePositionMarketWS(refid: refid, validate: validate, leverage: leverage)
         }
     }
 
-    func flattenPositionREST(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
+    func flattenPositionREST(refid: String, best_bid: Double, best_ask: Double, validate: Bool, leverage: Int) async {
         LogManager.shared.error("Flattening position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
-            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, validate: validate, reduce_only: true)
+            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pair, leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
                 if let _ = message["result"] {
@@ -421,36 +426,35 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func flattenPositionWS(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
+    func flattenPositionWS(refid: String, best_bid: Double, best_ask: Double, validate: Bool,  leverage: Int) async {
         LogManager.shared.error("Flattening position using websocket \(refid)")
-        
+
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyBid(pair: position.pair, vol: position.vol, best_bid: best_bid, scaleInOut: true, validate: validate)
+                await buyBid(pair: position.pair, vol: Double(position.vol)!, best_bid: best_bid, scaleInOut: true, validate: validate, leverage: leverage)
             } else {
-                await sellAsk(pair: position.pair, vol: position.vol, best_ask: best_ask, scaleInOut: true, validate: validate)
+                await sellAsk(pair: position.pair, vol: Double(position.vol)!, best_ask: best_ask, scaleInOut: true, validate: validate, leverage: leverage)
             }
-            
         }
     }
 
-    func flattenPosition(refid: String, best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
+    func flattenPosition(refid: String, best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool, leverage: Int) async {
         if useREST {
-            await flattenPositionREST(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
+            await flattenPositionREST(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate, leverage: leverage)
         } else {
-            await flattenPositionWS(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
+            await flattenPositionWS(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate, leverage: leverage)
         }
     }
 
-    func flattenAllPositions(best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
+    func flattenAllPositions(best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool, leverage: Int) async {
         for position in positions {
-            await flattenPosition(refid: position.refid, best_bid: best_bid, best_ask: best_ask, useREST: useREST, validate: validate)
+            await flattenPosition(refid: position.refid, best_bid: best_bid, best_ask: best_ask, useREST: useREST, validate: validate, leverage: leverage)
         }
     }
 
-    func closeAllPositions(useREST: Bool, validate: Bool) async {
+    func closeAllPositions(useREST: Bool, validate: Bool, leverage: Int) async {
         for position in positions {
-            await closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
+            await closePositionMarket(refid: position.refid, useREST: useREST, validate: validate, leverage: leverage)
         }
     }
 
@@ -461,24 +465,24 @@ class Manager: ObservableObject, WebSocketDelegate {
 
             DispatchQueue.main.async {
                 var new_positions: [PositionResponse] = []
-                if let openOrders = positions["result"] {
-                    let dict = openOrders as? [String: AnyObject]
-                    for (key, value) in dict! {
-                        if let pair = value["pair"] as? String,
-                           let t = value["type"] as? String,
-                           let vol = value["vol"] as? Double,
-                           let cost = value["cost"] as? Double,
-                           let net = value["net"] as? String,
-                           let ordertype = value["ordertype"] as? String,
-                           let fee = value["fee"] as? Double,
-                           let v = value["value"] as? Double,
-                           let tm = value["time"] as? Double
-                        {
-                            let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
-                            new_positions.append(pos)
-                        }
+
+                let dict = positions as? [String: AnyObject]
+                for (key, value) in dict! {
+                    if let pair = value["pair"] as? String,
+                       let t = value["type"] as? String,
+                       let vol = value["vol"] as? String,
+                       let cost = value["cost"] as? String,
+                       let net = value["net"] as? String,
+                       let ordertype = value["ordertype"] as? String,
+                       let fee = value["fee"] as? String,
+                       let v = value["value"] as? String,
+                       let tm = value["time"] as? Double
+                    {
+                        let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
+                        new_positions.append(pos)
                     }
                 }
+
                 self.positionsData = new_positions
             }
 
@@ -520,5 +524,24 @@ class Manager: ObservableObject, WebSocketDelegate {
         if socket != nil {
             socket.disconnect()
         }
+    }
+
+    func getBalance() async -> Double {
+        let result = await kraken.accountBalance()
+        switch result {
+        case .success(let message):
+            if let result = message["result"] {
+                let dict = result as? [String: String]
+                var total = 0.0
+                for (_, value) in dict! {
+                    total += Double(value)!
+                }
+
+                return total
+            }
+        case .failure(let error):
+            LogManager.shared.error(error.localizedDescription)
+        }
+        return 0
     }
 }

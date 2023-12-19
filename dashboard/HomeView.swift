@@ -12,11 +12,12 @@ struct HomeView: View {
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = true
     @State private var useRest: Bool = false
+    @State private var leverage: Int = 4
     
     var body: some View {
         HStack {
-            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
-            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
+            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
         }
     }
 }

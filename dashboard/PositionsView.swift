@@ -12,14 +12,7 @@ struct PositionsView: View {
     @EnvironmentObject var book: OrderBookData
     var useREST: Bool
     var validate: Bool
-    
-    let layout = [
-        GridItem(.fixed(60), spacing: 1),
-        GridItem(.fixed(30), spacing: 1),
-        GridItem(.fixed(30), spacing: 1),
-        GridItem(.fixed(30), spacing: 1, alignment: .trailing),
-        GridItem(.fixed(30), spacing: 1, alignment: .trailing),
-    ]
+    var leverage: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -48,7 +41,7 @@ struct PositionsView: View {
                 if let positions = manager.positions {
                     if positions.count > 0 {
                         VStack {
-                            LazyVGrid(columns: layout) {
+                            HStack {
                                 ForEach(positions) { position in
                                     
                                     Text(position.pair).font(.caption2)
@@ -62,7 +55,7 @@ struct PositionsView: View {
                                     
                                     Button(action: {
                                         Task {
-                                            await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
+                                            await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate, leverage: leverage)
                                         }
                                     }) {
                                         HStack {
@@ -75,7 +68,7 @@ struct PositionsView: View {
                                     }.buttonStyle(PlainButtonStyle())
                                     Button(action: {
                                         Task {
-                                            await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
+                                            await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate, leverage: leverage)
                                         }
                                     }) {
                                         HStack {
@@ -92,7 +85,7 @@ struct PositionsView: View {
                             VStack {
                                 Button(action: {
                                     Task {
-                                        await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
+                                        await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate, leverage: leverage)
                                     }
                                 }) {
                                     HStack {
@@ -107,7 +100,7 @@ struct PositionsView: View {
                                 
                                 Button(action: {
                                     Task {
-                                        await manager.closeAllPositions(useREST: useREST, validate: validate)
+                                        await manager.closeAllPositions(useREST: useREST, validate: validate, leverage: leverage)
                                     }
                                 }) {
                                     HStack {
@@ -136,6 +129,6 @@ struct PositionsView: View {
 
 struct PositionsView_Previews: PreviewProvider {
     static var previews: some View {
-        PositionsView(useREST: true, validate: true)
+        PositionsView(useREST: true, validate: true, leverage: 4)
     }
 }

@@ -12,6 +12,7 @@ struct OrderForm: View {
     @Binding  var scaleInOut: Bool
     @Binding  var validate: Bool
     @Binding  var useRest: Bool
+    @Binding  var leverage: Int
     
     @EnvironmentObject var manager: Manager
     @EnvironmentObject var book: OrderBookData
@@ -34,7 +35,9 @@ struct OrderForm: View {
                 }
             }.padding()
             VStack(alignment: .leading) {
-                TextField("", value: $volume, formatter: formatter)
+                TextField("Volume", value: $volume, formatter: formatter)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                TextField("Leverage", value: $leverage, formatter: formatter)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
 
                 Toggle("Scale In/Out", isOn: $scaleInOut)
@@ -46,7 +49,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+                                await manager.sellMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
                             }
                         }) {
                             HStack {
@@ -59,7 +62,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+                                await manager.buyMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
                             }
                         }) {
                             HStack {
@@ -74,7 +77,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate)
+                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
                             }
                         }) {
                             HStack {
@@ -87,7 +90,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate)
+                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
                             }
                         }) {
                             HStack {
@@ -109,7 +112,7 @@ struct OrderForm: View {
             .padding(.top)
 
             VStack {
-                PositionsView(useREST: useRest, validate: validate)
+                PositionsView(useREST: useRest, validate: validate, leverage: leverage)
             }
 
             VStack {
@@ -154,11 +157,3 @@ struct OrderForm: View {
     }
 }
 
-//struct OrderForm_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let vol = 10
-//        let sc = false
-//        
-//        OrderForm(volume: 2, scaleInOut: false, validate: true, useRest: false)
-//    }
-//}

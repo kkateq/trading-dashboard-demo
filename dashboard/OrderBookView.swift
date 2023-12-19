@@ -13,6 +13,7 @@ struct OrderBookView: View {
     @Binding  var scaleInOut: Bool
     @Binding  var validate: Bool
     @Binding  var useRest: Bool
+    @Binding  var leverage: Int
     
     @EnvironmentObject var book: OrderBookData
     @EnvironmentObject var manager: Manager
@@ -26,11 +27,11 @@ struct OrderBookView: View {
     ]
     
     func sellLimit(price: String) async {
-        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
     }
     
     func buyLimit(price: String) async {
-        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
     }
     
     var body: some View {
@@ -84,9 +85,3 @@ struct OrderBookView: View {
         )
     }
 }
-
-//struct OrderBook_Previews: PreviewProvider {
-//    static var previews: some View {
-//        OrderBookView(volume: 2, scaleInOut: false, validate: true, useRest: false)
-//    }
-//}
