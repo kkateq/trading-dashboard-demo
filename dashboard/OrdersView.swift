@@ -36,7 +36,7 @@ struct OrdersView: View {
                         .imageScale(.large)
                 }.buttonStyle(PlainButtonStyle())
                 
-            }
+            }.padding([.bottom], 5)
             
             ScrollView {
                 if let ordersList = orders {

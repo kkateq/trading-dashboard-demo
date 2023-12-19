@@ -32,22 +32,25 @@ struct OrderBookView: View {
     
     var body: some View {
         VStack {
-            
-            ScrollView {
-                let bp = "\(book.stats.totalBidVolumePerc) %"
-                let ap = "\(book.stats.totalAskVolumePerc) %"
-                LazyVGrid(columns: layout, spacing: 2) {
-                    Text("\(book.pair)").font(.title3)
-                    Text(bp).foregroundColor(.blue)
-                    VStack {
-                        if book.isValid {
-                            Text("Valid").foregroundColor(Color("Green"))
-                        } else {
-                            Text("Invalid").foregroundColor(Color("Red"))
-                        }
+            let bp = "\(book.stats.totalBidVolumePerc) %"
+            let ap = "\(book.stats.totalAskVolumePerc) %"
+            LazyVGrid(columns: layout, spacing: 2) {
+                Text("\(book.pair)").font(.title3)
+                Text(bp).foregroundColor(.blue)
+                VStack {
+                    if book.isValid {
+                        Text("Valid").foregroundColor(Color("Green"))
+                    } else {
+                        Text("Invalid").foregroundColor(Color("Red"))
                     }
-                    Text(ap).foregroundColor(.red)
-                    Text("Depth: \(book.depth)")
+                }
+                Text(ap).foregroundColor(.red)
+                Text("Depth: \(book.depth)")
+            }
+            ScrollView {
+               
+                LazyVGrid(columns: layout, spacing: 2) {
+          
                     ForEach(book.allList) { record in
                        
                         let vol = String(format: "%.0f", round(Double(record.volume)!))

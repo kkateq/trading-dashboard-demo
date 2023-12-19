@@ -39,7 +39,7 @@ struct PositionsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         .imageScale(.large)
                 }.buttonStyle(PlainButtonStyle())
-            }
+            }.padding([.bottom], 5)
             
             ScrollView {
                 if let positions = manager.positions {
