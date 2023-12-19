@@ -11,14 +11,14 @@ struct LogView: View {
     @EnvironmentObject var logger: LogManager
 
     func getColor(level: LogLevel) -> Color {
-        var color = Color.gray
+        var color = Color.black
         
         if level == LogLevel.warning {
             color = Color.orange
         } else if level == LogLevel.error {
             color = Color("Red")
         } else if level == LogLevel.action {
-            color = Color("Green")
+            color = Color("Blue")
         }
         return color
     }

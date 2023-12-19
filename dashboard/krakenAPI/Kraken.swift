@@ -366,7 +366,6 @@ public struct Kraken {
             options["txid"] = txids.joined(separator: ",")
         }
         options["docalcs"] = "\(docalcs)"
-//        options["consolidation"] = consolidation.rawValue
         return await request.postRequest(with: "OpenPositions", params: options)
     }
 
