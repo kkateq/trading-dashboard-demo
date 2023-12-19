@@ -34,7 +34,7 @@ extension String {
 }
 
 struct OrderResponse: Identifiable, Equatable {
-    var id: UUID = UUID()
+    var id: UUID = .init()
     var txid: String
     var order: String
     var type: String!
@@ -65,13 +65,13 @@ struct PositionResponse: Identifiable, Equatable {
 class Manager: ObservableObject, WebSocketDelegate {
     let didOrdersChange = PassthroughSubject<Void, Never>()
     let didPositionsChange = PassthroughSubject<Void, Never>()
-    private var validate: Bool = true
+
     private var socket: WebSocket!
+
     @Published var isConnected = false
     @Published var isOwnTradesSubscribed = false
     @Published var isOpenOrdersSubscribed = false
     @Published var wsStatus: WSStatus = .init()
-    let didChange = PassthroughSubject<Void, Never>()
 
     private var apiKey: String = "YAdPx+LZ+YPxoABmeEdTI+LOe6JlcA9E8w0TI6eW8OiOwQpOQBH0rsnS"
     private var apiSecret: String = "GNsZ3sUrNz+/ZoeLpbAvQzN1f/kRgkftCR/9+kIXXMrLl/KLRQnM1Ml1nWtRJep/06WjOmcz7sk5ezaxr/nUyQ=="
@@ -82,7 +82,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     private var ordersCancellable: AnyCancellable?
     private var positionsCancellable: AnyCancellable?
-
+    private var connectedCancellable: AnyCancellable?
     private var auth_token: String = ""
 
     @Published var orders: [OrderResponse] {
@@ -97,6 +97,7 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
+
     init() {
         let credentials = Kraken.Credentials(apiKey: apiKey, privateKey: apiSecret)
 
@@ -104,6 +105,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
         orders = []
         positions = []
+
 
         ordersCancellable = AnyCancellable($ordersData
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -117,7 +119,6 @@ class Manager: ObservableObject, WebSocketDelegate {
 
         Task {
             await get_auth_token()
-         
         }
     }
 
@@ -179,7 +180,7 @@ class Manager: ObservableObject, WebSocketDelegate {
                     if result.status == "error" {
                         LogManager.shared.error(result.errorMessage)
                     } else {
-                        self.ordersData.append(OrderResponse(txid: validate ? "testorder": result.txid, order: result.descr))
+                        ordersData.append(OrderResponse(txid: result.txid == nil ? "testorder" : result.txid, order: result.descr))
                     }
                 }
             }
@@ -191,12 +192,17 @@ class Manager: ObservableObject, WebSocketDelegate {
     func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
         switch event {
         case .connected(let headers):
-            isConnected = true
+            DispatchQueue.main.async {
+                self.isConnected = true
+            }
+           
             LogManager.shared.info("websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
-            isConnected = false
-            isOwnTradesSubscribed = false
-            isOpenOrdersSubscribed = false
+            DispatchQueue.main.async {
+                self.isConnected = false
+                self.isOwnTradesSubscribed = false
+                self.isOpenOrdersSubscribed = false
+            }
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
 //                print("Received text: \(string)")
@@ -213,9 +219,13 @@ class Manager: ObservableObject, WebSocketDelegate {
         case .reconnectSuggested:
             break
         case .cancelled:
-            isConnected = false
+            DispatchQueue.main.async {
+                self.isConnected = false
+            }
         case .error(let error):
-            isConnected = false
+            DispatchQueue.main.async {
+                self.isConnected = false
+            }
             handleError(error)
         case .peerClosed:
             break
@@ -241,9 +251,9 @@ class Manager: ObservableObject, WebSocketDelegate {
                     auth_token = token
                     var request = URLRequest(url: URL(string: "wss://ws-auth.kraken.com")!)
                     request.timeoutInterval = 5
-                    self.socket = WebSocket(request: request)
-                    self.socket.delegate = self
-                    self.socket.connect()
+                    socket = WebSocket(request: request)
+                    socket.delegate = self
+                    socket.connect()
                 }
             case .failure(let error):
                 LogManager.shared.error(error.localizedDescription)
@@ -251,56 +261,56 @@ class Manager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit") -> String {
+    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false) -> String {
         let reduce_only = positions.count > 0 ? scaleInOut : false
         let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pair)\", \"price\": \"\(price)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\"}"
 
         return msg
     }
 
-    func buyMarket(pair: String, vol: Double, scaleInOut: Bool) async {
+    func buyMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market")
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellMarket(pair: String, vol: Double, scaleInOut: Bool) async {
+    func sellMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market")
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool) async {
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool) async {
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool) async {
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }

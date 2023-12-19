@@ -95,7 +95,7 @@ struct PositionsView: View {
                                     HStack {
                                         Image(systemName: "lightbulb.fill")
                                         Text("Flatten Positions")
-                                    }.frame(width: 190, height: 30)
+                                    }.frame(width: 200, height: 30)
                                         .foregroundColor(Color.white)
                                         .background(Color.teal)
                                         .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -111,7 +111,7 @@ struct PositionsView: View {
                                         Image(systemName: "power.circle.fill")
                                         Text("Close Positions")
                                     }
-                                    .frame(width: 190, height: 30)
+                                    .frame(width: 200, height: 30)
                                     .foregroundColor(Color.white)
                                     .background(Color.black)
                                     .imageScale(.large)

@@ -228,9 +228,6 @@ class OrderBookData: ObservableObject, Equatable {
 
         let res = hash == checksum_str
 
-//        if res == false {
-//            print("Book is NOT valid: \(hash) should be \(checksum_str)")
-//        }
 
         return res
     }

@@ -15,6 +15,8 @@ struct OrderForm: View {
     @State private var volume: Double = 10.0
     @State private var isEditing = false
     @State private var scaleInOut = true
+    @State private var validate = true
+    @State private var useRest = false
     @StateObject var manager = Manager()
 
     let formatter: NumberFormatter = {
@@ -53,7 +55,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellMarket(pair: pair, vol: volume, scaleInOut: scaleInOut)
+                                await manager.sellMarket(pair: pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -66,7 +68,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyMarket(pair: pair, vol: volume, scaleInOut: scaleInOut)
+                                await manager.buyMarket(pair: pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -81,7 +83,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellAsk(pair: pair, vol: volume, best_ask: bestAsk, scaleInOut: scaleInOut)
+                                await manager.sellAsk(pair: pair, vol: volume, best_ask: bestAsk, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -94,7 +96,7 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                         Button(action: {
                             Task {
-                                await manager.buyBid(pair: pair, vol: volume, best_bid: bestBid, scaleInOut: scaleInOut)
+                                await manager.buyBid(pair: pair, vol: volume, best_bid: bestBid, scaleInOut: scaleInOut, validate: validate)
                             }
                         }) {
                             HStack {
@@ -133,17 +135,30 @@ struct OrderForm: View {
                             .foregroundColor(Color.gray)
                         Text("Socket disconnected")
                     }
-                    
+                    Spacer()
 
                 }.frame(width: 200, height: 20)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .imageScale(.large)
+                Divider()
+                HStack {
+                    Toggle("Validate orders", isOn: $validate)
+                        .toggleStyle(.checkbox)
+                    Spacer()
+                }.frame(width: 200, height: 20)
+                Divider()
+                HStack {
+                    Toggle("Use REST API", isOn: $useRest)
+                        .toggleStyle(.checkbox)
+                    Spacer()
+                }.frame(width: 200)
+                Divider()
             }
 
             Spacer()
         }.frame(maxWidth: 220, maxHeight: .infinity)
             .overlay(
-                RoundedRectangle(cornerRadius: 5)
+                RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 2)
             )
     }

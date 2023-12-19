@@ -43,10 +43,10 @@ struct OrderBookView: View {
                     }
                 }
             }.overlay(
-                RoundedRectangle(cornerRadius: 5)
+                RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
               
-            LazyVGrid(columns: layout, spacing: 2) {
+            LazyVGrid(columns: layout, spacing: 1) {
                 let bp = "\(book.stats.totalBidVolumePerc) %"
                 let ap = "\(book.stats.totalAskVolumePerc) %"
                
@@ -63,11 +63,12 @@ struct OrderBookView: View {
                   
                 Text(ap).foregroundColor(.red)
                 Text("Depth: \(book.depth)")
-            }
+            }.padding([.trailing], 4)
+           
         }
         .frame(width: 530)
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)
         )
     }
