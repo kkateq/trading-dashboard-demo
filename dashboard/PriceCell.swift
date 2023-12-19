@@ -9,11 +9,14 @@ import SwiftUI
 
 struct PriceCell: View {
     var price: String
+
     var body: some View {
+
         Text(price)
             .frame(width: 100, height: 25, alignment: .center)
             .font(.system(.title3))
             .background(Rectangle().fill(Color.white))
+           
     }
 }
 

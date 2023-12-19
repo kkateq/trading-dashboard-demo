@@ -30,12 +30,12 @@ struct OrderBookView: View {
                             PositionCell(position: "")
                             EmptyCell()
                             PriceCell(price: price)
-                            VolumeCell(volume: vol, side: BookRecordType.ask)
+                            AskCell(volume: vol)
                             PositionCell(position: "")
                             
                         } else {
                             PositionCell(position: "")
-                            VolumeCell(volume: vol, side: BookRecordType.bid)
+                            BidCell(volume: vol)
                             PriceCell(price: price)
                             EmptyCell()
                             PositionCell(position: "")
