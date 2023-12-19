@@ -9,26 +9,35 @@ import SwiftUI
 
 struct BidCell: View {
     var volume: String
-
+    @StateObject var manager = Manager()
     @State var isHover = false
+    var price: String
+    var onBuyLimit: (String, String) -> Void
+    
     var hoverColor: Color {
         return isHover ? Color("BidHover") : .white
     }
     
     var body: some View {
-        Text(volume)
-            .frame(width:100, height: 25, alignment: .trailing)
-            .font(.system(.title3))
-            .foregroundColor(.blue).font(.system(.title3))
-            .background(Rectangle().fill(hoverColor))
-            .onHover { hover in
-                isHover = hover
+        Button(action: {
+            Task {
+                onBuyLimit(volume, price)
             }
+        }) {
+            Text(volume)
+                .frame(width:100, height: 25, alignment: .trailing)
+                .font(.system(.title3))
+                .foregroundColor(Color("BidTextColor")).font(.system(.title3))
+                .background(Rectangle().fill(hoverColor))
+                .onHover { hover in
+                    isHover = hover
+                }
+        }.buttonStyle(PlainButtonStyle())
     }
 }
 
 struct VolumeCell_Previews: PreviewProvider {
     static var previews: some View {
-        BidCell(volume: "1000")
+        BidCell(volume: "1000", price: "0.999", onBuyLimit: { print("\($0) sell \($1)") })
     }
 }

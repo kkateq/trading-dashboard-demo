@@ -50,11 +50,11 @@ struct PositionsView: View {
                                     
                                     Text(position.pair).font(.caption2)
                                     Text(position.type)
-                                        .foregroundColor(position.type == "sell" ? .red : .green)
+                                        .foregroundColor(position.type == "sell" ? Color("Red") : Color("Green"))
                                         .font(.caption2)
                                     
                                     Text("\(position.net)$")
-                                        .foregroundColor(position.net.starts(with: "-") ? .red : .green)
+                                        .foregroundColor(position.net.starts(with: "-") ?Color("Red") : Color("Green"))
                                         .font(.caption2)
                                     
                                     Button(action: {

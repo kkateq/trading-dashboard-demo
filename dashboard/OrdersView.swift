@@ -46,7 +46,7 @@ struct OrdersView: View {
                                 ForEach(orders) { order in
                                     HStack {
                                         Text(order.order)
-                                            .foregroundColor(order.order.starts(with: "sell") ? .red : .green)
+                                            .foregroundColor(order.order.starts(with: "sell") ? Color("Red") : Color("Green") )
                                             .font(.caption2)
                                         Spacer()
                                         Button(action: {

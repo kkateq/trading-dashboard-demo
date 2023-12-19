@@ -16,9 +16,9 @@ struct LogView: View {
         if level == LogLevel.warning {
             color = Color.orange
         } else if level == LogLevel.error {
-            color = Color.red
+            color = Color("Red")
         } else if level == LogLevel.action {
-            color = Color.green
+            color = Color("Green")
         }
         return color
     }

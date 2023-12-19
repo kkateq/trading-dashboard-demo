@@ -9,6 +9,8 @@ import SwiftUI
 
 struct OrderBookView: View {
     @EnvironmentObject var book: OrderBookData
+    @State private var scaleInOut = true
+    @State private var validate = true
     
     let layout = [
         GridItem(.fixed(100), spacing: 2),
@@ -17,10 +19,32 @@ struct OrderBookView: View {
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2)
     ]
+    
+    func sellLimit(vol: String, price: String) -> Void {
+        
+    }
+    
+    func buyLimit(vol: String, price: String) -> Void {
+        
+    }
+    
     var body: some View {
         VStack {
             ScrollView {
+                let bp = "\(book.stats.totalBidVolumePerc) %"
+                let ap = "\(book.stats.totalAskVolumePerc) %"
                 LazyVGrid(columns: layout, spacing: 2) {
+                    Text("\(book.pair)").font(.title3)
+                    Text(bp).foregroundColor(.blue)
+                    VStack {
+                        if book.isValid {
+                            Text("Valid").foregroundColor(Color("Green"))
+                        } else {
+                            Text("Invalid").foregroundColor(Color("Red"))
+                        }
+                    }
+                    Text(ap).foregroundColor(.red)
+                    Text("Depth: \(book.depth)")
                     ForEach(book.allList) { record in
                        
                         let vol = String(format: "%.0f", round(Double(record.volume)!))
@@ -30,12 +54,12 @@ struct OrderBookView: View {
                             PositionCell(position: "")
                             EmptyCell()
                             PriceCell(price: price)
-                            AskCell(volume: vol)
+                            AskCell(volume: vol, price: price, onSellLimit: sellLimit)
                             PositionCell(position: "")
                             
                         } else {
                             PositionCell(position: "")
-                            BidCell(volume: vol)
+                            BidCell(volume: vol, price: price, onBuyLimit: buyLimit)
                             PriceCell(price: price)
                             EmptyCell()
                             PositionCell(position: "")
@@ -46,24 +70,15 @@ struct OrderBookView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
               
-            LazyVGrid(columns: layout, spacing: 1) {
-                let bp = "\(book.stats.totalBidVolumePerc) %"
-                let ap = "\(book.stats.totalAskVolumePerc) %"
-               
-                Text("\(book.pair)").font(.title3)
-                Text(bp).foregroundColor(.blue)
-                  
-                VStack {
-                    if book.isValid {
-                        Text("Valid").foregroundColor(.green)
-                    } else {
-                        Text("Invalid").foregroundColor(.red)
-                    }
-                }.frame(width: 100)
-                  
-                Text(ap).foregroundColor(.red)
-                Text("Depth: \(book.depth)")
-            }.padding([.trailing], 4)
+            VStack {
+                HStack {
+                    Toggle("Validate orders", isOn: $validate)
+                        .toggleStyle(.checkbox)
+                    Spacer()
+                    Toggle("Scale In/Out", isOn: $scaleInOut)
+                        .toggleStyle(.checkbox)
+                }
+            }.padding([.trailing, .leading, .bottom], 4)
            
         }
         .frame(width: 530)
