@@ -11,6 +11,7 @@ import SwiftUI
 struct dashboardApp: App {
     
     var body: some Scene {
+        
         WindowGroup {
             ContentView().environmentObject(LogManager.shared)
                 

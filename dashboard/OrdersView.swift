@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OrdersView: View {
-    var orders: [OrderResponse]
+    var orders: [OrderResponse]!
     var onCancelOrder: (String) async -> Void
     var onCancelAllOrders: () async -> Void
     var onRefreshOrders: () async -> Void
@@ -42,42 +42,44 @@ struct OrdersView: View {
             }
             
             ScrollView {
-                if orders.count > 0 {
-                    VStack{
-                        LazyVGrid(columns: layout) {
-                            ForEach(orders) { order in
-                                Text(order.order)
-                                    .foregroundColor(order.type == "sell" ? .red : .green)
-                                    .font(.caption2)
-                                Button(action: {
-                                    Task {
-                                        await onCancelOrder(order.txid)
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "trash.square.fill")
-                                            .foregroundColor(Color.gray)
-                                        
-                                    }.frame(width: 20, height: 20)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                        .imageScale(.large)
-                                }.buttonStyle(PlainButtonStyle())
+                if let ordersList = orders {
+                    if ordersList.count > 0 {
+                        VStack{
+                            LazyVGrid(columns: layout) {
+                                ForEach(orders) { order in
+                                    Text(order.order)
+                                        .foregroundColor(order.type == "sell" ? .red : .green)
+                                        .font(.caption2)
+                                    Button(action: {
+                                        Task {
+                                            await onCancelOrder(order.txid)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "trash.square.fill")
+                                                .foregroundColor(Color.gray)
+                                            
+                                        }.frame(width: 20, height: 20)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                            .imageScale(.large)
+                                    }.buttonStyle(PlainButtonStyle())
+                                }
                             }
+                            Button(action: {
+                                Task {
+                                    await onCancelAllOrders()
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "trash.fill")
+                                    Text("Cancel Orders")
+                                }.frame(width: 190, height: 30)
+                                    .foregroundColor(Color.white)
+                                    .background(Color.gray)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    .imageScale(.large)
+                            }.buttonStyle(PlainButtonStyle())
                         }
-                        Button(action: {
-                            Task {
-                                await onCancelAllOrders()
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: "trash.fill")
-                                Text("Cancel Orders")
-                            }.frame(width: 190, height: 30)
-                                .foregroundColor(Color.white)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                                .imageScale(.large)
-                        }.buttonStyle(PlainButtonStyle())
                     }
                 } else {
                     Text("No orders")

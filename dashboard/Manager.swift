@@ -33,14 +33,14 @@ extension String {
     }
 }
 
-struct OrderResponse: Identifiable {
+struct OrderResponse: Identifiable, Equatable {
     var id: UUID = .init()
     var txid: String
     var order: String
     var type: String
 }
 
-struct PositionResponse: Identifiable {
+struct PositionResponse: Identifiable, Equatable {
     var id: UUID = .init()
     var refid: String
     var pair: String
@@ -55,6 +55,9 @@ struct PositionResponse: Identifiable {
 }
 
 class Manager: ObservableObject, WebSocketDelegate {
+    let didOrdersChange = PassthroughSubject<Void, Never>()
+    let didPositionsChange = PassthroughSubject<Void, Never>()
+
     private var socket: WebSocket!
     @Published var isConnected = false
     @Published var isOwnTradesSubscribed = false
@@ -66,20 +69,46 @@ class Manager: ObservableObject, WebSocketDelegate {
     private var apiSecret: String = "GNsZ3sUrNz+/ZoeLpbAvQzN1f/kRgkftCR/9+kIXXMrLl/KLRQnM1Ml1nWtRJep/06WjOmcz7sk5ezaxr/nUyQ=="
     private var socket_token: String = ""
     private var kraken: Kraken
-    @Published var orders: [OrderResponse] = []
-    @Published var positions: [PositionResponse] = []
+    @Published var ordersData: [OrderResponse] = []
+    @Published var positionsData: [PositionResponse] = []
+
+    private var ordersCancellable: AnyCancellable?
+    private var positionsCancellable: AnyCancellable?
 
     private var auth_token: String = ""
+
+    @Published var orders: [OrderResponse] {
+        didSet {
+            didOrdersChange.send()
+        }
+    }
+
+    @Published var positions: [PositionResponse] {
+        didSet {
+            didPositionsChange.send()
+        }
+    }
 
     init() {
         let credentials = Kraken.Credentials(apiKey: apiKey, privateKey: apiSecret)
 
         kraken = Kraken(credentials: credentials)
 
+        orders = []
+        positions = []
+
+        ordersCancellable = AnyCancellable($ordersData
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .assign(to: \.orders, on: self))
+
+        positionsCancellable = AnyCancellable($positionsData
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .assign(to: \.positions, on: self))
+
         Task {
             await get_auth_token()
-            await refetchOpenOrders()
-            await refetchOpenPositions()
         }
     }
 
@@ -155,7 +184,7 @@ class Manager: ObservableObject, WebSocketDelegate {
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
 //                print("Received text: \(string)")
-            
+
             parseTextMessage(message: string)
         case .binary(let data):
             LogManager.shared.info("Received data: \(data.count)")
@@ -263,30 +292,31 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     func refetchOpenPositions() async {
-        var new_positions: [PositionResponse] = []
         let result = await kraken.openPositions(docalcs: true)
         switch result {
         case .success(let positions):
-            if let openOrders = positions["result"] {
-                let dict = openOrders as? [String: AnyObject]
-                for (key, value) in dict! {
-        
-                    if let pair = value["pair"] as? String,
-                       let t = value["type"] as? String,
-                       let vol = value["vol"] as? Double,
-                       let cost = value["cost"] as? Double,
-                       let net = value["net"] as? String,
-                       let ordertype = value["ordertype"] as? String,
-                       let fee = value["fee"] as? Double,
-                       let v = value["value"] as? Double,
-                       let tm = value["time"] as? Double
-                    {
-                        let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
-                        new_positions.append(pos)
+
+            DispatchQueue.main.async {
+                var new_positions: [PositionResponse] = []
+                if let openOrders = positions["result"] {
+                    let dict = openOrders as? [String: AnyObject]
+                    for (key, value) in dict! {
+                        if let pair = value["pair"] as? String,
+                           let t = value["type"] as? String,
+                           let vol = value["vol"] as? Double,
+                           let cost = value["cost"] as? Double,
+                           let net = value["net"] as? String,
+                           let ordertype = value["ordertype"] as? String,
+                           let fee = value["fee"] as? Double,
+                           let v = value["value"] as? Double,
+                           let tm = value["time"] as? Double
+                        {
+                            let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
+                            new_positions.append(pos)
+                        }
                     }
                 }
-
-                self.positions = new_positions
+                self.positionsData = new_positions
             }
 
         case .failure(let error):
@@ -295,26 +325,27 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     func refetchOpenOrders() async {
-        var new_orders: [OrderResponse] = []
         let result: KrakenNetwork.KrakenResult = await kraken.openOrders()
         switch result {
         case .success(let orders):
-
-            if let openOrders = orders["open"] {
-                let dict = openOrders as? [String: AnyObject]
-                for (key, value) in dict! {
-                    if let descr = value["descr"] {
-                        if let ordertype = value["type"] {
-                            if let descrDict = descr as? [String: AnyObject] {
-                                if let order = descrDict["order"] {
-                                    new_orders.append(OrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
+            DispatchQueue.main.async {
+                var new_orders: [OrderResponse] = []
+                if let openOrders = orders["open"] {
+                    let dict = openOrders as? [String: AnyObject]
+                    for (key, value) in dict! {
+                        if let descr = value["descr"] {
+                            if let ordertype = value["type"] {
+                                if let descrDict = descr as? [String: AnyObject] {
+                                    if let order = descrDict["order"] {
+                                        new_orders.append(OrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                self.orders = new_orders
+                    self.ordersData = new_orders
+                }
             }
 
         case .failure(let error):

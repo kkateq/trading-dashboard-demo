@@ -42,82 +42,84 @@ struct PositionsView: View {
             }
             
             ScrollView {
-                if manager.positions.count > 0 {
-                    VStack {
-                        LazyVGrid(columns: layout) {
-                            ForEach(manager.positions) { position in
-                              
-                                Text(position.pair).font(.caption2)
-                                Text(position.type)
-                                    .foregroundColor(position.type == "sell" ? .red : .green)
-                                    .font(.caption2)
-                                
-                                Text("\(position.net)$")
-                                    .foregroundColor(position.net.starts(with: "-") ? .red : .green)
-                                    .font(.caption2)
-                                
+                if let positions = manager.positions {
+                    if positions.count > 0 {
+                        VStack {
+                            LazyVGrid(columns: layout) {
+                                ForEach(positions) { position in
+                                    
+                                    Text(position.pair).font(.caption2)
+                                    Text(position.type)
+                                        .foregroundColor(position.type == "sell" ? .red : .green)
+                                        .font(.caption2)
+                                    
+                                    Text("\(position.net)$")
+                                        .foregroundColor(position.net.starts(with: "-") ? .red : .green)
+                                        .font(.caption2)
+                                    
+                                    Button(action: {
+                                        Task {
+                                            await manager.flattenPosition(refid: position.refid)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "rectangle.portrait.and.arrow.right.fill")
+                                        }.frame(width: 20, height: 20)
+                                            .foregroundColor(Color.white)
+                                            .background(Color.teal)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                            .imageScale(.medium)
+                                    }.buttonStyle(PlainButtonStyle())
+                                    Button(action: {
+                                        Task {
+                                            await manager.closePositionMarket(refid: position.refid)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "xmark")
+                                        }.frame(width: 20, height: 20)
+                                            .foregroundColor(Color.white)
+                                            .background(Color.orange)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                            .imageScale(.medium)
+                                    }.buttonStyle(PlainButtonStyle())
+                                }
+                            }
+                            
+                            VStack {
                                 Button(action: {
                                     Task {
-                                        await manager.flattenPosition(refid: position.refid)
+                                        await manager.flattenAllPositions()
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: "rectangle.portrait.and.arrow.right.fill")
-                                    }.frame(width: 20, height: 20)
+                                        Image(systemName: "lightbulb.fill")
+                                        Text("Flatten Positions")
+                                    }.frame(width: 190, height: 30)
                                         .foregroundColor(Color.white)
                                         .background(Color.teal)
                                         .clipShape(RoundedRectangle(cornerRadius: 5))
-                                        .imageScale(.medium)
+                                        .imageScale(.large)
                                 }.buttonStyle(PlainButtonStyle())
+                                
                                 Button(action: {
                                     Task {
-                                        await manager.closePositionMarket(refid: position.refid)
+                                        await manager.closeAllPositions()
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: "xmark")
-                                    }.frame(width: 20, height: 20)
-                                        .foregroundColor(Color.white)
-                                        .background(Color.orange)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                        .imageScale(.medium)
-                                }.buttonStyle(PlainButtonStyle())
-                            }
-                        }
-                        
-                        VStack {
-                            Button(action: {
-                                Task {
-                                    await manager.flattenAllPositions()
-                                }
-                            }) {
-                                HStack {
-                                    Image(systemName: "lightbulb.fill")
-                                    Text("Flatten Positions")
-                                }.frame(width: 190, height: 30)
+                                        Image(systemName: "power.circle.fill")
+                                        Text("Close Positions")
+                                    }
+                                    .frame(width: 190, height: 30)
                                     .foregroundColor(Color.white)
-                                    .background(Color.teal)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    .background(Color.black)
                                     .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                               
-                            Button(action: {
-                                Task {
-                                    await manager.closeAllPositions()
-                                }
-                            }) {
-                                HStack {
-                                    Image(systemName: "power.circle.fill")
-                                    Text("Close Positions")
-                                }
-                                .frame(width: 190, height: 30)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .imageScale(.large)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                            }.buttonStyle(PlainButtonStyle())
-                        }.padding(.top)
-                            .padding(.bottom)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                }.buttonStyle(PlainButtonStyle())
+                            }.padding(.top)
+                                .padding(.bottom)
+                        }
                     }
                 }
                 else {

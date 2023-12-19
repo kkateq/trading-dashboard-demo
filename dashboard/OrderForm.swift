@@ -35,8 +35,8 @@ struct OrderForm: View {
                     .labelsHidden()
                     .pickerStyle(.menu)
                     Spacer()
-                    Text("$ 0.90")
-                        .foregroundColor(.blue)
+                    Text("\(volume * pegValue, specifier: "%.2f")$")
+                        .foregroundColor(.black)
                         .font(.title3)
                 }
             }.padding()
