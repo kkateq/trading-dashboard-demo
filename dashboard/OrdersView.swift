@@ -13,10 +13,7 @@ struct OrdersView: View {
     var onCancelAllOrders: () async -> Void
     var onRefreshOrders: () async -> Void
     
-    let layout = [
-        GridItem(.fixed(160), spacing: 1),
-        GridItem(.fixed(30), spacing: 1, alignment: .trailing),
-    ]
+ 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Divider()
@@ -45,26 +42,29 @@ struct OrdersView: View {
                 if let ordersList = orders {
                     if ordersList.count > 0 {
                         VStack{
-                            LazyVGrid(columns: layout) {
+                           
                                 ForEach(orders) { order in
-                                    Text(order.order)
-                                        .foregroundColor(order.type == "sell" ? .red : .green)
-                                        .font(.caption2)
-                                    Button(action: {
-                                        Task {
-                                            await onCancelOrder(order.txid)
-                                        }
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "trash.square.fill")
-                                                .foregroundColor(Color.gray)
-                                            
-                                        }.frame(width: 20, height: 20)
-                                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                                            .imageScale(.large)
-                                    }.buttonStyle(PlainButtonStyle())
+                                    HStack {
+                                        Text(order.order)
+                                            .foregroundColor(order.order.starts(with: "sell") ? .red : .green)
+                                            .font(.caption2)
+                                        Spacer()
+                                        Button(action: {
+                                            Task {
+                                                await onCancelOrder(order.txid)
+                                            }
+                                        }) {
+                                            HStack {
+                                                Image(systemName: "trash.square.fill")
+                                                    .foregroundColor(Color.gray)
+                                                
+                                            }.frame(width: 20, height: 20)
+                                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                                .imageScale(.large)
+                                        }.buttonStyle(PlainButtonStyle())
+                                    }
                                 }
-                            }
+                            
                             Button(action: {
                                 Task {
                                     await onCancelAllOrders()

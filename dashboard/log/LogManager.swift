@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 enum LogLevel {
-    case info, error, warning
+    case info, error, warning, action
 }
 
 struct LogMessage: Identifiable, Hashable, Equatable {
@@ -58,6 +58,12 @@ class LogManager: ObservableObject {
     }
 
     func warn(_ message: String, level: LogLevel = LogLevel.warning) {
+        DispatchQueue.main.async {
+            self.logMessages.append(LogMessage(text: message, level: level))
+        }
+    }
+    
+    func action(_ message: String, level: LogLevel = LogLevel.action) {
         DispatchQueue.main.async {
             self.logMessages.append(LogMessage(text: message, level: level))
         }

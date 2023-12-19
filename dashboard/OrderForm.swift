@@ -53,7 +53,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.buyMarket(pair:pair, vol:volume, scaleInOut: scaleInOut)
+                                await manager.sellMarket(pair: pair, vol: volume, scaleInOut: scaleInOut)
                             }
                         }) {
                             HStack {
@@ -64,7 +64,11 @@ struct OrderForm: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 .imageScale(.large)
                         }.buttonStyle(PlainButtonStyle())
-                        Button(action: {}) {
+                        Button(action: {
+                            Task {
+                                await manager.buyMarket(pair: pair, vol: volume, scaleInOut: scaleInOut)
+                            }
+                        }) {
                             HStack {
                                 Text("Buy Market")
                             }.frame(width: 100, height: 50)
@@ -75,7 +79,11 @@ struct OrderForm: View {
                         }.buttonStyle(PlainButtonStyle())
                     }
                     VStack {
-                        Button(action: {}) {
+                        Button(action: {
+                            Task {
+                                await manager.sellAsk(pair: pair, vol: volume, best_ask: bestAsk, scaleInOut: scaleInOut)
+                            }
+                        }) {
                             HStack {
                                 Text("Sell Ask")
                             }.frame(width: 100, height: 50)
@@ -84,7 +92,11 @@ struct OrderForm: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 .imageScale(.large)
                         }.buttonStyle(PlainButtonStyle())
-                        Button(action: {}) {
+                        Button(action: {
+                            Task {
+                                await manager.buyBid(pair: pair, vol: volume, best_bid: bestBid, scaleInOut: scaleInOut)
+                            }
+                        }) {
                             HStack {
                                 Text("Buy Bid")
                             }.frame(width: 100, height: 50)
@@ -107,7 +119,26 @@ struct OrderForm: View {
                 PositionsView()
             }
 
-            LogView()
+            VStack {
+                
+                LogView()
+
+                HStack(){
+                    if manager.isConnected {
+                        Image(systemName: "wifi")
+                            .foregroundColor(Color.green)
+                        Text("Socket connected")
+                    } else {
+                        Image(systemName: "wifi.slash")
+                            .foregroundColor(Color.gray)
+                        Text("Socket disconnected")
+                    }
+                    
+
+                }.frame(width: 200, height: 20)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .imageScale(.large)
+            }
 
             Spacer()
         }.frame(maxWidth: 220, maxHeight: .infinity)

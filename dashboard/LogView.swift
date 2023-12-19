@@ -10,7 +10,6 @@ import SwiftUI
 struct LogView: View {
     @EnvironmentObject var logger: LogManager
 
-    
     func getColor(level: LogLevel) -> Color {
         var color = Color.gray
         
@@ -18,18 +17,28 @@ struct LogView: View {
             color = Color.orange
         } else if level == LogLevel.error {
             color = Color.red
+        } else if level == LogLevel.action {
+            color = Color.green
         }
         return color
     }
     
     var body: some View {
-        VStack {
-            List(logger.logMessages) { log in
+        VStack(alignment: .leading, spacing: 2) {
+            Divider()
+            HStack {
+                Text("Log")
+                    .font(.caption)
+                Spacer()
+            }
+           
+            List(logger.logMessages.reversed()) { log in
                 Text(log.text)
                     .font(.caption)
                     .foregroundColor(getColor(level: log.level))
-            }
-        }
+            }.listStyle(.bordered)
+            Divider()
+        }.frame(width: 200)
     }
 }
 
