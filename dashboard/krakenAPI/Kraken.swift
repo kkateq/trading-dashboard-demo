@@ -483,10 +483,12 @@ public struct Kraken {
         var options: [String: String] = [:]
         options["ordertype"] = orderType.rawValue
         options["type"] = direction.rawValue
-        options["trigger"] = trigger.rawValue
-        options["timeinforce"] = timeinforce.rawValue
-        options["starttm"] = starttm
-        options["expiretm"] = expiretm
+        options["pair"] = pair
+//        NOTE: These parameters cause errors. Uncommit after testing.
+//        options["trigger"] = trigger.rawValue
+//        options["timeinforce"] = timeinforce.rawValue
+//        options["starttm"] = starttm
+//        options["expiretm"] = expiretm
         options["validate"] = "\(validate)"
         options["reduce_only"] = "\(reduce_only)"
 

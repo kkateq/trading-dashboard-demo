@@ -466,6 +466,7 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     func refetchOpenPositions() async {
+        LogManager.shared.action("Refetch positions...")
         let result = await kraken.openPositions(docalcs: true)
         switch result {
         case .success(let positions):
@@ -494,11 +495,14 @@ class Manager: ObservableObject, WebSocketDelegate {
             }
 
         case .failure(let error):
-            LogManager.shared.error(error.localizedDescription)
+        
+            LogManager.shared.info(error.localizedDescription)
+            
         }
     }
 
     func refetchOpenOrders() async {
+        LogManager.shared.action("Refetch open orders...")
         let result: KrakenNetwork.KrakenResult = await kraken.openOrders()
         switch result {
         case .success(let orders):
