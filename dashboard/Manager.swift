@@ -474,8 +474,8 @@ class Manager: ObservableObject, WebSocketDelegate {
             DispatchQueue.main.async {
                 var new_positions: [PositionResponse] = []
 
-                let dict = positions as? [String: AnyObject]
-                for (key, value) in dict! {
+                let dict = positions as [String: AnyObject]
+                for (key, value) in dict {
                     if let pair = value["pair"] as? String,
                        let t = value["type"] as? String,
                        let vol = value["vol"] as? String,
