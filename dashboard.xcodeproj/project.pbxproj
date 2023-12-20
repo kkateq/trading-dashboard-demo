@@ -22,8 +22,6 @@
 		34905C3E2B29C18300A5A649 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C3D2B29C18300A5A649 /* Starscream */; };
 		34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3F2B29C1A100A5A649 /* Krakenbook.swift */; };
 		34905C452B2A003F00A5A649 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C442B2A003F00A5A649 /* Collections */; };
-		34905C472B2A003F00A5A649 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C462B2A003F00A5A649 /* DequeModule */; };
-		34905C492B2A003F00A5A649 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C482B2A003F00A5A649 /* OrderedCollections */; };
 		34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C4D2B2B05D700A5A649 /* CryptoSwift */; };
 		34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C532B2B5B9E00A5A649 /* BidCell.swift */; };
 		34905C562B2B604500A5A649 /* PriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C552B2B604500A5A649 /* PriceCell.swift */; };
@@ -97,9 +95,7 @@
 			files = (
 				34905C452B2A003F00A5A649 /* Collections in Frameworks */,
 				34905C3E2B29C18300A5A649 /* Starscream in Frameworks */,
-				34905C492B2A003F00A5A649 /* OrderedCollections in Frameworks */,
 				34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */,
-				34905C472B2A003F00A5A649 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,8 +227,6 @@
 			packageProductDependencies = (
 				34905C3D2B29C18300A5A649 /* Starscream */,
 				34905C442B2A003F00A5A649 /* Collections */,
-				34905C462B2A003F00A5A649 /* DequeModule */,
-				34905C482B2A003F00A5A649 /* OrderedCollections */,
 				34905C4D2B2B05D700A5A649 /* CryptoSwift */,
 			);
 			productName = dashboard;
@@ -720,16 +714,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = Collections;
-		};
-		34905C462B2A003F00A5A649 /* DequeModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = DequeModule;
-		};
-		34905C482B2A003F00A5A649 /* OrderedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = OrderedCollections;
 		};
 		34905C4D2B2B05D700A5A649 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
