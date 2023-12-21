@@ -21,7 +21,7 @@ struct CandlestickMark<X: Plottable, Y: Plottable>: ChartContent {
     let high: PlottableValue<Y>
     let open: PlottableValue<Y>
     let close: PlottableValue<Y>
-    
+
     init(
         x: PlottableValue<X>,
         low: PlottableValue<Y>,
@@ -35,7 +35,7 @@ struct CandlestickMark<X: Plottable, Y: Plottable>: ChartContent {
         self.open = open
         self.close = close
     }
-    
+
     var body: some ChartContent {
         RectangleMark(x: x, yStart: low, yEnd: high, width: 1)
             .foregroundStyle(.red)
@@ -44,8 +44,9 @@ struct CandlestickMark<X: Plottable, Y: Plottable>: ChartContent {
     }
 }
 
-
 struct PriceChartView: View {
+    var service = KrakenOHLC("MATIC/USD", Kraken.OHLCInterval.i1min)
+
     let candles: [Candle] = [
         .init(open: 3, close: 6, low: 1, high: 8),
         .init(open: 4, close: 7, low: 2, high: 9),
@@ -53,18 +54,23 @@ struct PriceChartView: View {
     ]
 
     var body: some View {
-        Chart {
-            ForEach(0...10, id: \.self) { index in
-                CandlestickMark(
-                    x: .value("index", index),
-                    low: .value("low", Int.random(in: 0...2)),
-                    high: .value("high", Int.random(in: 8...10)),
-                    open: .value("open", Int.random(in: 2...8)),
-                    close: .value("close", Int.random(in: 2...8))
-                )
-                .foregroundStyle(.green)
-            }
-        }
+//        if let list = service.nodes {
+//            Chart {
+//                ForEach(list) { node in
+//                    CandlestickMark(
+//                        x: .value("index", node.time),
+//                        low: .value("low", node.low),
+//                        high: .value("high", node.high),
+//                        open: .value("open", node.open),
+//                        close: .value("close", node.close)
+//                    )
+//                    .foregroundStyle(.green)
+//                }
+//            }
+//        }
+//        else {
+            Text("No data")
+//        }
     }
 }
 

@@ -6,6 +6,14 @@
          contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
+         contextName = "closure #1 in KrakenOHLC.fetchInitialOHLC():KrakenOHLC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
       </ContextState>
       <ContextState
@@ -35,6 +43,14 @@
          contextName = "Manager.refetchOpenPositions():Manager.swift">
       </ContextState>
       <ContextState
+         contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "position.pairISO">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Manager.flattenPositionWS(refid:best_bid:best_ask:validate:):Manager.swift">
       </ContextState>
       <ContextState
@@ -45,14 +61,6 @@
          <PersistentStrings>
             <PersistentString
                value = "result.status">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "position.pairISO">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

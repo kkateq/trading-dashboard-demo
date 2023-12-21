@@ -55,31 +55,11 @@ public struct Kraken {
         request = KrakenNetwork(credentials: credentials)
     }
 
-    // MARK: - Public methods
-
-    // MARK: Server Time
-
-    /// Get the server's time.
-    ///
-    /// [See API Reference](https://docs.kraken.com/rest/#operation/getServerTime)
-    public func serverTime(completion: @escaping (KrakenNetwork.KrakenResult) -> ()) {
-        request.getRequest(with: "Time", completion: completion)
-    }
-
     /// Get the server's time.
     ///
     /// [See API Reference](https://docs.kraken.com/rest/#operation/getServerTime)
     public func serverTime() async -> KrakenNetwork.KrakenResult {
         await request.getRequest(with: "Time")
-    }
-
-    // MARK: System Status
-
-    /// Get the current system status or trading mode.
-    ///
-    /// [See API Reference](https://docs.kraken.com/rest/#operation/getSystemStatus)
-    public func systemStatus(completion: @escaping (KrakenNetwork.KrakenResult) -> ()) {
-        request.getRequest(with: "SystemStatus", completion: completion)
     }
 
     /// Get the current system status or trading mode.
