@@ -70,7 +70,7 @@ struct PositionResponse: Identifiable, Equatable {
     }
 }
 
-class Manager: ObservableObject, WebSocketDelegate {
+class KrakenOrderManager: ObservableObject, WebSocketDelegate {
     let didOrdersChange = PassthroughSubject<Void, Never>()
     let didPositionsChange = PassthroughSubject<Void, Never>()
 
@@ -81,10 +81,10 @@ class Manager: ObservableObject, WebSocketDelegate {
     @Published var isOpenOrdersSubscribed = false
     @Published var wsStatus: WSStatus = .init()
 
-    private var apiKey: String = "AlzaknI1O2d0SUrox8+mG0rCTqeftlzljly2PFdqNUTQcSOkS9mDa30y"
-    private var apiSecret: String = "YPscpvwDwcHa37pAH8ttN4GiWfi8LVo6wDNVGyE1qbBHxosAmCjZCM1aURKHKFSMqMaLDxP7uvUPVmo7hLoQwA=="
+    private var apiKey: String = KeychainHandler.KrakenApiKey
+    private var apiSecret: String = KeychainHandler.KrakenApiSecret
+    
     private var socket_token: String = ""
-    private var kraken: Kraken
     @Published var ordersData: [OrderResponse] = []
     @Published var positionsData: [PositionResponse] = []
 
@@ -106,10 +106,6 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     init() {
-        let credentials = Kraken.Credentials(apiKey: apiKey, privateKey: apiSecret)
-
-        kraken = Kraken(credentials: credentials)
-
         orders = []
         positions = []
 
@@ -252,7 +248,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     func get_auth_token() async {
         if auth_token == "" {
-            let result = await kraken.getToken()
+            let result = await Kraken.shared.getToken()
             switch result {
             case .success(let message):
                 if let token = message["token"] as? String {
@@ -327,7 +323,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     internal func cancelAllOrdersREST() async {
         LogManager.shared.action("Cancelling all orders via REST")
-        let result = await kraken.cancelAllOrders()
+        let result = await Kraken.shared.cancelAllOrders()
         switch result {
         case .success(let message):
             if let _ = message["count"] {
@@ -354,7 +350,7 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     internal func cancelOrderREST(txid: String) async {
-        let result = await kraken.cancelOrder(txid: txid)
+        let result = await Kraken.shared.cancelOrder(txid: txid)
         switch result {
         case .success(let message):
             if let _ = message["count"] {
@@ -396,7 +392,7 @@ class Manager: ObservableObject, WebSocketDelegate {
         LogManager.shared.action("Closing position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
-            let result = await kraken.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, leverage: "\(leverage)", validate: validate, reduce_only: true)
+            let result = await Kraken.shared.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
                 if let _ = message["result"] {
@@ -421,7 +417,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
         if let position = positions.first(where: { $0.refid == refid }) {
             let price = position.type == "sell" ? best_bid : best_ask
-            let result = await kraken.addOrder(orderType: .limit, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, price: "\(price)",  leverage: "\(leverage)", validate: validate, reduce_only: true)
+            let result = await Kraken.shared.addOrder(orderType: .limit, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, price: "\(price)",  leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
                 if let _ = message["result"] {
@@ -467,7 +463,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     func refetchOpenPositions() async {
         LogManager.shared.action("Refetch positions...")
-        let result = await kraken.openPositions(docalcs: true)
+        let result = await Kraken.shared.openPositions(docalcs: true)
         switch result {
         case .success(let positions):
 
@@ -503,7 +499,7 @@ class Manager: ObservableObject, WebSocketDelegate {
 
     func refetchOpenOrders() async {
         LogManager.shared.action("Refetch open orders...")
-        let result: KrakenNetwork.KrakenResult = await kraken.openOrders()
+        let result: KrakenNetwork.KrakenResult = await Kraken.shared.openOrders()
         switch result {
         case .success(let orders):
             DispatchQueue.main.async {
@@ -538,7 +534,7 @@ class Manager: ObservableObject, WebSocketDelegate {
     }
 
     func getBalance() async -> Double {
-        let result = await kraken.accountBalance()
+        let result = await Kraken.shared.accountBalance()
         switch result {
         case .success(let message):
             if let result = message["result"] {

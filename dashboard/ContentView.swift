@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
-    @StateObject var manager = Manager()
+    @StateObject var manager = KrakenOrderManager()
 
     var body: some View {
         HStack(alignment: .top) {

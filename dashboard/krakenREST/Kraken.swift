@@ -47,6 +47,8 @@ public struct Kraken {
         }
     }
     
+    static let shared = Kraken(credentials: Kraken.Credentials(apiKey: KeychainHandler.KrakenApiKey, privateKey: KeychainHandler.KrakenApiSecret))
+    
     private let request: KrakenNetwork
 
     public init(credentials: Credentials) {

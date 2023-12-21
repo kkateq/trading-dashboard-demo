@@ -16,7 +16,7 @@ struct OrderBookView: View {
     @Binding  var leverage: Int
     
     @EnvironmentObject var book: OrderBookData
-    @EnvironmentObject var manager: Manager
+    @EnvironmentObject var manager: KrakenOrderManager
     
     let layout = [
         GridItem(.fixed(100), spacing: 2),

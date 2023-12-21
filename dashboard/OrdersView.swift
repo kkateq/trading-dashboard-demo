@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OrdersView: View {
-    @EnvironmentObject var manager: Manager
+    @EnvironmentObject var manager: KrakenOrderManager
     var useREST: Bool
 
     var body: some View {

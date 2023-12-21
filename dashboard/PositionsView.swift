@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PositionsView: View {
-    @EnvironmentObject var manager: Manager
+    @EnvironmentObject var manager: KrakenOrderManager
     @EnvironmentObject var book: OrderBookData
     var useREST: Bool
     var validate: Bool

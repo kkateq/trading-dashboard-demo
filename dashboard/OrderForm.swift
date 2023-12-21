@@ -14,7 +14,7 @@ struct OrderForm: View {
     @Binding  var useRest: Bool
     @Binding  var leverage: Int
     
-    @EnvironmentObject var manager: Manager
+    @EnvironmentObject var manager: KrakenOrderManager
     @EnvironmentObject var book: OrderBookData
 
     let formatter: NumberFormatter = {

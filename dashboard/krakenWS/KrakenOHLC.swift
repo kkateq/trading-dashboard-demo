@@ -9,23 +9,65 @@ import Foundation
 import Combine
 import Starscream
 
-struct OHLCData: Equatable, Decodable {
+
+struct OHLCNode: Equatable, Decodable  {
+    var time: Double
+    var etime: Double
+    var open: Double
+    var high: Double
+    var low: Double
+    var close: Double
+    var vwap: Double
+    var volume: Double
+    var count: Int
     
+    
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        time = try container.decode(Double.self)
+        etime = try container.decode(Double.self)
+        open = try container.decode(Double.self)
+        high = try container.decode(Double.self)
+        close = try container.decode(Double.self)
+        low = try container.decode(Double.self)
+        vwap = try container.decode(Double.self)
+        volume = try container.decode(Double.self)
+        count = try container.decode(Int.self)
+    }
+    
+}
+struct OHLCUpdateResponse: Decodable {
+    var nodes: [OHLCNode]
+    var pair: String
+    var channelID: String
+    var channelName: String
+    
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        channelID = try container.decode(String.self)
+        nodes = try container.decode([OHLCNode].self)
+        channelName = try container.decode(String.self)
+        pair = try container.decode(String.self)
+    }
+}
+
+struct OHLCInitialResponse: Decodable {
+    var records: [String: OHLCNode]
 }
 
 class KrakenOHLC: WebSocketDelegate, ObservableObject {
-   
+    @Published var data: [Double: OHLCNode] = [:]
     var socket: WebSocket!
     @Published var isConnected = false
     @Published var isSubscribed = false
     var pair: String = ""
-    @Published var data: OHLCData! = nil
     @Published var wsStatus: WSStatus = .init()
     let didChange = PassthroughSubject<Void, Never>()
-    
+    var channelID: String!
     private var cancellable: AnyCancellable?
-
-    @Published var ohlc: OHLCData! {
+//    private var kraken: Kraken
+    
+    @Published var ohlc: [Double: OHLCNode]! {
         didSet {
             didChange.send()
         }
@@ -35,7 +77,6 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
     init(_ p: String) {
         pair = p
     
-
         cancellable = AnyCancellable($data
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -49,8 +90,41 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
     }
     
     func subscribe() {
-        
+        let msg = "{\"event\":\"subscribe\",\"pair\":[\"\(pair)\"], \"subscription\":{ \"name\":\"ohlc\"}}"
+        socket.write(string: msg)
     }
+    
+    func fetchInitialOHLC()  async {
+//            LogManager.shared.action("Refetch open orders...")
+//            let result: KrakenNetwork.KrakenResult = await kraken.openOrders()
+//            switch result {
+//            case .success(let orders):
+//                DispatchQueue.main.async {
+////                    var new_orders: [OrderResponse] = []
+////                    if let openOrders = orders["open"] {
+////                        let dict = openOrders as? [String: AnyObject]
+////                        for (key, value) in dict! {
+////                            if let descr = value["descr"] {
+////                                if let ordertype = value["type"] {
+////                                    if let descrDict = descr as? [String: AnyObject] {
+////                                        if let order = descrDict["order"] {
+////                                            new_orders.append(OrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
+////                                        }
+////                                    }
+////                                }
+////                            }
+////                        }
+////
+////                        self.ordersData = new_orders
+////                    }
+//                }
+//
+//            case .failure(let error):
+//                LogManager.shared.error(error.localizedDescription)
+//            }
+        }
+
+
     
     func parseTextMessage(message: String) {
         do {
@@ -73,10 +147,12 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
                     isSubscribed = true
                 }
             } else if isSubscribed {
-                let result = try decoder.decode(OHLCData.self, from: Data(message.utf8))
+                let result = try decoder.decode(OHLCUpdateResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
-                    self.data = result
+                    for record in result.nodes {
+                        self.data[round(record.time)] = record
+                    }
                 }
                
             }
@@ -95,7 +171,6 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
                 isSubscribed = false
                 print("websocket is disconnected: \(reason) with code: \(code)")
             case .text(let string):
-//                print("Received text: \(string)")
                 parseTextMessage(message: string)
             case .binary(let data):
                 print("Received data: \(data.count)")

@@ -15,6 +15,36 @@ struct Candle: Hashable {
     let high: Double
 }
 
+struct CandlestickMark<X: Plottable, Y: Plottable>: ChartContent {
+    let x: PlottableValue<X>
+    let low: PlottableValue<Y>
+    let high: PlottableValue<Y>
+    let open: PlottableValue<Y>
+    let close: PlottableValue<Y>
+    
+    init(
+        x: PlottableValue<X>,
+        low: PlottableValue<Y>,
+        high: PlottableValue<Y>,
+        open: PlottableValue<Y>,
+        close: PlottableValue<Y>
+    ) {
+        self.x = x
+        self.low = low
+        self.high = high
+        self.open = open
+        self.close = close
+    }
+    
+    var body: some ChartContent {
+        RectangleMark(x: x, yStart: low, yEnd: high, width: 1)
+            .foregroundStyle(.red)
+        RectangleMark(x: x, yStart: open, yEnd: close, width: 16)
+            .foregroundStyle(.red)
+    }
+}
+
+
 struct PriceChartView: View {
     let candles: [Candle] = [
         .init(open: 3, close: 6, low: 1, high: 8),
@@ -24,21 +54,15 @@ struct PriceChartView: View {
 
     var body: some View {
         Chart {
-            ForEach(Array(zip(candles.indices, candles)), id: \.1) { index, candle in
-                RectangleMark(
+            ForEach(0...10, id: \.self) { index in
+                CandlestickMark(
                     x: .value("index", index),
-                    yStart: .value("low", candle.low),
-                    yEnd: .value("high", candle.high),
-                    width: 4
+                    low: .value("low", Int.random(in: 0...2)),
+                    high: .value("high", Int.random(in: 8...10)),
+                    open: .value("open", Int.random(in: 2...8)),
+                    close: .value("close", Int.random(in: 2...8))
                 )
-
-                RectangleMark(
-                    x: .value("index", index),
-                    yStart: .value("open", candle.open),
-                    yEnd: .value("close", candle.close),
-                    width: 16
-                )
-                .foregroundStyle(.red)
+                .foregroundStyle(.green)
             }
         }
     }
