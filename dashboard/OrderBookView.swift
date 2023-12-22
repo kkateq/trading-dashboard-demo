@@ -53,22 +53,22 @@ struct OrderBookView: View {
             }
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {
-                    ForEach(book.allList) { record in
-                       
+                    ForEach(0..<book.allList.count) { index in
+                        let record = book.allList[index]
                         let vol = String(format: "%.0f", round(Double(record.volume)!))
                         let price = "\(round(10000 * Double(record.price)!) / 10000)"
                         
                         if record.type == BookRecordType.ask {
                             PositionCell(position: "")
                             EmptyCell()
-                            PriceCell(price: price)
+                            PriceCell(price: price, depth: book.depth, level: index)
                             AskCell(volume: vol, price: price, onSellLimit: sellLimit)
                             PositionCell(position: "")
                             
                         } else {
                             PositionCell(position: "")
                             BidCell(volume: vol, price: price, onBuyLimit: buyLimit)
-                            PriceCell(price: price)
+                            PriceCell(price: price, depth: book.depth, level: index)
                             EmptyCell()
                             PositionCell(position: "")
                         }
