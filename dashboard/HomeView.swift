@@ -18,20 +18,10 @@ struct HomeView: View {
         HStack {
             IndicatorPanView()
                 .frame(width: 400)
+          
             HStack {
-                
-                ZStack {
-                    HStack {
+                OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
                         
-                        OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
-                        VStack {
-                            VolumeProfileChart()
-                        }
-                    }
-                    GridOverlay()
-                }
-               
-                
             }.frame(width: 950)
             OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
         }

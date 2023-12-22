@@ -104,7 +104,9 @@ class OrderBookRecord: Identifiable, ObservableObject {
     var id: UUID
 
     var volume: String
+    var vol: Double
     var price: String
+    var pr: Double
     var timestamp: Double
     var type: BookRecordType
 
@@ -113,6 +115,8 @@ class OrderBookRecord: Identifiable, ObservableObject {
         self.price = price
         self.timestamp = timestamp
         self.type = type
+        self.vol = Double(volume)!
+        self.pr = Double(price)!
         id = UUID()
     }
 }
@@ -122,12 +126,14 @@ struct Stats {
     var totalAskVol: Double
     var bestBid: Double
     var bestAsk: Double
+    var maxVolume: Double
 
-    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double) {
+    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double, _ max_volume: Double) {
         totalBidVol = totalBidVolume
         totalAskVol = totalAskVolume
         bestAsk = bestA
         bestBid = bestB
+        maxVolume = max_volume
     }
 
     var pegValue: Double {
@@ -141,6 +147,7 @@ struct Stats {
     var totalBidVolumePerc: Double {
         return round((totalBidVol / (totalAskVol + totalBidVol)) * 100)
     }
+  
 }
 
 class OrderBookData: ObservableObject, Equatable {
@@ -170,12 +177,13 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     var stats: Stats {
-        let totalAskVol = ask_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
-        let totalBidVol = bid_keys.reduce(0) { $0 + Double(all[$1]!.volume)! }
-        let best_bid = bid_keys.count > 0 ? Double(all[bid_keys[0]]!.price)! : 0
-        let best_ask = ask_keys.count > 0 ? Double(all[ask_keys[0]]!.price)! : 0
+        let totalAskVol = ask_keys.reduce(0) { $0 + all[$1]!.vol }
+        let totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
+        let best_bid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
+        let best_ask = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
+        let max_volume = all.values.max(by: {$0.vol < $1.vol})?.vol
 
-        return Stats(totalBidVol, totalAskVol, best_bid, best_ask)
+        return Stats(totalBidVol, totalAskVol, best_bid, best_ask, max_volume!)
     }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {

@@ -42,6 +42,7 @@
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
+		34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401392B35B15200E0DC4A /* VolumeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,7 @@
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
+		34F401392B35B15200E0DC4A /* VolumeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +179,7 @@
 				34905C592B2B64B800A5A649 /* PositionCell.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
 				34905C532B2B5B9E00A5A649 /* BidCell.swift */,
+				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34066F502B31A8200090C78A /* AskCell.swift */,
 				34905C5F2B2C4A1800A5A649 /* OrderForm.swift */,
@@ -376,6 +379,7 @@
 			files = (
 				34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */,
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
+				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
 				34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */,
 				34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */,
 				34F401302B34393900E0DC4A /* KeychainHandler.swift in Sources */,
