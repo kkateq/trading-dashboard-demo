@@ -13,10 +13,26 @@ struct HomeView: View {
     @State private var validate: Bool = true
     @State private var useRest: Bool = false
     @State private var leverage: Int = 4
-    
+
     var body: some View {
         HStack {
-            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+            IndicatorPanView()
+                .frame(width: 400)
+            HStack {
+                
+                ZStack {
+                    HStack {
+                        
+                        OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+                        VStack {
+                            VolumeProfileChart()
+                        }
+                    }
+                    GridOverlay()
+                }
+               
+                
+            }.frame(width: 950)
             OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
         }
     }

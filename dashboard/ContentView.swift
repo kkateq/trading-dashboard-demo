@@ -12,17 +12,21 @@ struct ContentView: View {
     @StateObject var manager = KrakenOrderManager()
 
     var body: some View {
-        HStack(alignment: .top) {
-            HStack {
-                if kraken_ws.book != nil {
-    
-                    HomeView().environmentObject(kraken_ws.book).environmentObject(manager)
-                } else {
-                    Text("Connecting ... ")
+        VStack {
+       
+            HStack(alignment: .top) {
+                HStack {
+                    if kraken_ws.book != nil {
+                        
+                        HomeView().environmentObject(kraken_ws.book).environmentObject(manager)
+                    } else {
+                        Text("Connecting ... ")
+                    }
                 }
+                
+                
             }
-
-            
+           
         }
         .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
         .padding([.top, .bottom, .leading, .trailing], 2)

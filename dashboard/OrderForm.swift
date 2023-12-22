@@ -154,6 +154,8 @@ struct OrderForm: View {
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 2)
             )
+            .background(Color("Background"))
+            
     }
 }
 
