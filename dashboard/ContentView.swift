@@ -9,28 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
+    @StateObject var kraken_recent_trade_ws = KrakenRecentTrades("MATIC/USD")
     @StateObject var manager = KrakenOrderManager()
 
     var body: some View {
         VStack {
-       
             HStack(alignment: .top) {
                 HStack {
                     if kraken_ws.book != nil {
-                        
-                        HomeView().environmentObject(kraken_ws.book).environmentObject(manager)
+                        HomeView().environmentObject(kraken_ws.book).environmentObject(manager).environmentObject(kraken_recent_trade_ws.trades)
                     } else {
                         Text("Connecting ... ")
                     }
                 }
-                
-                
             }
-           
         }
         .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
         .padding([.top, .bottom, .leading, .trailing], 2)
-        
     }
 }
 

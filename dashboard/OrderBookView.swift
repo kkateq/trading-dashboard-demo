@@ -16,6 +16,7 @@ struct OrderBookView: View {
     @Binding  var leverage: Int
     
     @EnvironmentObject var book: OrderBookData
+
     @EnvironmentObject var manager: KrakenOrderManager
     
     let layout = [
@@ -59,18 +60,20 @@ struct OrderBookView: View {
                         let price = "\(round(10000 * record.pr) / 10000)"
                         
                         if record.type == BookRecordType.ask {
-                            PositionCell(position: "")
+                            RecentTradeCell(price: record.pr, side: .bid)
+                            RecentTradeCell(price: record.pr, side: .ask)
                             EmptyCell()
                             PriceCell(price: price, depth: book.depth, level: index)
                             VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
-                            PositionCell(position: "")
+                            
                             
                         } else {
-                            PositionCell(position: "")
+                            RecentTradeCell(price: record.pr, side: .bid)
+                            RecentTradeCell(price: record.pr, side: .ask)
                             VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
                             PriceCell(price: price, depth: book.depth, level: index)
                             EmptyCell()
-                            PositionCell(position: "")
+                           
                         }
                     }
                 }

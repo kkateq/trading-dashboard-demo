@@ -43,6 +43,8 @@
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
 		34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401392B35B15200E0DC4A /* VolumeCell.swift */; };
+		34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */; };
+		34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +102,8 @@
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
 		34F401392B35B15200E0DC4A /* VolumeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeCell.swift; sourceTree = "<group>"; };
+		34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenRecentTrades.swift; sourceTree = "<group>"; };
+		34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTradeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +176,7 @@
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
+				34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
 				34CF57F92B32F97800226F7A /* PriceChartView.swift */,
 				34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */,
@@ -233,6 +238,7 @@
 			children = (
 				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
 				349044952B330DE800975B95 /* KrakenOHLC.swift */,
+				34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */,
 			);
 			path = krakenWS;
 			sourceTree = "<group>";
@@ -382,6 +388,7 @@
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
 				34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */,
 				34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */,
+				34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */,
 				34F401302B34393900E0DC4A /* KeychainHandler.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
@@ -399,6 +406,7 @@
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
+				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
 				34066F532B31B4B30090C78A /* HomeView.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
