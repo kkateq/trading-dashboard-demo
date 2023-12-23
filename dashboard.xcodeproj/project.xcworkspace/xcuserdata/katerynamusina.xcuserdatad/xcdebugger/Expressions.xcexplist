@@ -40,7 +40,18 @@
          contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
+         contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
+      </ContextState>
+      <ContextState
          contextName = "Manager.refetchOpenPositions():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "trade[0] as? Double">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">

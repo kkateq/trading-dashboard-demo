@@ -179,7 +179,6 @@
 				34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
 				34CF57F92B32F97800226F7A /* PriceChartView.swift */,
-				34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */,
 				34F4012F2B34393900E0DC4A /* KeychainHandler.swift */,
 				34905C592B2B64B800A5A649 /* PositionCell.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
@@ -236,6 +235,7 @@
 		34F4012D2B335DD300E0DC4A /* krakenWS */ = {
 			isa = PBXGroup;
 			children = (
+				34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */,
 				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
 				349044952B330DE800975B95 /* KrakenOHLC.swift */,
 				34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */,

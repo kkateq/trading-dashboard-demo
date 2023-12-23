@@ -21,7 +21,7 @@ struct HomeView: View {
           
             HStack {
                 OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
-                        
+            
             }.frame(width: 950)
             OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
         }

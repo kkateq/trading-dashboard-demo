@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct OrderBookView: View {
-
     @Binding var volume: Double
-    @Binding  var scaleInOut: Bool
-    @Binding  var validate: Bool
-    @Binding  var useRest: Bool
-    @Binding  var leverage: Int
+    @Binding var scaleInOut: Bool
+    @Binding var validate: Bool
+    @Binding var useRest: Bool
+    @Binding var leverage: Int
     
     @EnvironmentObject var book: OrderBookData
 
     @EnvironmentObject var manager: KrakenOrderManager
     
     let layout = [
-        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(200), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
@@ -52,36 +51,40 @@ struct OrderBookView: View {
                 Text(ap).foregroundColor(.red)
                 Text("Depth: \(book.depth)")
             }
-            ScrollView {
-                LazyVGrid(columns: layout, spacing: 2) {
-                    ForEach(0..<book.allList.count) { index in
-                        let record = book.allList[index]
-//                     
-                        let price = "\(round(10000 * record.pr) / 10000)"
+            VStack{
+                ZStack {
+                    ScrollView {
                         
-                        if record.type == BookRecordType.ask {
-                            RecentTradeCell(price: record.pr, side: .bid)
-                            RecentTradeCell(price: record.pr, side: .ask)
-                            EmptyCell()
-                            PriceCell(price: price, depth: book.depth, level: index)
-                            VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
-                            
-                            
-                        } else {
-                            RecentTradeCell(price: record.pr, side: .bid)
-                            RecentTradeCell(price: record.pr, side: .ask)
-                            VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
-                            PriceCell(price: price, depth: book.depth, level: index)
-                            EmptyCell()
-                           
+                        LazyVGrid(columns: layout, spacing: 2) {
+                            ForEach(0 ..< book.allList.count) { index in
+                                let record = book.allList[index]
+                                let price = "\(round(10000 * record.pr) / 10000)"
+                                
+                                if record.type == BookRecordType.ask {
+                                    RecentTradeCell(price: record.pr)
+                                    EmptyCell()
+                                    PriceCell(price: price, depth: book.depth, level: index)
+                                    VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
+                                    PositionCell(position: "")
+                                    
+                                } else {
+                                    RecentTradeCell(price: record.pr)
+                                    VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
+                                    PriceCell(price: price, depth: book.depth, level: index)
+                                    EmptyCell()
+                                    PositionCell(position: "")
+                                }
+                            }
                         }
-                    }
+                    }.overlay(
+                        RoundedRectangle(cornerRadius: 2)
+                            .stroke(.gray, lineWidth: 1))
+                    
+                    GridOverlay()
                 }
-            }.overlay(
-                RoundedRectangle(cornerRadius: 2)
-                    .stroke(.gray, lineWidth: 1))
+            }
         }
-        .frame(width: 530)
+        .frame(width: 670)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)

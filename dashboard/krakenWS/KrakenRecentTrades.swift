@@ -11,7 +11,7 @@ import Foundation
 import Starscream
 
 struct RecentTrade: Identifiable, Equatable {
-    var id: UUID = .init()
+    var id: UUID = UUID()
     var price: Double
     var sellLimit: Double
     var buyLimit: Double
@@ -28,6 +28,18 @@ struct TradeRecordUpdateResponse: Decodable {
     var side: String
     var orderType: String
     var misc: String
+    var count: Double? = 0
+    
+    
+    init(price: String, volume: String, timestamp: Double, side: String, orderType: String, misc: String, count: Double) {
+        self.price = Double(price)!
+        self.volume = Double(volume)!
+        self.timestamp = timestamp
+        self.side = side
+        self.orderType = orderType
+        self.misc = misc
+        self.count = count
+    }
 
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
@@ -37,6 +49,11 @@ struct TradeRecordUpdateResponse: Decodable {
         side = try container.decode(String.self)
         orderType = try container.decode(String.self)
         misc = try container.decode(String.self)
+        do {
+            count = try container.decode(Double.self)
+        } catch {
+            print("No count to decode")
+        }
     }
 }
 
@@ -64,15 +81,15 @@ class RecentTradesData: ObservableObject, Identifiable, Equatable {
     var trades: [Double: RecentTrade] = [:]
 
     var maxSellMarketVolume: Double {
-        if let v = trades.values.max(by: { $0.sellMarket < $1.sellMarket }){
+        if let v = trades.values.max(by: { $0.sellMarket < $1.sellMarket }) {
             return v.sellMarket
         }
-        
+
         return 0
     }
 
     var maxBuyMarketVolume: Double {
-        if let v = trades.values.max(by: { $0.buyMarket < $1.buyMarket }){
+        if let v = trades.values.max(by: { $0.buyMarket < $1.buyMarket }) {
             return v.buyMarket
         }
         return 0
@@ -89,7 +106,7 @@ class RecentTradesData: ObservableObject, Identifiable, Equatable {
         if let v = trades.values.max(by: { $0.buyLimit < $1.buyLimit }) {
             return v.buyLimit
         }
-        
+
         return 0
     }
 }
@@ -124,11 +141,38 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
         socket = WebSocket(request: request)
         socket.delegate = self
         socket.connect()
+
+        self.data = RecentTradesData()
+        
+        Task {
+            await fetchRecentTrades()
+        }
     }
 
     func subscribe() {
         let msg = "{\"event\":\"subscribe\",\"pair\":[\"\(pair)\"], \"subscription\":{ \"name\":\"trade\"}}"
         socket.write(string: msg)
+    }
+
+    func fetchRecentTrades() async {
+        LogManager.shared.action("Refetch open orders...")
+        let result: KrakenNetwork.KrakenResult = await Kraken.shared.trades(pair: pair)
+        switch result {
+        case .success(let trades):
+            DispatchQueue.main.async {
+                if let trades_list = trades[self.pair] as? [AnyObject] {
+                    for trade in trades_list {
+                        let recentTrade = TradeRecordUpdateResponse(price: trade[0] as! String, volume: trade[1] as! String, timestamp: trade[2] as! Double, side: trade[3] as! String, orderType: trade[4] as! String, misc: trade[5] as! String, count: trade[6] as! Double)
+                        
+                        self.update(trade: recentTrade)
+                        
+
+                    }
+                }
+            }
+        case .failure(let error):
+            LogManager.shared.error(error.localizedDescription)
+        }
     }
 
     func parseTextMessage(message: String) {
@@ -152,7 +196,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
                     isSubscribed = true
                     channelID = result.channelID!
                 }
-                data = RecentTradesData()
+               
 
             } else if isSubscribed {
                 let trades_update = try decoder.decode(TradeUpdateResponse.self, from: Data(message.utf8))
@@ -160,18 +204,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
                 DispatchQueue.main.async {
                     if self.data != nil {
                         for trade in trades_update.trades {
-                            let sellLimit = trade.side == "s" && trade.orderType == "l" ? trade.volume : 0
-                            let buyLimit = trade.side == "b" && trade.orderType == "l" ? trade.volume : 0
-                            let sellMarket = trade.side == "s" && trade.orderType == "m" ? trade.volume : 0
-                            let buyMarket = trade.side == "b" && trade.orderType == "m" ? trade.volume : 0
-
-                            if let exTrade = self.data.trades[trade.price] {
-                                let newTrade = RecentTrade(price: trade.price, sellLimit: exTrade.sellLimit + sellLimit, buyLimit: exTrade.buyLimit + buyLimit, sellMarket: exTrade.sellMarket + sellMarket, buyMarket: exTrade.buyMarket + buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : exTrade.lastSellTimestamp, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : exTrade.lastBuyTimestamp)
-                                self.data.trades[trade.price] = newTrade
-                            } else {
-                                let newTrade = RecentTrade(price: trade.price, sellLimit: sellLimit, buyLimit: buyLimit, sellMarket: sellMarket, buyMarket: buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : 0, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : 0)
-                                self.data.trades[trade.price] = newTrade
-                            }
+                            self.update(trade: trade)
                         }
                     }
                 }
@@ -181,35 +214,50 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
         }
     }
 
+    func update(trade: TradeRecordUpdateResponse) {
+        let sellLimit = trade.side == "s" && trade.orderType == "l" ? trade.volume : 0
+        let buyLimit = trade.side == "b" && trade.orderType == "l" ? trade.volume : 0
+        let sellMarket = trade.side == "s" && trade.orderType == "m" ? trade.volume : 0
+        let buyMarket = trade.side == "b" && trade.orderType == "m" ? trade.volume : 0
+
+        if let exTrade = data.trades[trade.price] {
+            let newTrade = RecentTrade(price: trade.price, sellLimit: exTrade.sellLimit + sellLimit, buyLimit: exTrade.buyLimit + buyLimit, sellMarket: exTrade.sellMarket + sellMarket, buyMarket: exTrade.buyMarket + buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : exTrade.lastSellTimestamp, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : exTrade.lastBuyTimestamp)
+            data.trades[trade.price] = newTrade
+        } else {
+            let newTrade = RecentTrade(price: trade.price, sellLimit: sellLimit, buyLimit: buyLimit, sellMarket: sellMarket, buyMarket: buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : 0, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : 0)
+            data.trades[trade.price] = newTrade
+        }
+    }
+
     func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
         switch event {
-            case .connected(let headers):
-                isConnected = true
-                print("websocket is connected: \(headers)")
-            case .disconnected(let reason, let code):
-                isConnected = false
-                isSubscribed = false
-                channelID = 0
-                print("websocket is disconnected: \(reason) with code: \(code)")
-            case .text(let string):
-                parseTextMessage(message: string)
-            case .binary(let data):
-                print("Received data: \(data.count)")
-            case .ping:
-                break
-            case .pong:
-                break
-            case .viabilityChanged:
-                break
-            case .reconnectSuggested:
-                break
-            case .cancelled:
-                isConnected = false
-            case .error(let error):
-                isConnected = false
-                handleError(error)
-            case .peerClosed:
-                break
+        case .connected(let headers):
+            isConnected = true
+            print("websocket is connected: \(headers)")
+        case .disconnected(let reason, let code):
+            isConnected = false
+            isSubscribed = false
+            channelID = 0
+            print("websocket is disconnected: \(reason) with code: \(code)")
+        case .text(let string):
+            parseTextMessage(message: string)
+        case .binary(let data):
+            print("Received data: \(data.count)")
+        case .ping:
+            break
+        case .pong:
+            break
+        case .viabilityChanged:
+            break
+        case .reconnectSuggested:
+            break
+        case .cancelled:
+            isConnected = false
+        case .error(let error):
+            isConnected = false
+            handleError(error)
+        case .peerClosed:
+            break
         }
     }
 

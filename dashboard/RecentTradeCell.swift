@@ -11,7 +11,6 @@ struct RecentTradeCell: View {
     @EnvironmentObject var recentTrades: RecentTradesData
     
     var price: Double
-    var side: BookRecordType
     let cellHeight: CGFloat = 25
     let cellWidth: CGFloat = 100
     
@@ -67,50 +66,64 @@ struct RecentTradeCell: View {
         return recentTrades.maxBuyMarketVolume
     }
 
-    var fill1: CGFloat {
-        if side == .ask {
-            return round(((sellMarket + sellLimit) / (maxSellLimitVolume + maxBuyMarketVolume)) * 100)
+    var fillAsk1: CGFloat {
+        let k = round(((sellMarket + sellLimit) / (maxSellLimitVolume + maxBuyMarketVolume)) * 100)
+        return k
+    }
+    
+    var fillBid1: CGFloat {
+        let p = round(((buyMarket + buyLimit) / (maxBuyLimitVolume + maxBuyMarketVolume)) * 100)
+        return p
+    }
+    
+    var fillAsk2: CGFloat {
+        let res = 100 - fillAsk1
+        if res < 0 {
+            return 0
         }
-        else {
-            return round(((buyMarket + buyLimit) / (maxBuyLimitVolume + maxBuyMarketVolume)) * 100)
+        return res
+    }
+    
+    var fillBid2: CGFloat {
+        let res = 100 - fillBid1
+        if res < 0 {
+            return 0
         }
-    }
-    
-    var align: Alignment {
-        return side == .bid ? .leading : .trailing
-    }
-    
-    var textColor: Color {
-        return side == .ask ? Color("AskTextColor") : Color("BidTextColor")
-    }
-    
-    var volumeColor: Color {
-        return side == .ask ? Color("RedLight") : Color("BlueLight")
-    }
-    
-    var volumeFullColor: Color {
-        return side == .ask ? .white : .white
+        return res
     }
     
     var body: some View {
-        let volStr = String(format: "%.0f", side == .bid ? round(buyLimit + buyMarket) : round(sellLimit + sellMarket))
-        ZStack {
-            HStack(spacing: 0) {
-                if side == .bid {
-                    Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
-                    Rectangle().fill(volumeColor).frame(width: fill1)
-                }
-                else {
-                    Rectangle().fill(volumeColor).frame(width: fill1)
-                    Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
-                }
-            }.frame(width: cellWidth, height: cellHeight)
-            Text(volStr)
-                .frame(width: cellWidth, height: cellHeight, alignment: align)
-                .font(.system(.caption))
-                .foregroundColor(Color("LightGray")).font(.system(.title3))
+        let sellVolumeStr = String(format: "%.0f", round(sellLimit + sellMarket))
+        let buyVolumeStr = String(format: "%.0f", round(buyLimit + buyMarket))
+        HStack(spacing: 0) {
+            ZStack {
+                HStack(spacing: 0) {
+                    Rectangle().fill(.white).frame(width: fillBid2, height: 25)
+                    Rectangle().fill(Color("GreenLight")).frame(width: fillBid1, height: 25)
+      
+                }.frame(width: cellWidth, height: cellHeight)
+                Text(buyVolumeStr)
+                    .frame(width: cellWidth, height: cellHeight, alignment: .trailing)
+                    .font(.system(.caption))
+                    .foregroundColor(Color("GreenDarker")).font(.system(.title3))
+              
+            }
+            Divider()
+            ZStack {
+                HStack(spacing: 0) {
+                   
+                    Rectangle().fill(Color("RedLight")).frame(width: fillAsk1, height: 25)
+                    Rectangle().fill(.white).frame(width: fillAsk2, height: 25)
+                    
+                }.frame(width: cellWidth, height: cellHeight)
+              
+                Text(sellVolumeStr)
+                    .frame(width: cellWidth, height: cellHeight, alignment: .leading)
+                    .font(.system(.caption))
+                    .foregroundColor(Color("RedDarker")).font(.system(.title3))
+            }
         }
-        .frame(width: 100, height: 25)
+        .frame(width: 200, height: 25)
     }
 }
 
@@ -125,21 +138,21 @@ struct RecentTradeCell: View {
             EmptyCell()
             PriceCell(price: "0.9888", depth: 25, level: 1)
             VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
-            RecentTradeCell(price: 0.5055, side: .ask)
+            RecentTradeCell(price: 0.5055)
             
             PositionCell(position: "")
             EmptyCell()
             PriceCell(price: "0.9888", depth: 25, level: 1)
             VolumeCell(volume: 8700, maxVolume: 200000, type: .ask, price: "0.997", onLimit: { print("\($0)") })
-            RecentTradeCell(price: 0.5055, side: .ask)
+            RecentTradeCell(price: 0.5055)
             
-            RecentTradeCell(price: 0.5055, side: .bid)
+            RecentTradeCell(price: 0.5055)
             VolumeCell(volume: 87000, maxVolume: 200000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
             PriceCell(price: "0.9888", depth: 25, level: 1)
             EmptyCell()
             PositionCell(position: "")
             
-            RecentTradeCell(price: 0.5055, side: .bid)
+            RecentTradeCell(price: 0.5055)
             VolumeCell(volume: 7000, maxVolume: 20000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
             PriceCell(price: "0.9888", depth: 25, level: 1)
             EmptyCell()
