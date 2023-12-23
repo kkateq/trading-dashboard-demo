@@ -3,6 +3,9 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">
+      </ContextState>
+      <ContextState
          contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
@@ -54,6 +57,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "&quot;\(yesterday)&quot;">
+            </PersistentString>
+            <PersistentString
+               value = "Calendar.current.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
          <PersistentStrings>
             <PersistentString
@@ -80,6 +94,9 @@
       </ContextState>
       <ContextState
          contextName = "Manager.subscribeOwnTrades():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "KrakenRecentTrades.update(trade:):KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
          contextName = "OrderBookData.verifyChecksum(_:):KrakenWS.swift">

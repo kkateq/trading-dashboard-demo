@@ -156,7 +156,9 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
 
     func fetchRecentTrades() async {
         LogManager.shared.action("Refetch open orders...")
-        let result: KrakenNetwork.KrakenResult = await Kraken.shared.trades(pair: pair)
+//        let tim = Int(Calendar.current.startOfDay(for: Date()).timeIntervalSince1970 * 1000)
+        let yesterday = Int(Calendar.current.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970)
+        let result: KrakenNetwork.KrakenResult = await Kraken.shared.trades(pair: pair, since: yesterday)
         switch result {
         case .success(let trades):
             DispatchQueue.main.async {
