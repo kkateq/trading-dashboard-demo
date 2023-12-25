@@ -91,7 +91,7 @@ struct RecentTradeCell: View {
   
         HStack {
             Text(price).frame(width: cellWidth, height: cellHeight)
-                .font(trade.id == recentTrades.lastRecentTradeId ? .title :.caption)
+                .font(.caption)
                 .background(.white)
         }
            
