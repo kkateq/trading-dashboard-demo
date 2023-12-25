@@ -8,46 +8,27 @@
 import SwiftUI
 
 struct RecentTradeCell: View {
-    @EnvironmentObject var recentTrades: RecentTradesData
+    var trade: RecentTrade
+    var recentTrades: RecentTradesData
+    var book: OrderBookData
     
-    var price: Double
     let cellHeight: CGFloat = 25
     let cellWidth: CGFloat = 100
     
     var sellMarket: Double {
-        if let trade = recentTrades.trades[price] {
-            return trade.sellMarket
-        }
-        else {
-            return 0
-        }
+        return trade.sellMarket
     }
     
     var buyMarket: Double {
-        if let trade = recentTrades.trades[price] {
-            return trade.buyMarket
-        }
-        else {
-            return 0
-        }
+        return trade.buyMarket
     }
     
     var buyLimit: Double {
-        if let trade = recentTrades.trades[price] {
-            return trade.buyLimit
-        }
-        else {
-            return 0
-        }
+        return trade.buyLimit
     }
     
     var sellLimit: Double {
-        if let trade = recentTrades.trades[price] {
-            return trade.sellLimit
-        }
-        else {
-            return 0
-        }
+        return trade.sellLimit
     }
     
     var maxSellLimitVolume: Double {
@@ -91,72 +72,74 @@ struct RecentTradeCell: View {
         }
         return res
     }
-    
+
     var body: some View {
         let sellVolumeStr = String(format: "%.0f", round(sellLimit + sellMarket))
         let buyVolumeStr = String(format: "%.0f", round(buyLimit + buyMarket))
-        HStack(spacing: 0) {
-            ZStack {
-                HStack(spacing: 0) {
-                    Rectangle().fill(.white).frame(width: fillBid2, height: 25)
-                    Rectangle().fill(Color("GreenLight")).frame(width: fillBid1, height: 25)
+        let price = "\(round(10000 * trade.price) / 10000)"
+        ZStack {
+            HStack(spacing: 0) {
+                Rectangle().fill(.white).frame(width: fillBid2, height: 25)
+                Rectangle().fill(Color("GreenLight")).frame(width: fillBid1, height: 25)
       
-                }.frame(width: cellWidth, height: cellHeight)
-                Text(buyVolumeStr)
-                    .frame(width: cellWidth, height: cellHeight, alignment: .trailing)
-                    .font(.system(.caption))
-                    .foregroundColor(Color("GreenDarker")).font(.system(.title3))
-              
-            }
-            Divider()
-            ZStack {
-                HStack(spacing: 0) {
-                   
-                    Rectangle().fill(Color("RedLight")).frame(width: fillAsk1, height: 25)
-                    Rectangle().fill(.white).frame(width: fillAsk2, height: 25)
-                    
-                }.frame(width: cellWidth, height: cellHeight)
-              
-                Text(sellVolumeStr)
-                    .frame(width: cellWidth, height: cellHeight, alignment: .leading)
-                    .font(.system(.caption))
-                    .foregroundColor(Color("RedDarker")).font(.system(.title3))
-            }
+            }.frame(width: cellWidth, height: cellHeight)
+            Text(buyVolumeStr)
+                .frame(width: cellWidth, height: cellHeight, alignment: .trailing)
+                .font(.system(.caption))
+                .foregroundColor(Color("GreenDarker")).font(.system(.title3))
         }
-        .frame(width: 200, height: 25)
+  
+        HStack {
+            Text(price).frame(width: cellWidth, height: cellHeight)
+                .font(trade.id == recentTrades.lastRecentTradeId ? .title :.caption)
+                .background(.white)
+        }
+           
+        ZStack {
+            HStack(spacing: 0) {
+                Rectangle().fill(Color("RedLight")).frame(width: fillAsk1, height: 25)
+                Rectangle().fill(.white).frame(width: fillAsk2, height: 25)
+                    
+            }.frame(width: cellWidth, height: cellHeight)
+              
+            Text(sellVolumeStr)
+                .frame(width: cellWidth, height: cellHeight, alignment: .leading)
+                .font(.system(.caption))
+                .foregroundColor(Color("RedDarker")).font(.system(.title3))
+        }
     }
 }
 
 #Preview {
     VStack {
-        LazyVGrid(columns: [GridItem(.fixed(100), spacing: 2),
-                            GridItem(.fixed(100), spacing: 2),
-                            GridItem(.fixed(100), spacing: 2),
-                            GridItem(.fixed(100), spacing: 2),
-                            GridItem(.fixed(100), spacing: 2)], spacing: 2) {
-            PositionCell(position: "")
-            EmptyCell()
-            PriceCell(price: "0.9888", depth: 25, level: 1)
-            VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
-            RecentTradeCell(price: 0.5055)
-            
-            PositionCell(position: "")
-            EmptyCell()
-            PriceCell(price: "0.9888", depth: 25, level: 1)
-            VolumeCell(volume: 8700, maxVolume: 200000, type: .ask, price: "0.997", onLimit: { print("\($0)") })
-            RecentTradeCell(price: 0.5055)
-            
-            RecentTradeCell(price: 0.5055)
-            VolumeCell(volume: 87000, maxVolume: 200000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
-            PriceCell(price: "0.9888", depth: 25, level: 1)
-            EmptyCell()
-            PositionCell(position: "")
-            
-            RecentTradeCell(price: 0.5055)
-            VolumeCell(volume: 7000, maxVolume: 20000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
-            PriceCell(price: "0.9888", depth: 25, level: 1)
-            EmptyCell()
-            PositionCell(position: "")
-        }
+//        LazyVGrid(columns: [GridItem(.fixed(100), spacing: 2),
+//                            GridItem(.fixed(100), spacing: 2),
+//                            GridItem(.fixed(100), spacing: 2),
+//                            GridItem(.fixed(100), spacing: 2),
+//                            GridItem(.fixed(100), spacing: 2)], spacing: 2) {
+//            PositionCell(position: "")
+//            EmptyCell()
+//            PriceCell(price: "0.9888", depth: 25, level: 1)
+//            VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
+//            RecentTradeCell(price: "0.5055")
+//
+//            PositionCell(position: "")
+//            EmptyCell()
+//            PriceCell(price: "0.9888", depth: 25, level: 1)
+//            VolumeCell(volume: 8700, maxVolume: 200000, type: .ask, price: "0.997", onLimit: { print("\($0)") })
+//            RecentTradeCell(price: "0.5055")
+//
+//            RecentTradeCell(price: "0.5055")
+//            VolumeCell(volume: 87000, maxVolume: 200000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
+//            PriceCell(price: "0.9888", depth: 25, level: 1)
+//            EmptyCell()
+//            PositionCell(position: "")
+//
+//            RecentTradeCell(price: "0.5055")
+//            VolumeCell(volume: 7000, maxVolume: 20000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
+//            PriceCell(price: "0.9888", depth: 25, level: 1)
+//            EmptyCell()
+//            PositionCell(position: "")
+//        }
     }.frame(width: 700, height: 500)
 }

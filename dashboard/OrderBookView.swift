@@ -19,7 +19,7 @@ struct OrderBookView: View {
     @EnvironmentObject var manager: KrakenOrderManager
     
     let layout = [
-        GridItem(.fixed(200), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
@@ -51,24 +51,23 @@ struct OrderBookView: View {
                 Text(ap).foregroundColor(.red)
                 Text("Depth: \(book.depth)")
             }
-            VStack{
+            VStack {
                 ZStack {
                     ScrollView {
-                        
                         LazyVGrid(columns: layout, spacing: 2) {
                             ForEach(0 ..< book.allList.count) { index in
                                 let record = book.allList[index]
                                 let price = "\(round(10000 * record.pr) / 10000)"
                                 
                                 if record.type == BookRecordType.ask {
-                                    RecentTradeCell(price: record.pr)
+                                    PositionCell(position: "")
                                     EmptyCell()
                                     PriceCell(price: price, depth: book.depth, level: index)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
                                     PositionCell(position: "")
-                                    
+                                   
                                 } else {
-                                    RecentTradeCell(price: record.pr)
+                                    PositionCell(position: "")
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
                                     PriceCell(price: price, depth: book.depth, level: index)
                                     EmptyCell()
@@ -84,7 +83,7 @@ struct OrderBookView: View {
                 }
             }
         }
-        .frame(width: 670)
+        .frame(width: 530)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)

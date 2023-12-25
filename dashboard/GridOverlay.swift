@@ -16,7 +16,7 @@ struct GridOverlay: View {
 //                    .frame(height: i == 16 ? 2 : 1)
 //                    .edgesIgnoringSafeArea(.horizontal)
                 Rectangle()
-                    .fill(Color("Blue"))
+                .fill(.gray)
                     .frame(width: .infinity ,height: 2)
                     .edgesIgnoringSafeArea(.horizontal)
                    

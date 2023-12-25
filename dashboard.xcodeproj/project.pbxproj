@@ -45,6 +45,8 @@
 		34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401392B35B15200E0DC4A /* VolumeCell.swift */; };
 		34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */; };
 		34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */; };
+		34F401402B36F2DD00E0DC4A /* LastTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */; };
+		34F401422B37128700E0DC4A /* RecentTradesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401412B37128700E0DC4A /* RecentTradesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,8 @@
 		34F401392B35B15200E0DC4A /* VolumeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeCell.swift; sourceTree = "<group>"; };
 		34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenRecentTrades.swift; sourceTree = "<group>"; };
 		34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTradeCell.swift; sourceTree = "<group>"; };
+		34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastTradeCell.swift; sourceTree = "<group>"; };
+		34F401412B37128700E0DC4A /* RecentTradesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTradesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,9 +177,11 @@
 				34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34066F522B31B4B30090C78A /* HomeView.swift */,
+				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
+				34F401412B37128700E0DC4A /* RecentTradesView.swift */,
 				34F4013D2B35D9A000E0DC4A /* RecentTradeCell.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
 				34CF57F92B32F97800226F7A /* PriceChartView.swift */,
@@ -386,6 +392,7 @@
 				34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */,
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
+				34F401402B36F2DD00E0DC4A /* LastTradeCell.swift in Sources */,
 				34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */,
 				34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */,
 				34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */,
@@ -399,6 +406,7 @@
 				34CF57FA2B32F97800226F7A /* PriceChartView.swift in Sources */,
 				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
+				34F401422B37128700E0DC4A /* RecentTradesView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,
 				34066F512B31A8200090C78A /* AskCell.swift in Sources */,
