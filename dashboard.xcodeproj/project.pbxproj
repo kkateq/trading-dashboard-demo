@@ -50,6 +50,7 @@
 		34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401432B39C25100E0DC4A /* AverageVolumeIndicator.swift */; };
 		34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401452B3ADCDE00E0DC4A /* Commons.swift */; };
 		34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */; };
+		34F4014A2B3B224900E0DC4A /* ImbalanceChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +115,7 @@
 		34F401432B39C25100E0DC4A /* AverageVolumeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageVolumeIndicator.swift; sourceTree = "<group>"; };
 		34F401452B3ADCDE00E0DC4A /* Commons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commons.swift; sourceTree = "<group>"; };
 		34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceChart.swift; sourceTree = "<group>"; };
+		34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceChart2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +185,7 @@
 				34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34066F522B31B4B30090C78A /* HomeView.swift */,
+				34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */,
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
@@ -398,6 +401,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34F4014A2B3B224900E0DC4A /* ImbalanceChart2.swift in Sources */,
 				34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */,
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,

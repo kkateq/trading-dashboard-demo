@@ -124,6 +124,10 @@ class OrderBookRecord: Identifiable, ObservableObject {
 struct Stats {
     var totalBidVol: Double
     var totalAskVol: Double
+    var totalBidVol5: Double
+    var totalAskVol5: Double
+    var totalBidVol10: Double
+    var totalAskVol10: Double
     var bestBid: Double
     var bestAsk: Double
     var bestBidVolume: Double
@@ -131,15 +135,20 @@ struct Stats {
     var maxVolume: Double
     var time: Date
 
-    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double,_ bestBV: Double, _ bestAV: Double, _ max_volume: Double) {
-        totalBidVol = totalBidVolume
-        totalAskVol = totalAskVolume
-        bestAsk = bestA
-        bestBid = bestB
-        bestAskVolume = bestAV
-        bestBidVolume = bestBV
-        maxVolume = max_volume
+    init(all: [Double: OrderBookRecord], bid_keys: [Double], ask_keys: [Double]) {
         time = Date()
+
+        totalAskVol = ask_keys.reduce(0) { $0 + all[$1]!.vol }
+        totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
+        bestBid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
+        bestAsk = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
+        bestBidVolume = bid_keys.count > 0 ? all[bid_keys[0]]!.vol : 0.0
+        bestAskVolume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
+        totalAskVol5 = ask_keys.prefix(5).reduce(0) { $0 + all[$1]!.vol }
+        totalBidVol5 = bid_keys.prefix(5).reduce(0) { $0 + all[$1]!.vol }
+        totalAskVol10 = ask_keys.prefix(10).reduce(0) { $0 + all[$1]!.vol }
+        totalBidVol10 = bid_keys.prefix(10).reduce(0) { $0 + all[$1]!.vol }
+        maxVolume = all.values.max(by: { $0.vol < $1.vol })!.vol
     }
 
     var pegValue: Double {
@@ -165,7 +174,7 @@ class OrderBookData: ObservableObject, Equatable {
     var pair: String
     @Published var recentPeg: Double!
     @Published var statsHistory: [Stats] = []
-    
+
     var allList: [OrderBookRecord] {
         var list: [OrderBookRecord] = []
         for ask_key in ask_keys.reversed() {
@@ -186,15 +195,7 @@ class OrderBookData: ObservableObject, Equatable {
     @Published var stats: Stats!
 
     func getStats() -> Stats {
-        let totalAskVol = ask_keys.reduce(0) { $0 + all[$1]!.vol }
-        let totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
-        let best_bid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
-        let best_ask = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
-        let best_bid_volume = bid_keys.count > 0 ? all[bid_keys[0]]!.vol : 0.0
-        let best_ask_volume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
-        let max_volume = all.values.max(by: { $0.vol < $1.vol })?.vol
-        
-        return Stats(totalBidVol, totalAskVol, best_bid, best_ask, best_bid_volume, best_ask_volume, max_volume!)
+        return Stats(all: all, bid_keys: bid_keys, ask_keys: ask_keys)
     }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
@@ -207,7 +208,7 @@ class OrderBookData: ObservableObject, Equatable {
         self.depth = depth
         self.pair = pair
         all = [:]
-       
+
         channelID = response.channelID
 
         for ask in response.bookRecord.asks {
@@ -287,13 +288,13 @@ class OrderBookData: ObservableObject, Equatable {
         }
 
         isValid = verifyChecksum(updateResponse.bookRecord.checksum)
-        
+
         if let s = stats {
-            self.recentPeg = s.pegValue
-            if self.statsHistory.count > 5000 {
-                self.statsHistory = self.statsHistory.reversed().dropLast(2500).reversed()
+            recentPeg = s.pegValue
+            if statsHistory.count > 1000 {
+                statsHistory = statsHistory.reversed().dropLast(500).reversed()
             }
-            self.statsHistory.append(s)
+            statsHistory.append(s)
         }
         stats = getStats()
     }

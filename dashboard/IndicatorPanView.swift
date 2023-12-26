@@ -13,6 +13,7 @@ struct IndicatorPanView: View {
             HStack {
                 ImbalanceChart()
             }
+            ImbalanceChart2()
         }.frame(width: 720)
     }
 }

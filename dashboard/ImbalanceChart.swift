@@ -31,14 +31,6 @@ struct ImbalanceChart: View {
         return res
     }
 
-    let stops = [
-        Gradient.Stop(color: .red, location: -1.0),
-        Gradient.Stop(color: .red, location: -0.33),
-        Gradient.Stop(color: .blue, location: -0.3301),
-        Gradient.Stop(color: .blue, location: 0.33001),
-        Gradient.Stop(color: .green, location: 0.33),
-        Gradient.Stop(color: .green, location: 1.0)
-    ]
 
     var body: some View {
         VStack {
@@ -71,7 +63,7 @@ struct ImbalanceChart: View {
             } .overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
-            .padding()
+        
         }
        
     }
