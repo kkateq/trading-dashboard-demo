@@ -115,8 +115,8 @@ class OrderBookRecord: Identifiable, ObservableObject {
         self.price = price
         self.timestamp = timestamp
         self.type = type
-        self.vol = Double(volume)!
-        self.pr = Double(price)!
+        vol = Double(volume)!
+        pr = Double(price)!
         id = UUID()
     }
 }
@@ -147,7 +147,6 @@ struct Stats {
     var totalBidVolumePerc: Double {
         return round((totalBidVol / (totalAskVol + totalBidVol)) * 100)
     }
-  
 }
 
 class OrderBookData: ObservableObject, Equatable {
@@ -176,12 +175,14 @@ class OrderBookData: ObservableObject, Equatable {
         return list
     }
 
-    var stats: Stats {
+    @Published var stats: Stats!
+
+    func getStats() -> Stats {
         let totalAskVol = ask_keys.reduce(0) { $0 + all[$1]!.vol }
         let totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
         let best_bid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
         let best_ask = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
-        let max_volume = all.values.max(by: {$0.vol < $1.vol})?.vol
+        let max_volume = all.values.max(by: { $0.vol < $1.vol })?.vol
 
         return Stats(totalBidVol, totalAskVol, best_bid, best_ask, max_volume!)
     }
@@ -198,6 +199,7 @@ class OrderBookData: ObservableObject, Equatable {
         all = [:]
 
         channelID = response.channelID
+
         for ask in response.bookRecord.asks {
             let key = Double(ask.price)!
             all[key] = OrderBookRecord(ask.price, ask.volume, Double(ask.timestamp)!, BookRecordType.ask)
@@ -206,6 +208,8 @@ class OrderBookData: ObservableObject, Equatable {
             let key = Double(bid.price)!
             all[key] = OrderBookRecord(bid.price, bid.volume, Double(bid.timestamp)!, BookRecordType.bid)
         }
+
+        stats = getStats()
     }
 
     func parseValue(p: String) -> String {
@@ -235,7 +239,6 @@ class OrderBookData: ObservableObject, Equatable {
         let hash = str.crc32()
 
         let res = hash == checksum_str
-
 
         return res
     }
@@ -274,6 +277,7 @@ class OrderBookData: ObservableObject, Equatable {
         }
 
         isValid = verifyChecksum(updateResponse.bookRecord.checksum)
+        stats = getStats()
     }
 }
 

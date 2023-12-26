@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var volume: Double = 10
+    @State private var volume: Double = 100
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = true
     @State private var useRest: Bool = false

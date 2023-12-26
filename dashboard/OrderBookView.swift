@@ -7,13 +7,14 @@
 
 import SwiftUI
 
+
+
 struct OrderBookView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
     @Binding var useRest: Bool
     @Binding var leverage: Int
-    
     @EnvironmentObject var book: OrderBookData
 
     @EnvironmentObject var manager: KrakenOrderManager
@@ -33,6 +34,8 @@ struct OrderBookView: View {
     func buyLimit(price: String) async {
         await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, leverage: leverage)
     }
+    
+
     
     var body: some View {
         VStack {
@@ -57,21 +60,21 @@ struct OrderBookView: View {
                         LazyVGrid(columns: layout, spacing: 2) {
                             ForEach(0 ..< book.allList.count) { index in
                                 let record = book.allList[index]
-                                let price = "\(round(10000 * record.pr) / 10000)"
+                                let price = formatPrice(price: record.pr)
                                 
                                 if record.type == BookRecordType.ask {
-                                    PositionCell(position: "")
+                                    NoteCell()
                                     EmptyCell()
                                     PriceCell(price: price, depth: book.depth, level: index)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
-                                    PositionCell(position: "")
+                                    NoteCell()
                                    
                                 } else {
-                                    PositionCell(position: "")
+                                    NoteCell()
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
                                     PriceCell(price: price, depth: book.depth, level: index)
                                     EmptyCell()
-                                    PositionCell(position: "")
+                                    NoteCell()
                                 }
                             }
                         }

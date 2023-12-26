@@ -215,7 +215,8 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
 
             } else if isSubscribed {
                 let trades_update = try decoder.decode(TradeUpdateResponse.self, from: Data(message.utf8))
-
+                LogManager.shared.action("Recent trade")
+                LogManager.shared.action(message)
                 DispatchQueue.main.async {
                     if self.data != nil {
                         var last: TradeRecord!

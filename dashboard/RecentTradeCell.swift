@@ -74,9 +74,12 @@ struct RecentTradeCell: View {
     }
 
     var body: some View {
-        let sellVolumeStr = String(format: "%.0f", round(sellLimit + sellMarket))
-        let buyVolumeStr = String(format: "%.0f", round(buyLimit + buyMarket))
-        let price = "\(round(10000 * trade.price) / 10000)"
+        let sellVolumeStr = String(format: "%.0f", sellLimit + sellMarket)
+        let buyVolumeStr = String(format: "%.0f", buyLimit + buyMarket)
+        let price = formatPrice(price: trade.price)
+        let isAskPeg = formatPrice(price: book.stats.bestAsk) == price
+        let isBidPeg = formatPrice(price: book.stats.bestBid) == price
+        let priceColor =  isAskPeg ? Color("RedTransparent"): (isBidPeg ? Color("GreenTransparent"): .white)
         ZStack {
             HStack(spacing: 0) {
                 Rectangle().fill(.white).frame(width: fillBid2, height: 25)
@@ -92,7 +95,7 @@ struct RecentTradeCell: View {
         HStack {
             Text(price).frame(width: cellWidth, height: cellHeight)
                 .font(.caption)
-                .background(.white)
+                .background(priceColor)
         }
            
         ZStack {
