@@ -65,14 +65,14 @@ struct OrderBookView: View {
                                 if record.type == BookRecordType.ask {
                                     NoteCell()
                                     EmptyCell()
-                                    PriceCell(price: price, depth: book.depth, level: index)
+                                    PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
                                     NoteCell()
                                    
                                 } else {
                                     NoteCell()
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
-                                    PriceCell(price: price, depth: book.depth, level: index)
+                                    PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
                                     EmptyCell()
                                     NoteCell()
                                 }

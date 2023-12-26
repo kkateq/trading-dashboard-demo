@@ -126,14 +126,20 @@ struct Stats {
     var totalAskVol: Double
     var bestBid: Double
     var bestAsk: Double
+    var bestBidVolume: Double
+    var bestAskVolume: Double
     var maxVolume: Double
+    var time: Date
 
-    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double, _ max_volume: Double) {
+    init(_ totalBidVolume: Double, _ totalAskVolume: Double, _ bestB: Double, _ bestA: Double,_ bestBV: Double, _ bestAV: Double, _ max_volume: Double) {
         totalBidVol = totalBidVolume
         totalAskVol = totalAskVolume
         bestAsk = bestA
         bestBid = bestB
+        bestAskVolume = bestAV
+        bestBidVolume = bestBV
         maxVolume = max_volume
+        time = Date()
     }
 
     var pegValue: Double {
@@ -157,7 +163,9 @@ class OrderBookData: ObservableObject, Equatable {
     @Published var isValid: Bool
     var depth: Int
     var pair: String
-
+    @Published var recentPeg: Double!
+    @Published var statsHistory: [Stats] = []
+    
     var allList: [OrderBookRecord] {
         var list: [OrderBookRecord] = []
         for ask_key in ask_keys.reversed() {
@@ -182,9 +190,11 @@ class OrderBookData: ObservableObject, Equatable {
         let totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
         let best_bid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
         let best_ask = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
+        let best_bid_volume = bid_keys.count > 0 ? all[bid_keys[0]]!.vol : 0.0
+        let best_ask_volume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
         let max_volume = all.values.max(by: { $0.vol < $1.vol })?.vol
-
-        return Stats(totalBidVol, totalAskVol, best_bid, best_ask, max_volume!)
+        
+        return Stats(totalBidVol, totalAskVol, best_bid, best_ask, best_bid_volume, best_ask_volume, max_volume!)
     }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
@@ -197,7 +207,7 @@ class OrderBookData: ObservableObject, Equatable {
         self.depth = depth
         self.pair = pair
         all = [:]
-
+       
         channelID = response.channelID
 
         for ask in response.bookRecord.asks {
@@ -277,6 +287,14 @@ class OrderBookData: ObservableObject, Equatable {
         }
 
         isValid = verifyChecksum(updateResponse.bookRecord.checksum)
+        
+        if let s = stats {
+            self.recentPeg = s.pegValue
+            if self.statsHistory.count > 5000 {
+                self.statsHistory = self.statsHistory.reversed().dropLast(2500).reversed()
+            }
+            self.statsHistory.append(s)
+        }
         stats = getStats()
     }
 }

@@ -87,25 +87,25 @@ struct VolumeCell: View {
            
 //            NoteCell()
             EmptyCell()
-            PriceCell(price: "0.9888", depth: 25, level: 1)
+            PriceCell(price: "0.9888", depth: 25, level: 1, up: true)
             VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
 //            NoteCell()
             
 //            NoteCell()
             EmptyCell()
-            PriceCell(price: "0.9888", depth: 25, level: 1)
+            PriceCell(price: "0.9888", depth: 25, level: 1, up: true)
             VolumeCell(volume: 8700, maxVolume: 200000, type: .ask, price: "0.997", onLimit: { print("\($0)") })
 //            NoteCell()
             
 //            NoteCell()
             VolumeCell(volume: 87000, maxVolume: 200000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
-            PriceCell(price: "0.9888", depth: 25, level: 1)
+            PriceCell(price: "0.9888", depth: 25, level: 1, up: true)
             EmptyCell()
 //            NoteCell()
             
 //            NoteCell()
             VolumeCell(volume: 7000, maxVolume: 200000, type: .bid, price: "0.997", onLimit: { print("\($0)") })
-            PriceCell(price: "0.9888", depth: 25, level: 1)
+            PriceCell(price: "0.9888", depth: 25, level: 1, up: true)
             EmptyCell()
 //            NoteCell()
         }

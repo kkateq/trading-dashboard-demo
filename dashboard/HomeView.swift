@@ -16,13 +16,12 @@ struct HomeView: View {
 
     var body: some View {
         HStack {
-            IndicatorPanView()
-                .frame(width: 400)
             RecentTradesView()
-            HStack {
-                OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
 
-            }.frame(width: 950)
+            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+
+            IndicatorPanView()
+
             OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
         }
     }

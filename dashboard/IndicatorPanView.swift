@@ -10,8 +10,10 @@ import SwiftUI
 struct IndicatorPanView: View {
     var body: some View {
         VStack {
-            Text("Indicator pan")
-        }.frame(width: 220)
+            HStack {
+                ImbalanceChart()
+            }
+        }.frame(width: 720)
     }
 }
 
