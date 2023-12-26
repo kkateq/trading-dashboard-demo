@@ -56,7 +56,7 @@ struct ImbalanceChart: View {
                         y: .value("Threshold", 0.33)
                     )
                     .foregroundStyle(.purple)
-                }.frame(width: 710, height: 500)
+                }.frame(width: 710, height: 300)
                    
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()

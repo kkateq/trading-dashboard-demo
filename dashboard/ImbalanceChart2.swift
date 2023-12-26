@@ -14,6 +14,9 @@ struct ImbalancePoint: Identifiable {
     var imbalance: Double
 }
 
+//https://davidsevangelista.github.io/post/basic_statistics_order_imbalance/
+//https://osquant.com/papers/key-insights-limit-order-book/
+
 struct ImbalanceChart2: View {
     @EnvironmentObject var book: OrderBookData
 
@@ -76,7 +79,7 @@ struct ImbalanceChart2: View {
                         endPoint: .top
                     ))}
                 
-                .frame(width: 710, height: 500)
+                .frame(width: 710, height: 300)
                 .padding()
             }
         }

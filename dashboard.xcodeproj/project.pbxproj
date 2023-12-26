@@ -51,6 +51,7 @@
 		34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401452B3ADCDE00E0DC4A /* Commons.swift */; };
 		34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */; };
 		34F4014A2B3B224900E0DC4A /* ImbalanceChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */; };
+		34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		34F401452B3ADCDE00E0DC4A /* Commons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commons.swift; sourceTree = "<group>"; };
 		34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceChart.swift; sourceTree = "<group>"; };
 		34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceChart2.swift; sourceTree = "<group>"; };
+		34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChart.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +188,7 @@
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34066F522B31B4B30090C78A /* HomeView.swift */,
 				34F401492B3B224900E0DC4A /* ImbalanceChart2.swift */,
+				34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */,
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
@@ -412,6 +415,7 @@
 				34F401302B34393900E0DC4A /* KeychainHandler.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
+				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */,
 				34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */,
