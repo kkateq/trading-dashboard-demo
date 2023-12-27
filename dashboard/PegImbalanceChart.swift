@@ -17,7 +17,7 @@ struct ImbalancePoint: Identifiable {
 //https://davidsevangelista.github.io/post/basic_statistics_order_imbalance/
 //https://osquant.com/papers/key-insights-limit-order-book/
 
-struct ImbalanceChart2: View {
+struct PegImbalanceChart: View {
     @EnvironmentObject var book: OrderBookData
 
     func getBidVolume(_ stats: Stats, _ prevStats: Stats!) -> Double {
@@ -49,14 +49,15 @@ struct ImbalanceChart2: View {
     func getPoints() -> [ImbalancePoint] {
         var res: [ImbalancePoint] = []
         if book.statsHistory.count > 2 {
+            var sum: Double = 0
             var prevStats: Stats! = nil
-            for stats in book.statsHistory {
-                
+            for (index, stats) in book.statsHistory.enumerated() {
+             
                 if prevStats != nil {
                     let askV = getAskVolume(stats, prevStats)
                     let bidV = getBidVolume(stats, prevStats)
-                    
-                    res.append(ImbalancePoint(time: stats.time, imbalance: bidV - askV))
+                    sum += bidV - askV
+                    res.append(ImbalancePoint(time: stats.time, imbalance: sum))
                 }
                 prevStats = stats
             }
@@ -64,22 +65,21 @@ struct ImbalanceChart2: View {
 
         return res
     }
-
+    let markColors: [Color] = [.pink, .blue]
     var body: some View {
+        Text("Imbalance Best Bid/Ask")
         VStack {
             ScrollView {
                 Chart(getPoints()) {
-                    AreaMark(
+                    PointMark(
                         x: .value("Time", $0.time),
                         y: .value("Imbalance", $0.imbalance)
-                    )
-                    .foregroundStyle(.linearGradient(
-                        colors: [.red, .blue, .green],
-                        startPoint: .bottom,
-                        endPoint: .top
-                    ))}
-                
-                .frame(width: 710, height: 300)
+                        
+                        
+                    ).foregroundStyle($0.imbalance > 0 ? .green : .red)
+                                      
+                }
+                .frame(width: 710, height: 200)
                 .padding()
             }
         }

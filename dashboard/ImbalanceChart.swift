@@ -34,6 +34,7 @@ struct ImbalanceChart: View {
 
     var body: some View {
         VStack {
+            Text("Imbalance Best Bid VS Best Ask")
             ScrollView {
                 Chart {
                     ForEach(getPoints()) { point in
@@ -56,7 +57,7 @@ struct ImbalanceChart: View {
                         y: .value("Threshold", 0.33)
                     )
                     .foregroundStyle(.purple)
-                }.frame(width: 710, height: 300)
+                }.frame(width: 710, height: 200)
                    
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()
