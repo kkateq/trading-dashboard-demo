@@ -77,8 +77,10 @@ struct OrderForm: View {
                 }
 
                 HStack {
-                    Text("Fee \(volume * kraken_fee)$").font(.caption).foregroundColor(.gray)
-                }.padding()
+                    Text("Kraken fee \(kraken_fee)%").font(.caption).foregroundColor(.gray)
+                    Spacer()
+                    Text("\(formatPrice(price:volume * kraken_fee))$").font(.caption).foregroundColor(.gray)
+                }.padding([.bottom])
 
                 Toggle("Scale In/Out", isOn: $scaleInOut)
                     .toggleStyle(.checkbox)
@@ -94,7 +96,7 @@ struct OrderForm: View {
                         }) {
                             HStack {
                                 Text("Sell Market")
-                            }.frame(width: 100, height: 50)
+                            }.frame(width: 150, height: 50)
                                 .foregroundColor(Color.white)
                                 .background(Color("RedDarker"))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -108,7 +110,7 @@ struct OrderForm: View {
                         }) {
                             HStack {
                                 Text("Buy Market")
-                            }.frame(width: 100, height: 50)
+                            }.frame(width: 150, height: 50)
                                 .foregroundColor(Color.white)
                                 .background(Color("GreenDarker"))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -124,7 +126,7 @@ struct OrderForm: View {
                         }) {
                             HStack {
                                 Text("Sell Ask")
-                            }.frame(width: 100, height: 50)
+                            }.frame(width: 150, height: 50)
                                 .foregroundColor(Color.white)
                                 .background(Color("Red"))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -138,7 +140,7 @@ struct OrderForm: View {
                         }) {
                             HStack {
                                 Text("Buy Bid")
-                            }.frame(width: 100, height: 50)
+                            }.frame(width: 150, height: 50)
                                 .foregroundColor(Color.white)
                                 .background(Color("Green"))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -174,7 +176,7 @@ struct OrderForm: View {
                     }
                     Spacer()
 
-                }.frame(width: 200, height: 20)
+                }.frame(width: 300, height: 20)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .imageScale(.large)
                 Divider()
@@ -182,18 +184,18 @@ struct OrderForm: View {
                     Toggle("Validate orders", isOn: $validate)
                         .toggleStyle(.checkbox)
                     Spacer()
-                }.frame(width: 200, height: 20)
+                }.frame(width: 300, height: 20)
                 Divider()
                 HStack {
                     Toggle("Use REST API", isOn: $useRest)
                         .toggleStyle(.checkbox)
                     Spacer()
-                }.frame(width: 200)
+                }.frame(width: 300)
                 Divider()
             }
 
             Spacer()
-        }.frame(maxWidth: 220, maxHeight: .infinity)
+        }.frame(maxWidth: 320, maxHeight: .infinity)
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 2)

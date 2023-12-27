@@ -13,6 +13,7 @@ struct PositionsView: View {
     var useREST: Bool
     var validate: Bool
     
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Divider()
@@ -38,19 +39,24 @@ struct PositionsView: View {
             
             ScrollView {
                 if manager.positions.count > 0 {
-                    VStack {
-                        HStack {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 2) {
                             ForEach(manager.positions) { position in
                                     
                                 Text(position.pair).font(.caption2)
+                                Spacer()
                                 Text(position.type)
                                     .foregroundColor(position.type == "sell" ? Color("Red") : Color("Green"))
                                     .font(.caption2)
-                                    
+                                    Spacer()
+                                Text("\(formatPrice(price: Double(position.cost)! / Double(position.vol)!))")
+                                    .foregroundColor(.blue)
+                                    .font(.caption2)
+                                Spacer()
                                 Text("\(position.net)$")
                                     .foregroundColor(position.net.starts(with: "-") ?Color("Red") : Color("Green"))
                                     .font(.caption2)
-                                    
+                                    Spacer()
                                 Button(action: {
                                     Task {
                                         await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
@@ -89,7 +95,7 @@ struct PositionsView: View {
                                 HStack {
                                     Image(systemName: "lightbulb.fill")
                                     Text("Flatten Positions")
-                                }.frame(width: 200, height: 30)
+                                }.frame(width: 300, height: 30)
                                     .foregroundColor(Color.white)
                                     .background(Color.teal)
                                     .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -105,7 +111,7 @@ struct PositionsView: View {
                                     Image(systemName: "power.circle.fill")
                                     Text("Close Positions")
                                 }
-                                .frame(width: 200, height: 30)
+                                .frame(width: 300, height: 30)
                                 .foregroundColor(Color.white)
                                 .background(Color.black)
                                 .imageScale(.large)
@@ -120,7 +126,7 @@ struct PositionsView: View {
                 }
                 Divider()
             }
-        }.frame(width: 200, height: 200, alignment: .leading)
+        }.frame(width: 300, height: 200, alignment: .leading)
     }
 }
 

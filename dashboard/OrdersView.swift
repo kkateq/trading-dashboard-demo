@@ -70,7 +70,7 @@ struct OrdersView: View {
                             HStack {
                                 Image(systemName: "trash.fill")
                                 Text("Cancel Orders")
-                            }.frame(width: 200, height: 30)
+                            }.frame(width: 300, height: 30)
                                 .foregroundColor(Color.white)
                                 .background(Color.gray)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -83,7 +83,7 @@ struct OrdersView: View {
                 }
                 Divider()
             }
-        }.frame(width: 200, height: 200, alignment: .leading)
+        }.frame(width: 300, height: 200, alignment: .leading)
     }
 }
 

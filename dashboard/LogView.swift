@@ -38,7 +38,7 @@ struct LogView: View {
                     .foregroundColor(getColor(level: log.level))
             }.listStyle(.bordered)
             Divider()
-        }.frame(width: 200)
+        }.frame(width: 300)
     }
 }
 
