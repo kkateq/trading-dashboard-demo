@@ -27,6 +27,18 @@ struct OrderForm: View {
         VStack {
             VStack {
                 HStack {
+                    Text("Account balance:")
+                        .foregroundColor(.black)
+                        .font(.title3)
+                    Spacer()
+                    Text("\(Int(manager.accountBalance))$")
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                }
+            }.padding()
+            Divider()
+            VStack {
+                HStack {
                     Text(book.pair)
                     Spacer()
                     Text("\(volume * book.stats.pegValue, specifier: "%.2f")$")

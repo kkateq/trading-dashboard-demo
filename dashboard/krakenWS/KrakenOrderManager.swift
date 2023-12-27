@@ -79,6 +79,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
     @Published var isConnected = false
     @Published var isOwnTradesSubscribed = false
     @Published var isOpenOrdersSubscribed = false
+    @Published var accountBalance: Double = 0
     @Published var wsStatus: WSStatus = .init()
 
     private var apiKey: String = KeychainHandler.KrakenApiKey
@@ -123,6 +124,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
             await get_auth_token()
             await refetchOpenPositions()
             await refetchOpenOrders()
+            await getBalance()
         }
     }
 
@@ -537,14 +539,10 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         let result = await Kraken.shared.accountBalance()
         switch result {
         case .success(let message):
-            if let result = message["result"] {
-                let dict = result as? [String: String]
-                var total = 0.0
-                for (_, value) in dict! {
-                    total += Double(value)!
+            if let result = message["ZUSD"] as? String {
+                DispatchQueue.main.async {
+                    self.accountBalance = Double(result)!
                 }
-
-                return total
             }
         case .failure(let error):
             LogManager.shared.error(error.localizedDescription)
