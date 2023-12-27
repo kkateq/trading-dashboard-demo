@@ -180,6 +180,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
                 } else if message.contains("ownTrades") {
                     Task {
                         await refetchOpenPositions()
+                        await getBalance()
                     }
                 } else if message.contains("addOrderStatus") {
                     let result = try decoder.decode(AddOrderEvent.self, from: Data(message.utf8))
@@ -399,6 +400,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
             case .success(let message):
                 if let _ = message["result"] {
                     await refetchOpenPositions()
+                    await getBalance()
                 }
             case .failure(let error):
                 LogManager.shared.error(error.localizedDescription)
@@ -535,7 +537,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func getBalance() async -> Double {
+    func getBalance() async  {
         let result = await Kraken.shared.accountBalance()
         switch result {
         case .success(let message):
@@ -547,6 +549,5 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         case .failure(let error):
             LogManager.shared.error(error.localizedDescription)
         }
-        return 0
     }
 }

@@ -13,9 +13,13 @@ struct IndicatorPanView: View {
             VStack {
                 VolumeChart()
             }.frame(height: 100)
+           
             ImbalanceChart()
+           
             PegImbalanceChart()
+          
             ImbalanceLevel5Chart()
+         
             ImbalanceLevel10Chart()
         
 
