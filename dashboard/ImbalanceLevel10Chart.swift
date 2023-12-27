@@ -46,7 +46,7 @@ struct ImbalanceLevel10Chart: View {
         if book.statsHistory.count > 2 {
             var sum: Double = 0
             var prevStats: Stats! = nil
-            for (index, stats) in book.statsHistory.enumerated() {
+            for stats in book.statsHistory {
              
                 if prevStats != nil {
                     let askV = getAskVolume(stats, prevStats)

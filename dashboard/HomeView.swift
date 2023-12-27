@@ -8,21 +8,20 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var volume: Double = 100
+    @State private var volume: Double = 200
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = true
     @State private var useRest: Bool = false
-    @State private var leverage: Int = 4
-
+    
     var body: some View {
         HStack {
             RecentTradesView()
 
-            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
 
             IndicatorPanView()
 
-            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, leverage: $leverage)
+            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
         }
     }
 }

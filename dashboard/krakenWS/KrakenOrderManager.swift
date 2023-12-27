@@ -10,6 +10,10 @@ import CryptoSwift
 import Foundation
 import Starscream
 
+let LEVERAGE = [
+    "MATIC/USD": 4,
+]
+
 struct TokenResponse: Decodable {
     var token: String
 
@@ -268,57 +272,59 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false, leverage: Int = 1) -> String {
+    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false) -> String {
         let reduce_only = positions.count > 0 ? scaleInOut : false
+        
         let pairName = pair.contains("/") ? pair : PAIRS_ISO_NAMES[pair]
-        let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(price)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage)\"}"
+        let leverage = LEVERAGE[pairName!]
+        let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(price)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1)\"}"
 
         return msg
     }
 
-    func buyMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func buyMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "buy", scaleInOut: scaleInOut, ordertype: "market")
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func sellMarket(pair: String, vol: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: 0, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, leverage: Int) async {
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate, leverage: leverage)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
@@ -379,22 +385,23 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func closePositionMarketWS(refid: String, validate: Bool, leverage: Int) async {
+    func closePositionMarketWS(refid: String, validate: Bool) async {
         LogManager.shared.action("Closing position using websocket \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyMarket(pair: position.pairISO, vol: Double(position.vol)!, scaleInOut: true, validate: validate, leverage: leverage)
+                await buyMarket(pair: position.pairISO, vol: Double(position.vol)!, scaleInOut: true, validate: validate)
             } else {
-                await sellMarket(pair: position.pairISO, vol: Double(position.vol)!, scaleInOut: true, validate: validate, leverage: leverage)
+                await sellMarket(pair: position.pairISO, vol: Double(position.vol)!, scaleInOut: true, validate: validate)
             }
         }
     }
 
-    func closePositionMarketREST(refid: String, validate: Bool, leverage: Int) async {
+    func closePositionMarketREST(refid: String, validate: Bool) async {
         LogManager.shared.action("Closing position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
+            let leverage = LEVERAGE[position.pairISO]
             let result = await Kraken.shared.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
@@ -408,19 +415,20 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func closePositionMarket(refid: String, useREST: Bool, validate: Bool, leverage: Int) async {
+    func closePositionMarket(refid: String, useREST: Bool, validate: Bool) async {
         if useREST {
-            await closePositionMarketREST(refid: refid, validate: validate, leverage: leverage)
+            await closePositionMarketREST(refid: refid, validate: validate)
         } else {
-            await closePositionMarketWS(refid: refid, validate: validate, leverage: leverage)
+            await closePositionMarketWS(refid: refid, validate: validate)
         }
     }
 
-    func flattenPositionREST(refid: String, best_bid: Double, best_ask: Double, validate: Bool, leverage: Int) async {
+    func flattenPositionREST(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
         LogManager.shared.action("Flattening position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
             let price = position.type == "sell" ? best_bid : best_ask
+            let leverage = LEVERAGE[position.pairISO]
             let result = await Kraken.shared.addOrder(orderType: .limit, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, price: "\(price)",  leverage: "\(leverage)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
@@ -433,35 +441,35 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func flattenPositionWS(refid: String, best_bid: Double, best_ask: Double, validate: Bool, leverage: Int) async {
+    func flattenPositionWS(refid: String, best_bid: Double, best_ask: Double, validate: Bool) async {
         LogManager.shared.action("Flattening position using websocket \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyBid(pair: position.pairISO, vol: Double(position.vol)!, best_bid: best_bid, scaleInOut: true, validate: validate, leverage: leverage)
+                await buyBid(pair: position.pairISO, vol: Double(position.vol)!, best_bid: best_bid, scaleInOut: true, validate: validate)
             } else {
-                await sellAsk(pair: position.pairISO, vol: Double(position.vol)!, best_ask: best_ask, scaleInOut: true, validate: validate, leverage: leverage)
+                await sellAsk(pair: position.pairISO, vol: Double(position.vol)!, best_ask: best_ask, scaleInOut: true, validate: validate)
             }
         }
     }
 
-    func flattenPosition(refid: String, best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool, leverage: Int) async {
+    func flattenPosition(refid: String, best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
         if useREST {
-            await flattenPositionREST(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate, leverage: leverage)
+            await flattenPositionREST(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
         } else {
-            await flattenPositionWS(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate, leverage: leverage)
+            await flattenPositionWS(refid: refid, best_bid: best_bid, best_ask: best_ask, validate: validate)
         }
     }
 
-    func flattenAllPositions(best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool, leverage: Int) async {
+    func flattenAllPositions(best_bid: Double, best_ask: Double, useREST: Bool, validate: Bool) async {
         for position in positions {
-            await flattenPosition(refid: position.refid, best_bid: best_bid, best_ask: best_ask, useREST: useREST, validate: validate, leverage: leverage)
+            await flattenPosition(refid: position.refid, best_bid: best_bid, best_ask: best_ask, useREST: useREST, validate: validate)
         }
     }
 
-    func closeAllPositions(useREST: Bool, validate: Bool, leverage: Int) async {
+    func closeAllPositions(useREST: Bool, validate: Bool) async {
         for position in positions {
-            await closePositionMarket(refid: position.refid, useREST: useREST, validate: validate, leverage: leverage)
+            await closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
         }
     }
 

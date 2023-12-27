@@ -12,7 +12,6 @@ struct PositionsView: View {
     @EnvironmentObject var book: OrderBookData
     var useREST: Bool
     var validate: Bool
-    var leverage: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -54,7 +53,7 @@ struct PositionsView: View {
                                     
                                 Button(action: {
                                     Task {
-                                        await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate, leverage: leverage)
+                                        await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
                                     }
                                 }) {
                                     HStack {
@@ -67,7 +66,7 @@ struct PositionsView: View {
                                 }.buttonStyle(PlainButtonStyle())
                                 Button(action: {
                                     Task {
-                                        await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate, leverage: leverage)
+                                        await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
                                     }
                                 }) {
                                     HStack {
@@ -84,7 +83,7 @@ struct PositionsView: View {
                         VStack {
                             Button(action: {
                                 Task {
-                                    await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate, leverage: leverage)
+                                    await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
                                 }
                             }) {
                                 HStack {
@@ -99,7 +98,7 @@ struct PositionsView: View {
                                 
                             Button(action: {
                                 Task {
-                                    await manager.closeAllPositions(useREST: useREST, validate: validate, leverage: leverage)
+                                    await manager.closeAllPositions(useREST: useREST, validate: validate)
                                 }
                             }) {
                                 HStack {
@@ -127,6 +126,6 @@ struct PositionsView: View {
 
 struct PositionsView_Previews: PreviewProvider {
     static var previews: some View {
-        PositionsView(useREST: true, validate: true, leverage: 4)
+        PositionsView(useREST: true, validate: true)
     }
 }
