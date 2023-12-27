@@ -10,18 +10,19 @@ import SwiftUI
 struct HomeView: View {
     @State private var volume: Double = 200
     @State private var scaleInOut: Bool = true
-    @State private var validate: Bool = true
+    @State private var validate: Bool = false
     @State private var useRest: Bool = false
-    
+    @State private var stopLoss: Bool = false
+    @State private var stopLossPerc: Double = 0.05
+
     var body: some View {
         HStack {
             RecentTradesView()
-
-            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
-
             IndicatorPanView()
 
-            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest)
+            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
+
+            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
         }
     }
 }

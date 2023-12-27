@@ -14,7 +14,9 @@ struct OrderBookView: View {
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
     @Binding var useRest: Bool
- 
+    @Binding var stopLoss: Bool
+    @Binding var stopLossPerc: Double
+    
     @EnvironmentObject var book: OrderBookData
 
     @EnvironmentObject var manager: KrakenOrderManager
@@ -28,14 +30,12 @@ struct OrderBookView: View {
     ]
     
     func sellLimit(price: String) async {
-        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
     }
     
     func buyLimit(price: String) async {
-        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate)
+        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
     }
-    
-
     
     var body: some View {
         VStack {

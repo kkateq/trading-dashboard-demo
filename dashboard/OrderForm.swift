@@ -12,7 +12,8 @@ struct OrderForm: View {
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
     @Binding var useRest: Bool
-    
+    @Binding var stopLoss: Bool
+    @Binding var stopLossPerc: Double
 
     @EnvironmentObject var manager: KrakenOrderManager
     @EnvironmentObject var book: OrderBookData
@@ -22,6 +23,12 @@ struct OrderForm: View {
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
+    let percent: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
         return formatter
     }()
     
@@ -81,7 +88,15 @@ struct OrderForm: View {
                     Spacer()
                     Text("\(formatPrice(price:volume * kraken_fee))$").font(.caption).foregroundColor(.gray)
                 }.padding([.bottom])
-
+                HStack {
+                    Toggle("Stop loss %", isOn: $stopLoss)
+                        .toggleStyle(.checkbox)
+                    Spacer()
+                    TextField("Stop loss", value: $stopLossPerc, formatter: percent)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .disabled(!stopLoss)
+                }.padding([.bottom])
+                
                 Toggle("Scale In/Out", isOn: $scaleInOut)
                     .toggleStyle(.checkbox)
             }.padding(.leading)
@@ -91,7 +106,8 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+//Note: Here price is used for the stop order calculation
+                                await manager.sellMarket(pair: book.pair, vol: volume, price: book.stats.bestAsk ,scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
                             }
                         }) {
                             HStack {
@@ -105,7 +121,8 @@ struct OrderForm: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                await manager.buyMarket(pair: book.pair, vol: volume, scaleInOut: scaleInOut, validate: validate)
+                                //NOTE: Here price is used for the stop order calculation
+                                await manager.buyMarket(pair: book.pair, vol: volume, price: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
                             }
                         }) {
                             HStack {
@@ -121,7 +138,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate)
+                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
                             }
                         }) {
                             HStack {
@@ -135,7 +152,7 @@ struct OrderForm: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate)
+                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
                             }
                         }) {
                             HStack {
