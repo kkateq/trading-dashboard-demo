@@ -10,14 +10,14 @@ import SwiftUI
 struct IndicatorPanView: View {
     var body: some View {
         VStack {
-            ImbalanceChart()
-
-            PegImbalanceChart()
-            ImbalanceLevel5Chart()
-            ImbalanceLevel10Chart()
             VStack {
                 VolumeChart()
             }.frame(height: 100)
+            ImbalanceChart()
+            PegImbalanceChart()
+            ImbalanceLevel5Chart()
+            ImbalanceLevel10Chart()
+        
 
         }.frame(width: 720)
     }
