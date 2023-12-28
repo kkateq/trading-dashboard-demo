@@ -173,15 +173,17 @@ struct Stats {
 }
 
 class OrderBookData: ObservableObject, Equatable {
+    var channelID: Double
+    var depth: Int
+    var pair: String
+
     @Published var all: [Double: OrderBookRecord]
     @Published var bid_keys = [Double]()
     @Published var ask_keys = [Double]()
-    var channelID: Double
     @Published var isValid: Bool
-    var depth: Int
-    var pair: String
     @Published var recentPeg: Double!
     @Published var statsHistory: [Stats] = []
+    @Published var stats: Stats!
 
     var allList: [OrderBookRecord] {
         var list: [OrderBookRecord] = []
@@ -200,10 +202,16 @@ class OrderBookData: ObservableObject, Equatable {
         return list
     }
 
-    @Published var stats: Stats!
-
-    func getStats() -> Stats {
-        return Stats(all: all, bid_keys: bid_keys, ask_keys: ask_keys)
+    func generateStats() {
+        let newStats = Stats(all: all, bid_keys: bid_keys, ask_keys: ask_keys)
+        if let recentStats = stats {
+            recentPeg = recentStats.pegValue
+        }
+        stats = newStats
+        statsHistory.append(newStats)
+        if statsHistory.count > 1500 {
+            statsHistory = statsHistory.suffix(750)
+        }
     }
 
     static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
@@ -227,8 +235,7 @@ class OrderBookData: ObservableObject, Equatable {
             let key = Double(bid.price)!
             all[key] = OrderBookRecord(bid.price, bid.volume, Double(bid.timestamp)!, BookRecordType.bid)
         }
-
-        stats = getStats()
+        generateStats()
     }
 
     func parseValue(p: String) -> String {
@@ -297,14 +304,7 @@ class OrderBookData: ObservableObject, Equatable {
 
         isValid = verifyChecksum(updateResponse.bookRecord.checksum)
 
-        if let s = stats {
-            recentPeg = s.pegValue
-            if statsHistory.count > 1000 {
-                statsHistory = statsHistory.reversed().dropLast(500).reversed()
-            }
-            statsHistory.append(s)
-        }
-        stats = getStats()
+        generateStats()
     }
 }
 
