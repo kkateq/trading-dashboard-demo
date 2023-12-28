@@ -56,6 +56,7 @@
 		34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */; };
 		34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401512B3D95AE00E0DC4A /* Constants.swift */; };
 		34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401532B3D9BB100E0DC4A /* DashboardView.swift */; };
+		34F401562B3DA8C500E0DC4A /* VolumeChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel10Chart.swift; sourceTree = "<group>"; };
 		34F401512B3D95AE00E0DC4A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		34F401532B3D9BB100E0DC4A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChart2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 				34F401412B37128700E0DC4A /* RecentTradesView.swift */,
 				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */,
+				34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */,
 				34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */,
 				34905C132B29C12C00A5A649 /* Assets.xcassets */,
 				34905C652B2C7E5300A5A649 /* krakenREST */,
@@ -437,6 +440,7 @@
 				34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,
 				34CF57FA2B32F97800226F7A /* PriceChartView.swift in Sources */,
+				34F401562B3DA8C500E0DC4A /* VolumeChart2.swift in Sources */,
 				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
 				34F401422B37128700E0DC4A /* RecentTradesView.swift in Sources */,

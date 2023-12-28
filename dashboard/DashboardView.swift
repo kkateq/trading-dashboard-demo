@@ -35,7 +35,9 @@ struct DashboardView: View {
                     if isReady {
                         PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume).environmentObject(kraken_ws.book).environmentObject(manager).environmentObject(kraken_recent_trade_ws.trades)
                     } else {
-                        Text("Connecting ... ")
+                        VStack {
+                            Text("Connecting ... ").font(.title).foregroundStyle(.blue)
+                        }
                     }
                 }
             }
