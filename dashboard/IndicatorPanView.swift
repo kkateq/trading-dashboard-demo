@@ -16,11 +16,11 @@ struct IndicatorPanView: View {
            
             ImbalanceChart()
            
-            PegImbalanceChart()
+      
           
-            ImbalanceLevel5Chart()
+            ImbalanceLevelsChart()
          
-            ImbalanceLevel10Chart()
+           
         
 
         }.frame(width: 720)

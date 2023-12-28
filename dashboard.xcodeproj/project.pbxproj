@@ -50,13 +50,11 @@
 		34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401432B39C25100E0DC4A /* AverageVolumeIndicator.swift */; };
 		34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401452B3ADCDE00E0DC4A /* Commons.swift */; };
 		34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */; };
-		34F4014A2B3B224900E0DC4A /* PegImbalanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401492B3B224900E0DC4A /* PegImbalanceChart.swift */; };
 		34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */; };
-		34F4014E2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */; };
-		34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */; };
+		34F401502B3C37B000E0DC4A /* ImbalanceLevelsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014F2B3C37B000E0DC4A /* ImbalanceLevelsChart.swift */; };
 		34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401512B3D95AE00E0DC4A /* Constants.swift */; };
 		34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401532B3D9BB100E0DC4A /* DashboardView.swift */; };
-		34F401562B3DA8C500E0DC4A /* VolumeChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */; };
+		34F401582B3DBC1D00E0DC4A /* VolumeChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,13 +119,11 @@
 		34F401432B39C25100E0DC4A /* AverageVolumeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageVolumeIndicator.swift; sourceTree = "<group>"; };
 		34F401452B3ADCDE00E0DC4A /* Commons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commons.swift; sourceTree = "<group>"; };
 		34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceChart.swift; sourceTree = "<group>"; };
-		34F401492B3B224900E0DC4A /* PegImbalanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PegImbalanceChart.swift; sourceTree = "<group>"; };
 		34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChart.swift; sourceTree = "<group>"; };
-		34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel5Chart.swift; sourceTree = "<group>"; };
-		34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel10Chart.swift; sourceTree = "<group>"; };
+		34F4014F2B3C37B000E0DC4A /* ImbalanceLevelsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevelsChart.swift; sourceTree = "<group>"; };
 		34F401512B3D95AE00E0DC4A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		34F401532B3D9BB100E0DC4A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChart2.swift; sourceTree = "<group>"; };
+		34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeChart2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,8 +198,7 @@
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */,
-				34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */,
-				34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */,
+				34F4014F2B3C37B000E0DC4A /* ImbalanceLevelsChart.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
 				34F4012F2B34393900E0DC4A /* KeychainHandler.swift */,
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
@@ -213,7 +208,6 @@
 				34905C5F2B2C4A1800A5A649 /* OrderForm.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34066F522B31B4B30090C78A /* PairHomeView.swift */,
-				34F401492B3B224900E0DC4A /* PegImbalanceChart.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C552B2B604500A5A649 /* PriceCell.swift */,
 				34CF57F92B32F97800226F7A /* PriceChartView.swift */,
@@ -221,7 +215,7 @@
 				34F401412B37128700E0DC4A /* RecentTradesView.swift */,
 				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */,
-				34F401552B3DA8C500E0DC4A /* VolumeChart2.swift */,
+				34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */,
 				34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */,
 				34905C132B29C12C00A5A649 /* Assets.xcassets */,
 				34905C652B2C7E5300A5A649 /* krakenREST */,
@@ -419,7 +413,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34F4014A2B3B224900E0DC4A /* PegImbalanceChart.swift in Sources */,
 				34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */,
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
@@ -429,25 +422,24 @@
 				34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */,
 				34F401302B34393900E0DC4A /* KeychainHandler.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
+				34F401582B3DBC1D00E0DC4A /* VolumeChart2.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */,
 				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
-				34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */,
+				34F401502B3C37B000E0DC4A /* ImbalanceLevelsChart.swift in Sources */,
 				34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */,
 				34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */,
 				34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */,
 				34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,
 				34CF57FA2B32F97800226F7A /* PriceChartView.swift in Sources */,
-				34F401562B3DA8C500E0DC4A /* VolumeChart2.swift in Sources */,
 				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
 				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
 				34F401422B37128700E0DC4A /* RecentTradesView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,
 				34066F512B31A8200090C78A /* AskCell.swift in Sources */,
-				34F4014E2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift in Sources */,
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */,

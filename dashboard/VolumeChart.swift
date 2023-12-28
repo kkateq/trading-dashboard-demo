@@ -12,14 +12,17 @@ struct VolumeChart: View {
     @EnvironmentObject var book: OrderBookData
     let cellWidth = 300.0
     var body: some View {
-        
+        let totalAskVol5 = book.getAskVolume(levels: 5)
+        let totalAskVol10 = book.getAskVolume(levels: 10)
+        let totalBidVol5 = book.getBidVolume(levels: 5)
+        let totalBidVol10 = book.getBidVolume(levels: 10)
         let totalAskPerc = book.stats.totalAskVol/(book.stats.totalAskVol + book.stats.totalBidVol)
         let fillTotalAsk = CGFloat(cellWidth * totalAskPerc)
         
-        let total5AskPerc = book.stats.totalAskVol5/(book.stats.totalAskVol5 + book.stats.totalBidVol5)
+        let total5AskPerc = totalAskVol5/(totalAskVol5 + totalBidVol5)
         let fillTotalAsk5 = CGFloat(cellWidth * total5AskPerc)
         
-        let total10AskPerc = book.stats.totalAskVol10/(book.stats.totalAskVol10 + book.stats.totalBidVol10)
+        let total10AskPerc = totalAskVol10/(totalAskVol10 + totalBidVol10)
         let fillTotalAsk10 = CGFloat(cellWidth * total10AskPerc)
         
         HStack {

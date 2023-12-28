@@ -124,14 +124,7 @@ class OrderBookRecord: Identifiable, ObservableObject {
 struct Stats {
     var totalBidVol: Double
     var totalAskVol: Double
-    var totalBidVol5: Double
-    var totalAskVol5: Double
-    var totalBidVol1_5: Double
-    var totalAskVol1_5: Double
-    var totalBidVol10: Double
-    var totalAskVol10: Double
-    var totalBidVol1_10: Double
-    var totalAskVol1_10: Double
+
     var bestBid: Double
     var bestAsk: Double
     var bestBidVolume: Double
@@ -148,14 +141,7 @@ struct Stats {
         bestAsk = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
         bestBidVolume = bid_keys.count > 0 ? all[bid_keys[0]]!.vol : 0.0
         bestAskVolume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
-        totalAskVol5 = ask_keys.prefix(5).reduce(0) { $0 + all[$1]!.vol }
-        totalBidVol5 = bid_keys.prefix(5).reduce(0) { $0 + all[$1]!.vol }
-        totalAskVol10 = ask_keys.prefix(10).reduce(0) { $0 + all[$1]!.vol }
-        totalBidVol10 = bid_keys.prefix(10).reduce(0) { $0 + all[$1]!.vol }
-        totalAskVol1_5 = ask_keys.dropFirst(0).prefix(5).reduce(0) { $0 + all[$1]!.vol }
-        totalBidVol1_5 = bid_keys.dropFirst(0).prefix(5).reduce(0) { $0 + all[$1]!.vol }
-        totalAskVol1_10 = ask_keys.dropFirst(0).prefix(10).reduce(0) { $0 + all[$1]!.vol }
-        totalBidVol1_10 = bid_keys.dropFirst(0).prefix(10).reduce(0) { $0 + all[$1]!.vol }
+
         maxVolume = all.values.max(by: { $0.vol < $1.vol })!.vol
     }
 
@@ -200,6 +186,17 @@ class OrderBookData: ObservableObject, Equatable {
         }
 
         return list
+    }
+
+    func getBidVolume(levels: Int) -> Double {
+        if levels == 0 {
+            return 0
+        }
+        return bid_keys.prefix(levels).reduce(0) { $0 + all[$1]!.vol }
+    }
+
+    func getAskVolume(levels: Int) -> Double {
+        return ask_keys.prefix(levels).reduce(0) { $0 + all[$1]!.vol }
     }
 
     func generateStats() {

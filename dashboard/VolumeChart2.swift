@@ -20,20 +20,20 @@ struct VolumeChart2: View {
     @State var data: [BarValue] = []
 
     func updateChart(_ s: Stats!) {
-        let totalAskPerc = round(100 * book.stats.totalAskVol/(book.stats.totalAskVol + book.stats.totalBidVol))
-
-        let total5AskPerc = round(100 * book.stats.totalAskVol5/(book.stats.totalAskVol5 + book.stats.totalBidVol5))
-
-        let total10AskPerc = round(100 * book.stats.totalAskVol10/(book.stats.totalAskVol10 + book.stats.totalBidVol10))
-
-        data = [
-            .init(color: "Green", type: "Total", count: 100 - totalAskPerc),
-            .init(color: "Red", type: "Total", count: totalAskPerc),
-            .init(color: "Green", type: "5 levels", count: 100 - total5AskPerc),
-            .init(color: "Red", type: "5 levels", count: total5AskPerc),
-            .init(color: "Green", type: "10 levels", count: 100 - total10AskPerc),
-            .init(color: "Red", type: "10 levels", count: total10AskPerc),
-        ]
+//        let totalAskPerc = round(100 * book.stats.totalAskVol/(book.stats.totalAskVol + book.stats.totalBidVol))
+//
+//        let total5AskPerc = round(100 * book.stats.totalAskVol5/(book.stats.totalAskVol5 + book.stats.totalBidVol5))
+//
+//        let total10AskPerc = round(100 * book.stats.totalAskVol10/(book.stats.totalAskVol10 + book.stats.totalBidVol10))
+//
+//        data = [
+//            .init(color: "Green", type: "Total", count: 100 - totalAskPerc),
+//            .init(color: "Red", type: "Total", count: totalAskPerc),
+//            .init(color: "Green", type: "5 levels", count: 100 - total5AskPerc),
+//            .init(color: "Red", type: "5 levels", count: total5AskPerc),
+//            .init(color: "Green", type: "10 levels", count: 100 - total10AskPerc),
+//            .init(color: "Red", type: "10 levels", count: total10AskPerc),
+//        ]
     }
 
     var body: some View {

@@ -44,15 +44,15 @@ struct ImbalanceLevel5Chart: View {
     func getPoints() -> [ImbalancePoint] {
         var res: [ImbalancePoint] = []
         if book.statsHistory.count > 2 {
-            var sum: Double = 0
+
             var prevStats: Stats! = nil
             for stats in book.statsHistory {
              
                 if prevStats != nil {
                     let askV = getAskVolume(stats, prevStats)
                     let bidV = getBidVolume(stats, prevStats)
-                    sum += bidV - askV
-                    res.append(ImbalancePoint(time: stats.time, imbalance: sum))
+                    let color = bidV > askV ? "Green" : "Red"
+                    res.append(ImbalancePoint(time: stats.time, imbalance:  bidV - askV, color: color))
                 }
                 prevStats = stats
             }
@@ -66,15 +66,20 @@ struct ImbalanceLevel5Chart: View {
         VStack {
             Text("Imbalance 5 levels")
             ScrollView {
-                Chart(getPoints()) {
-                    PointMark(
-                        x: .value("Time", $0.time),
-                        y: .value("Imbalance", $0.imbalance)
-                        
-                        
-                    ).foregroundStyle($0.imbalance > 0 ? .green : .red)
+                Chart {
+                    ForEach(getPoints()) { point in
+                        AreaMark(
+                            x: .value("Time", point.time),
+                            y: .value("Imbalance", point.imbalance)
+                            
+                            
+                        ) .foregroundStyle(by: .value("Shape Color", point.color))
+                    }
                                       
                 }
+                .chartForegroundStyleScale([
+                    "Green": Color("Green"), "Red": Color("Red"),
+                ])
                 .frame(width: 710, height: 200)
                 .padding()
             }

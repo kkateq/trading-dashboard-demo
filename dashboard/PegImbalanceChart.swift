@@ -12,6 +12,7 @@ struct ImbalancePoint: Identifiable {
     var id = UUID()
     var time: Date
     var imbalance: Double
+    var color: String!
 }
 
 //https://davidsevangelista.github.io/post/basic_statistics_order_imbalance/

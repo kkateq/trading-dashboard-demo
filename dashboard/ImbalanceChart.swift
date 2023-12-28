@@ -10,7 +10,6 @@ import SwiftUI
 
 struct Point: Identifiable {
     var id = UUID()
-
     var x: Date
     var y: Double
 }
