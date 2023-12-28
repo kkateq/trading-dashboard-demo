@@ -12,6 +12,7 @@ import Starscream
 
 let LEVERAGE = [
     "MATIC/USD": 4,
+    "ETH/USD": 4
 ]
 
 struct TokenResponse: Decodable {

@@ -54,6 +54,7 @@
 		34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */; };
 		34F4014E2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */; };
 		34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */; };
+		34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401512B3D95AE00E0DC4A /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeChart.swift; sourceTree = "<group>"; };
 		34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel5Chart.swift; sourceTree = "<group>"; };
 		34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel10Chart.swift; sourceTree = "<group>"; };
+		34F401512B3D95AE00E0DC4A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +200,7 @@
 				34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */,
 				34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
+				34F401512B3D95AE00E0DC4A /* Constants.swift */,
 				34F4012F2B34393900E0DC4A /* KeychainHandler.swift */,
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
@@ -425,6 +428,7 @@
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */,
 				34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */,
+				34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */,
 				34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */,
 				34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,

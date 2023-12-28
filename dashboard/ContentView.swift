@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var kraken_ws = Krakenbook("MATIC/USD", 25)
-    @StateObject var kraken_recent_trade_ws = KrakenRecentTrades("MATIC/USD")
+    @StateObject var kraken_ws = Krakenbook("ETH/USD", 25)
+    @StateObject var kraken_recent_trade_ws = KrakenRecentTrades("ETH/USD")
     @StateObject var manager = KrakenOrderManager()
 
     var body: some View {

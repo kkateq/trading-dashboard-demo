@@ -17,18 +17,25 @@ struct Point: Identifiable {
 
 struct ImbalanceChart: View {
     @EnvironmentObject var book: OrderBookData
-
+    @State private var points: [Point] = []
+    
     func imbalance(_ stats: Stats) -> Double {
         return ((stats.bestBidVolume - stats.bestAskVolume) / (stats.bestBidVolume + stats.bestAskVolume))
     }
 
-    func getPoints() -> [Point] {
+    func getPoints(_ statsList: [Stats]!) -> [Point] {
         var res: [Point] = []
-        for stats in book.statsHistory {
+        for stats in statsList {
             res.append(Point(x: stats.time, y: imbalance(stats)))
         }
 
         return res
+    }
+    
+    func updateChart(_ publishedStats: Stats!) -> Void {
+//        withAnimation(.easeOut(duration: 0.08)) {
+        self.points = getPoints(book.statsHistory)
+//        }
     }
 
 
@@ -37,7 +44,7 @@ struct ImbalanceChart: View {
             Text("Imbalance Best Bid VS Best Ask")
             ScrollView {
                 Chart {
-                    ForEach(getPoints()) { point in
+                    ForEach(points) { point in
                         LineMark(
                             x: .value("Time", point.x),
                             y: .value("Imbalance", point.y)
@@ -58,7 +65,7 @@ struct ImbalanceChart: View {
                     )
                     .foregroundStyle(.purple)
                 }.frame(width: 710, height: 200)
-                   
+                    .onReceive(book.$stats) { updateChart($0) }
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()
             } .overlay(
