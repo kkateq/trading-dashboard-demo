@@ -18,7 +18,6 @@ struct OrderForm: View {
     @EnvironmentObject var manager: KrakenOrderManager
     @EnvironmentObject var book: OrderBookData
 
-    let kraken_fee = 0.02
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -32,9 +31,12 @@ struct OrderForm: View {
         return formatter
     }()
     
+    func getAllowedleverage(pair: String) -> Int {
+        return Constants.pairSettings[pair]!.leverage
+    }
     func getAllowedMargin() -> Double {
-        let p = manager.accountBalance * Double(LEVERAGE[book.pair]!)
-        return p - p*kraken_fee
+        let p = manager.accountBalance * Double(getAllowedleverage(pair: book.pair))
+        return p - p*Constants.kraken_fee
     }
     
     func isFormInvalid() -> Bool {
@@ -42,6 +44,7 @@ struct OrderForm: View {
     }
 
     var body: some View {
+        
         VStack {
             VStack {
                 HStack {
@@ -66,7 +69,7 @@ struct OrderForm: View {
                     }
                 }
                 HStack {
-                    Text("Leverage \(LEVERAGE[book.pair]!)x").font(.caption)
+                    Text("Leverage \(getAllowedleverage(pair:book.pair))x").font(.caption)
                         .foregroundColor(.gray)
                     Spacer()
                     VStack {
@@ -84,9 +87,9 @@ struct OrderForm: View {
                 }
 
                 HStack {
-                    Text("Kraken fee \(kraken_fee)%").font(.caption).foregroundColor(.gray)
+                    Text("Kraken fee \(Constants.kraken_fee)%").font(.caption).foregroundColor(.gray)
                     Spacer()
-                    Text("\(formatPrice(price:volume * kraken_fee))$").font(.caption).foregroundColor(.gray)
+                    Text("\(formatPrice(price:volume * Constants.kraken_fee))$").font(.caption).foregroundColor(.gray)
                 }.padding([.bottom])
                 HStack {
                     Toggle("Stop loss %", isOn: $stopLoss)

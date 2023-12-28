@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var kraken_ws = Krakenbook("ETH/USD", 25)
-    @StateObject var kraken_recent_trade_ws = KrakenRecentTrades("ETH/USD")
-    @StateObject var manager = KrakenOrderManager()
+    @State private var selectedPair = ""
 
     var body: some View {
-        VStack {
-            HStack(alignment: .top) {
-                HStack {
-                    if kraken_ws.book != nil {
-                        HomeView().environmentObject(kraken_ws.book).environmentObject(manager).environmentObject(kraken_recent_trade_ws.trades)
-                    } else {
-                        Text("Connecting ... ")
+        VStack(alignment: .leading) {
+            if selectedPair == "" {
+                Picker("Pair", selection: $selectedPair) {
+                    ForEach(Constants.pairs, id: \.self) {
+                        Text($0)
                     }
-                }
+                }.frame(width: 200)
+                
+            }
+
+            else {
+                DashboardView(pair: selectedPair)
             }
         }
-        .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
-        .padding([.top, .bottom, .leading, .trailing], 2)
     }
 }
 

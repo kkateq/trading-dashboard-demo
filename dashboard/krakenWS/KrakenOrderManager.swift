@@ -10,11 +10,6 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-let LEVERAGE = [
-    "MATIC/USD": 4,
-    "ETH/USD": 4
-]
-
 struct TokenResponse: Decodable {
     var token: String
 
@@ -53,10 +48,6 @@ struct AddOrderEvent: Decodable {
     var errorMessage: String!
 }
 
-var PAIRS_ISO_NAMES = [
-    "MATICUSD": "MATIC/USD",
-]
-
 struct PositionResponse: Identifiable, Equatable {
     var id: UUID = .init()
     var refid: String
@@ -71,7 +62,7 @@ struct PositionResponse: Identifiable, Equatable {
     var time: Double
 
     var pairISO: String {
-        return pair.contains("/") ? pair : PAIRS_ISO_NAMES[pair]!
+        return pair.contains("/") ? pair : Constants.PAIRS_ISO_NAMES[pair]!
     }
 }
 
@@ -276,25 +267,23 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
     func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false, stopLoss: Bool = false, stopLossPerc: Double = 0.05) -> String {
         let reduce_only = positions.count > 0 ? scaleInOut : false
 
-        let pairName = pair.contains("/") ? pair : PAIRS_ISO_NAMES[pair]
-        let leverage = LEVERAGE[pairName!]
+        let pairName = pair.contains("/") ? pair : Constants.PAIRS_ISO_NAMES[pair]
+        let leverage = Constants.pairSettings[pairName!]?.leverage
         let pr = ordertype == "market" ? 0 : price
-        
-        
+
         if stopLoss {
-            let stopPrice = type == "buy" ? price*(1-stopLossPerc) : price*(1+stopLossPerc)
+            let stopPrice = type == "buy" ? price*(1 - stopLossPerc) : price*(1 + stopLossPerc)
             let msg_st = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(pr)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1), \"close[ordertype]\": \"stop-loss\", \"close[price]\": \(stopPrice)}"
 
             return msg_st
         }
-        
-        
+
         let msg = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(pr)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1)\"}"
 
         return msg
     }
 
-    func buyMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func buyMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -302,7 +291,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func sellMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func sellMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -310,7 +299,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -318,7 +307,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -326,7 +315,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -334,7 +323,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool , stopLossPerc: Double = 0.05) async {
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
         if isConnected && socket != nil {
             let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
             socket.write(string: msg)
@@ -413,7 +402,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         LogManager.shared.action("Closing position using REST \(refid)")
 
         if let position = positions.first(where: { $0.refid == refid }) {
-            let leverage = LEVERAGE[position.pairISO]
+            let leverage = Constants.pairSettings[position.pairISO]?.leverage
             let result = await Kraken.shared.addOrder(orderType: .market, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, leverage: "\(leverage ?? 1)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):
@@ -440,7 +429,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
 
         if let position = positions.first(where: { $0.refid == refid }) {
             let price = position.type == "sell" ? best_bid : best_ask
-            let leverage = LEVERAGE[position.pairISO]
+            let leverage = Constants.pairSettings[position.pairISO]?.leverage
             let result = await Kraken.shared.addOrder(orderType: .limit, direction: position.type == "sell" ? .buy : .sell, pair: position.pairISO, volume: position.vol, price: "\(price)", leverage: "\(leverage ?? 1)", validate: validate, reduce_only: true)
             switch result {
             case .success(let message):

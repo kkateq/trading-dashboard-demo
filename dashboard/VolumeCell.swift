@@ -43,48 +43,42 @@ struct VolumeCell: View {
     var body: some View {
         let volStr = String(format: "%.0f", round(volume))
       
-            
-            Button(action: {
-                Task {
-                    await onLimit(price)
-                }
-            }) {
-                ZStack {
-                    HStack(spacing: 0) {
-                        if type == .bid {
-                            Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
-                            Rectangle().fill(volumeColor).frame(width: fill1)
-                        } else {
-                            Rectangle().fill(volumeColor).frame(width: fill1)
-                            Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
-                        }
-                    }.frame(width: cellWidth, height: cellHeight)
-                    Text(volStr)
-                        .frame(width: cellWidth, height: cellHeight, alignment: align)
-                        .font(.system(.title3))
-                        .foregroundColor(textColor).font(.system(.title3))
-                        .background(Rectangle().fill(hoverColor))
-                        .onHover { hover in
-                            isHover = hover
-                        }
-                    
-                }
-            }.buttonStyle(PlainButtonStyle())
+        Button(action: {
+            Task {
+                await onLimit(price)
+            }
+        }) {
+            ZStack {
+                HStack(spacing: 0) {
+                    if type == .bid {
+                        Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
+                        Rectangle().fill(volumeColor).frame(width: fill1)
+                    } else {
+                        Rectangle().fill(volumeColor).frame(width: fill1)
+                        Rectangle().fill(volumeFullColor).frame(width: 100 - fill1)
+                    }
+                }.frame(width: cellWidth, height: cellHeight)
+                Text(volStr)
+                    .frame(width: cellWidth, height: cellHeight, alignment: align)
+                    .font(.system(.title3))
+                    .foregroundColor(textColor).font(.system(.title3))
+                    .background(Rectangle().fill(hoverColor))
+                    .onHover { hover in
+                        isHover = hover
+                    }
+            }
+        }.buttonStyle(PlainButtonStyle())
             .frame(width: 100, height: 25)
-               
-        
     }
 }
 
 #Preview {
-
     VStack {
-        LazyVGrid(columns: [ GridItem(.fixed(100), spacing: 2),
-                             GridItem(.fixed(100), spacing: 2),
-                             GridItem(.fixed(100), spacing: 2),
-                             GridItem(.fixed(100), spacing: 2),
-                             GridItem(.fixed(100), spacing: 2)], spacing: 2) {
-           
+        LazyVGrid(columns: [GridItem(.fixed(100), spacing: 2),
+                            GridItem(.fixed(100), spacing: 2),
+                            GridItem(.fixed(100), spacing: 2),
+                            GridItem(.fixed(100), spacing: 2),
+                            GridItem(.fixed(100), spacing: 2)], spacing: 2) {
 //            NoteCell()
             EmptyCell()
             PriceCell(price: "0.9888", depth: 25, level: 1, up: true)

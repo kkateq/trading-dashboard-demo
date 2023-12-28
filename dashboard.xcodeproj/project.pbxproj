@@ -10,7 +10,7 @@
 		34066F4C2B309E3B0090C78A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4B2B309E3B0090C78A /* LogView.swift */; };
 		34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4E2B30DDDC0090C78A /* LogManager.swift */; };
 		34066F512B31A8200090C78A /* AskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F502B31A8200090C78A /* AskCell.swift */; };
-		34066F532B31B4B30090C78A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F522B31B4B30090C78A /* HomeView.swift */; };
+		34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F522B31B4B30090C78A /* PairHomeView.swift */; };
 		349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349044952B330DE800975B95 /* KrakenOHLC.swift */; };
 		34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C0F2B29C12A00A5A649 /* dashboardApp.swift */; };
 		34905C122B29C12A00A5A649 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C112B29C12A00A5A649 /* ContentView.swift */; };
@@ -55,6 +55,7 @@
 		34F4014E2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */; };
 		34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */; };
 		34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401512B3D95AE00E0DC4A /* Constants.swift */; };
+		34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401532B3D9BB100E0DC4A /* DashboardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,7 +79,7 @@
 		34066F4B2B309E3B0090C78A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		34066F4E2B30DDDC0090C78A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		34066F502B31A8200090C78A /* AskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskCell.swift; sourceTree = "<group>"; };
-		34066F522B31B4B30090C78A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		34066F522B31B4B30090C78A /* PairHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairHomeView.swift; sourceTree = "<group>"; };
 		349044952B330DE800975B95 /* KrakenOHLC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenOHLC.swift; sourceTree = "<group>"; };
 		34905C0C2B29C12A00A5A649 /* dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C0F2B29C12A00A5A649 /* dashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardApp.swift; sourceTree = "<group>"; };
@@ -124,6 +125,7 @@
 		34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel5Chart.swift; sourceTree = "<group>"; };
 		34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImbalanceLevel10Chart.swift; sourceTree = "<group>"; };
 		34F401512B3D95AE00E0DC4A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		34F401532B3D9BB100E0DC4A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,16 +193,16 @@
 				34905C532B2B5B9E00A5A649 /* BidCell.swift */,
 				34905C612B2C53F700A5A649 /* ButtonStyles.swift */,
 				34F401452B3ADCDE00E0DC4A /* Commons.swift */,
+				34F401512B3D95AE00E0DC4A /* Constants.swift */,
 				34905C112B29C12A00A5A649 /* ContentView.swift */,
 				34905C0F2B29C12A00A5A649 /* dashboardApp.swift */,
+				34F401532B3D9BB100E0DC4A /* DashboardView.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
-				34066F522B31B4B30090C78A /* HomeView.swift */,
 				34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */,
 				34F4014D2B3C340A00E0DC4A /* ImbalanceLevel5Chart.swift */,
 				34F4014F2B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
-				34F401512B3D95AE00E0DC4A /* Constants.swift */,
 				34F4012F2B34393900E0DC4A /* KeychainHandler.swift */,
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
@@ -208,6 +210,7 @@
 				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
 				34905C5F2B2C4A1800A5A649 /* OrderForm.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
+				34066F522B31B4B30090C78A /* PairHomeView.swift */,
 				34F401492B3B224900E0DC4A /* PegImbalanceChart.swift */,
 				34905C5D2B2B684700A5A649 /* PositionsView.swift */,
 				34905C552B2B604500A5A649 /* PriceCell.swift */,
@@ -424,6 +427,7 @@
 				34F401302B34393900E0DC4A /* KeychainHandler.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
+				34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */,
 				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34F401502B3C37B000E0DC4A /* ImbalanceLevel10Chart.swift in Sources */,
@@ -446,7 +450,7 @@
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
-				34066F532B31B4B30090C78A /* HomeView.swift in Sources */,
+				34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 				34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */,

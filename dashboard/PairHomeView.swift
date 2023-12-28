@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct HomeView: View {
-    @State private var volume: Double = 200
+struct PairHomeView: View {
+    @State var volume: Double
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = false
     @State private var useRest: Bool = false
@@ -19,9 +19,7 @@ struct HomeView: View {
         HStack {
             RecentTradesView()
             IndicatorPanView()
-
             OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
-
             OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
         }
     }
@@ -29,6 +27,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        PairHomeView(volume: 100)
     }
 }
