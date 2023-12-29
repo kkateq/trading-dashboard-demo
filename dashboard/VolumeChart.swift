@@ -16,6 +16,7 @@ struct VolumeChart: View {
         let totalAskVol10 = book.getAskVolume(levels: 10)
         let totalBidVol5 = book.getBidVolume(levels: 5)
         let totalBidVol10 = book.getBidVolume(levels: 10)
+        
         let totalAskPerc = book.stats.totalAskVol/(book.stats.totalAskVol + book.stats.totalBidVol)
         let fillTotalAsk = CGFloat(cellWidth * totalAskPerc)
         
@@ -61,7 +62,6 @@ struct VolumeChart: View {
                     
                 }
                 VStack {
-                    
                     ZStack {
                         HStack(spacing: 0) {
                             Rectangle().fill(Color("BidTextColor")).frame(width: cellWidth - fillTotalAsk, height: 25)

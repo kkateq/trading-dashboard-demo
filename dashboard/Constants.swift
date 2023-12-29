@@ -10,7 +10,8 @@ import Foundation
 struct PairSettings {
     var leverage: Int
     var minimumOrderVolume: Double
-    var numberOfFractionalPoints: Int
+    var priceFractionalPoints: Int
+    var volumeFractionalPoints: Int
 }
 
 enum Constants {
@@ -18,8 +19,8 @@ enum Constants {
     static let defaultPair = "MATIC/USD"
     static let pairs = ["MATIC/USD", "ETH/USD"]
     static let pairSettings: [String: PairSettings] = [
-        "MATIC/USD": PairSettings(leverage: 4, minimumOrderVolume: 100, numberOfFractionalPoints: 4),
-        "ETH/USD": PairSettings(leverage: 5, minimumOrderVolume: 0.04, numberOfFractionalPoints: 4)
+        "MATIC/USD": PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0),
+        "ETH/USD": PairSettings(leverage: 5, minimumOrderVolume: 0.04, priceFractionalPoints: 2, volumeFractionalPoints: 2)
     ]
     static let PAIRS_ISO_NAMES = [
         "MATICUSD": "MATIC/USD",

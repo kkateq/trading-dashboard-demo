@@ -14,8 +14,10 @@ struct OrderBookView: View {
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
     @Binding var useRest: Bool
-    @Binding var stopLoss: Bool
-    @Binding var stopLossPerc: Double
+    @Binding var stopLossEnabled: Bool
+    @Binding var sellStopLoss: Double!
+    @Binding var buyStopLoss: Double!
+    
     
     @EnvironmentObject var book: OrderBookData
 
@@ -30,11 +32,11 @@ struct OrderBookView: View {
     ]
     
     func sellLimit(price: String) async {
-        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+        await manager.sellLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? sellStopLoss : nil)
     }
     
     func buyLimit(price: String) async {
-        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss: nil)
     }
     
     var body: some View {

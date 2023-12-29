@@ -12,15 +12,17 @@ struct PairHomeView: View {
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = false
     @State private var useRest: Bool = false
-    @State private var stopLoss: Bool = false
-    @State private var stopLossPerc: Double = 0.05
+    @State var stopLossEnabled: Bool = true
+    @State var sellStopLoss: Double!
+    @State var buyStopLoss: Double!
+    
 
     var body: some View {
         HStack {
             RecentTradesView()
             IndicatorPanView()
-            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
-            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLoss: $stopLoss, stopLossPerc: $stopLossPerc)
+            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
         }
     }
 }

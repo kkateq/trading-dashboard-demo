@@ -264,17 +264,17 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         }
     }
 
-    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false, stopLoss: Bool = false, stopLossPerc: Double = 0.05) -> String {
+    func add_order_payload(pair: String, vol: Double, price: Double, type: String, scaleInOut: Bool, ordertype: String = "limit", validate: Bool = false, stopLoss: Double! = nil) -> String {
         let reduce_only = positions.count > 0 ? scaleInOut : false
 
         let pairName = pair.contains("/") ? pair : Constants.PAIRS_ISO_NAMES[pair]
         let leverage = Constants.pairSettings[pairName!]?.leverage
         let pr = ordertype == "market" ? 0 : price
 
-        if stopLoss {
-            let stopPrice = roundPrice(price: type == "buy" ? price*(1 - stopLossPerc) : price*(1 + stopLossPerc))
+        if let st = stopLoss {
+            let stopPrice = roundPrice(price: st)
             let msg_st = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(pr)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1)\", \"close[ordertype]\": \"stop-loss\", \"close[price]\": \"\(stopPrice)\"}"
-            
+
             return msg_st
         }
 
@@ -283,49 +283,49 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         return msg
     }
 
-    func buyMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func buyMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func sellMarket(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, ordertype: "market", validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func buyBid(pair: String, vol: Double, best_bid: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_bid, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func sellAsk(pair: String, vol: Double, best_ask: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: best_ask, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func buyLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "buy", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
     }
 
-    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Bool, stopLossPerc: Double = 0.05) async {
+    func sellLimit(pair: String, vol: Double, price: Double, scaleInOut: Bool, validate: Bool, stopLoss: Double! = nil) async {
         if isConnected && socket != nil {
-            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+            let msg = add_order_payload(pair: pair, vol: vol, price: price, type: "sell", scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss)
             socket.write(string: msg)
             LogManager.shared.action(msg)
         }
@@ -391,9 +391,9 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
 
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyMarket(pair: position.pairISO, vol: Double(position.vol)!, price: 0, scaleInOut: true, validate: validate, stopLoss: false)
+                await buyMarket(pair: position.pairISO, vol: Double(position.vol)!, price: 0, scaleInOut: true, validate: validate)
             } else {
-                await sellMarket(pair: position.pairISO, vol: Double(position.vol)!, price: 0, scaleInOut: true, validate: validate, stopLoss: false)
+                await sellMarket(pair: position.pairISO, vol: Double(position.vol)!, price: 0, scaleInOut: true, validate: validate)
             }
         }
     }
@@ -447,9 +447,9 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
 
         if let position = positions.first(where: { $0.refid == refid }) {
             if position.type == "sell" {
-                await buyBid(pair: position.pairISO, vol: Double(position.vol)!, best_bid: best_bid, scaleInOut: true, validate: validate, stopLoss: false)
+                await buyBid(pair: position.pairISO, vol: Double(position.vol)!, best_bid: best_bid, scaleInOut: true, validate: validate)
             } else {
-                await sellAsk(pair: position.pairISO, vol: Double(position.vol)!, best_ask: best_ask, scaleInOut: true, validate: validate, stopLoss: false)
+                await sellAsk(pair: position.pairISO, vol: Double(position.vol)!, best_ask: best_ask, scaleInOut: true, validate: validate)
             }
         }
     }

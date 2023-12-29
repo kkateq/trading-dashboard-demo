@@ -12,39 +12,45 @@ struct OrderForm: View {
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
     @Binding var useRest: Bool
-    @Binding var stopLoss: Bool
-    @Binding var stopLossPerc: Double
+
+    @Binding var stopLossEnabled: Bool
+    @Binding var sellStopLoss: Double!
+    @Binding var buyStopLoss: Double!
 
     @EnvironmentObject var manager: KrakenOrderManager
     @EnvironmentObject var book: OrderBookData
-
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter
     }()
-    
+
     let percent: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
         return formatter
     }()
-    
+
     func getAllowedleverage(pair: String) -> Int {
         return Constants.pairSettings[pair]!.leverage
     }
+
     func getAllowedMargin() -> Double {
         let p = manager.accountBalance * Double(getAllowedleverage(pair: book.pair))
-        return p - p*Constants.kraken_fee
+        return p - p * Constants.kraken_fee
     }
-    
+
     func isFormInvalid() -> Bool {
         return volume * book.stats.pegValue > getAllowedMargin() - 1
     }
 
+    func updateStopLoss(_ publishedStats: Stats!) {
+        sellStopLoss = publishedStats.bestAsk + roundPrice(price: publishedStats.bestAsk * 0.05, pair: book.pair)
+        buyStopLoss = publishedStats.bestBid - roundPrice(price: publishedStats.bestBid * 0.05, pair: book.pair)
+    }
+
     var body: some View {
-        
         VStack {
             VStack {
                 HStack {
@@ -69,7 +75,7 @@ struct OrderForm: View {
                     }
                 }
                 HStack {
-                    Text("Leverage \(getAllowedleverage(pair:book.pair))x").font(.caption)
+                    Text("Leverage \(getAllowedleverage(pair: book.pair))x").font(.caption)
                         .foregroundColor(.gray)
                     Spacer()
                     VStack {
@@ -89,17 +95,28 @@ struct OrderForm: View {
                 HStack {
                     Text("Kraken fee \(Constants.kraken_fee)%").font(.caption).foregroundColor(.gray)
                     Spacer()
-                    Text("\(formatPrice(price:volume * Constants.kraken_fee))$").font(.caption).foregroundColor(.gray)
+                    Text("\(formatPrice(price: volume * Constants.kraken_fee))$").font(.caption).foregroundColor(.gray)
                 }.padding([.bottom])
                 HStack {
-                    Toggle("Stop loss %", isOn: $stopLoss)
+                    Toggle("Stop loss", isOn: $stopLossEnabled)
                         .toggleStyle(.checkbox)
                     Spacer()
-                    TextField("Stop loss", value: $stopLossPerc, formatter: percent)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .disabled(!stopLoss)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Sell stop loss").font(.caption).foregroundStyle(.gray)
+                        TextField("Sell stop loss", value: $sellStopLoss, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onReceive(book.$stats, perform: updateStopLoss)
+                            .disabled(!stopLossEnabled)
+                    }
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Buy stop loss").font(.caption).foregroundStyle(.gray)
+                        TextField("Buy stop loss", value: $buyStopLoss, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onReceive(book.$stats, perform: updateStopLoss)
+                            .disabled(!stopLossEnabled)
+                    }
                 }.padding([.bottom])
-                
+
                 Toggle("Scale In/Out", isOn: $scaleInOut)
                     .toggleStyle(.checkbox)
             }.padding(.leading)
@@ -109,8 +126,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-//Note: Here price is used for the stop order calculation
-                                await manager.sellMarket(pair: book.pair, vol: volume, price: book.stats.bestAsk ,scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+                                await manager.sellMarket(pair: book.pair, vol: volume, price: 0, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? sellStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -124,8 +140,7 @@ struct OrderForm: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                //NOTE: Here price is used for the stop order calculation
-                                await manager.buyMarket(pair: book.pair, vol: volume, price: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+                                await manager.buyMarket(pair: book.pair, vol: volume, price: 0, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -141,7 +156,7 @@ struct OrderForm: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? sellStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -155,7 +170,7 @@ struct OrderForm: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLoss, stopLossPerc: stopLossPerc)
+                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss : nil)
                             }
                         }) {
                             HStack {
