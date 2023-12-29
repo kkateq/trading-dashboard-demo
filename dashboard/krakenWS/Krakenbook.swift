@@ -277,6 +277,14 @@ struct Stats {
     var totalBidVolumePerc: Double {
         return round((totalBidVol / (totalAskVol + totalBidVol)) * 100)
     }
+    
+    var totalAskRawVolumePerc: Double {
+        return round((totalAskVolRaw / (totalAskVolRaw + totalBidVolRaw)) * 100)
+    }
+
+    var totalBidRawVolumePerc: Double {
+        return round((totalBidVolRaw / (totalAskVolRaw + totalBidVolRaw)) * 100)
+    }
 }
 
 class OrderBookData: ObservableObject, Equatable {

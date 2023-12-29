@@ -43,9 +43,14 @@ struct OrderBookView: View {
         VStack {
             let bp = "\(book.stats.totalBidVolumePerc) %"
             let ap = "\(book.stats.totalAskVolumePerc) %"
+            let bpraw = "\(book.stats.totalBidRawVolumePerc) %"
+            let apraw = "\(book.stats.totalAskRawVolumePerc) %"
             LazyVGrid(columns: layout, spacing: 2) {
                 Text("\(book.pair)").font(.title3)
-                Text(bp).foregroundColor(.blue)
+                VStack{
+                    Text(bp).foregroundColor(.blue)
+                    Text(bpraw).foregroundColor(.gray).font(.caption)
+                }
                 VStack {
                     if book.isValid {
                         Text("Valid").foregroundColor(Color("Green"))
@@ -53,7 +58,10 @@ struct OrderBookView: View {
                         Text("Invalid").foregroundColor(Color("Red"))
                     }
                 }
-                Text(ap).foregroundColor(.red)
+                VStack {
+                    Text(ap).foregroundColor(.red)
+                    Text(apraw).foregroundColor(.gray).font(.caption)
+                }
                 Text("Depth: \(book.depth)")
             }
             VStack {

@@ -13,7 +13,11 @@ struct IndicatorPanView: View {
     var body: some View {
         VStack {
             VStack {
-                VolumeChart()
+                HStack {
+                    VolumeChart()
+                    Spacer()
+                    RawVolumeChart()
+                }
             }.frame(height: 100)
            
             ImbalanceChart()

@@ -56,6 +56,7 @@
 		34F401542B3D9BB100E0DC4A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401532B3D9BB100E0DC4A /* DashboardView.swift */; };
 		34F401582B3DBC1D00E0DC4A /* VolumeChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */; };
 		34F4015A2B3EF02900E0DC4A /* BellCurve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401592B3EF02900E0DC4A /* BellCurve.swift */; };
+		34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4015B2B3F24CE00E0DC4A /* RawVolumeChart.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		34F401532B3D9BB100E0DC4A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeChart2.swift; sourceTree = "<group>"; };
 		34F401592B3EF02900E0DC4A /* BellCurve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BellCurve.swift; sourceTree = "<group>"; };
+		34F4015B2B3F24CE00E0DC4A /* RawVolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawVolumeChart.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +219,7 @@
 				34F401412B37128700E0DC4A /* RecentTradesView.swift */,
 				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34F4014B2B3B2F6200E0DC4A /* VolumeChart.swift */,
+				34F4015B2B3F24CE00E0DC4A /* RawVolumeChart.swift */,
 				34F401592B3EF02900E0DC4A /* BellCurve.swift */,
 				34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */,
 				34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */,
@@ -447,6 +450,7 @@
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */,
+				34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */,
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
