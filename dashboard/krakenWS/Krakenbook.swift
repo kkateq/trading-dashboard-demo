@@ -5,6 +5,7 @@
 //  Created by km on 13/12/2023.
 //
 
+import Charts
 import Combine
 import CryptoSwift
 import Foundation
@@ -121,7 +122,14 @@ class OrderBookRecord: Identifiable, ObservableObject {
     }
 }
 
+struct VolumeDistributionElement {
+    var index: Int
+    var range: ChartBinRange<Double>
+    var frequency: Int
+}
+
 struct Stats {
+    var pair: String
     var totalBidVol: Double
     var totalAskVol: Double
 
@@ -131,9 +139,57 @@ struct Stats {
     var bestAskVolume: Double
     var maxVolume: Double
     var time: Date
+    var ask_bins: NumberBins<Double>
+    var bid_bins: NumberBins<Double>
+    var ask_groups: [Int: [Array<Double>.Element]]
+    var bid_groups: [Int: [Array<Double>.Element]]
 
-    init(all: [Double: OrderBookRecord], bid_keys: [Double], ask_keys: [Double]) {
+    var askVolumeCutOff: Double = 0
+    var bidVolumeCutOff: Double = 0
+
+    init(pair: String, all: [Double: OrderBookRecord], bid_keys: [Double], ask_keys: [Double]) {
         time = Date()
+        self.pair = pair
+        let ask_volumes = ask_keys.map { all[$0]!.vol }
+
+        ask_bins = NumberBins(
+            data: ask_volumes,
+            desiredCount: 3
+        )
+        ask_groups = Dictionary(
+            grouping: ask_volumes,
+            by: ask_bins.index
+        )
+
+        let bid_volumes = bid_keys.map { all[$0]!.vol }
+
+        bid_bins = NumberBins(
+            data: bid_volumes,
+            desiredCount: 3
+        )
+
+        bid_groups = Dictionary(
+            grouping: bid_volumes,
+            by: bid_bins.index
+        )
+        
+        if let avVol = Constants.pairSettings[pair] {
+            if ask_groups.values.count > 0 {
+                askVolumeCutOff = ask_groups.suffix(1)[0].value[0]
+
+                if askVolumeCutOff < avVol.averageVolume {
+                    askVolumeCutOff = Constants.pairSettings[pair]!.averageVolume
+                }
+            }
+
+            if bid_groups.values.count > 0 {
+                bidVolumeCutOff = bid_groups.suffix(1)[0].value[0]
+
+                if bidVolumeCutOff < avVol.averageVolume {
+                    bidVolumeCutOff = Constants.pairSettings[pair]!.averageVolume
+                }
+            }
+        }
 
         totalAskVol = ask_keys.reduce(0) { $0 + all[$1]!.vol }
         totalBidVol = bid_keys.reduce(0) { $0 + all[$1]!.vol }
@@ -200,7 +256,7 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     func generateStats() {
-        let newStats = Stats(all: all, bid_keys: bid_keys, ask_keys: ask_keys)
+        let newStats = Stats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
         if let recentStats = stats {
             recentPeg = recentStats.pegValue
         }

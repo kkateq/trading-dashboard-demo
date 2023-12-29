@@ -5,13 +5,80 @@
 //  Created by km on 29/12/2023.
 //
 
-import SwiftUI
 import Charts
+import SwiftUI
 
 struct BellCurve: View {
-    
+    @EnvironmentObject var book: OrderBookData
+
+    @State var askData: [VolumeDistributionElement]!
+    @State var bidData: [VolumeDistributionElement]!
+
+    func updateChart(_ publishedStats: Stats!) {
+        askData = publishedStats.ask_groups.map { key, values in
+            VolumeDistributionElement(
+                index: key,
+                range: publishedStats.ask_bins[key],
+                frequency: values.count
+            )
+        }
+
+        bidData = publishedStats.bid_groups.map { key, values in
+            VolumeDistributionElement(
+                index: key,
+                range: publishedStats.bid_bins[key],
+                frequency: values.count
+            )
+        }
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Bell curve volume distribution")
+            Text("ask - \(book.stats.askVolumeCutOff)")
+            Text("bid - \(book.stats.bidVolumeCutOff)")
+            if let askdataset = askData {
+                VStack(alignment: .leading) {
+                    Text("Asks")
+                    Chart(askdataset, id: \.index) { element in
+                        BarMark(
+                            x: .value(
+                                "Volume",
+                                element.range
+                            ),
+                            y: .value(
+                                "Frequency",
+                                element.frequency
+                            )
+                        ).foregroundStyle(Color("Red"))
+                    }
+                    .chartXScale(
+                        domain: .automatic(includesZero: false)
+                    )
+                }
+            }
+            if let biddataset = bidData {
+                VStack(alignment: .leading) {
+                    Text("Bids")
+                    Chart(biddataset, id: \.index) { element in
+                        BarMark(
+                            x: .value(
+                                "Volume",
+                                element.range
+                            ),
+                            y: .value(
+                                "Frequency",
+                                element.frequency
+                            )
+                        ).foregroundStyle(Color("Blue"))
+                    }
+                    .chartXScale(
+                        domain: .automatic(includesZero: false)
+                    )
+                }
+            }
+
+        }.onReceive(book.$stats, perform: updateChart)
     }
 }
 

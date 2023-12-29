@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct IndicatorPanView: View {
+
+    
     var body: some View {
         VStack {
             VStack {
@@ -15,14 +17,9 @@ struct IndicatorPanView: View {
             }.frame(height: 100)
            
             ImbalanceChart()
-           
-      
-          
             ImbalanceLevelsChart()
-         
+            BellCurve()
            
-        
-
         }.frame(width: 720)
     }
 }
