@@ -8,18 +8,30 @@
 import SwiftUI
 
 struct PriceCell: View {
+    @EnvironmentObject var book: OrderBookData
     var price: String
     var depth: Int
     var level: Int
     var up: Bool
+
+    var bgColor: Color {
+        let up = book.isUp()
+        if let isUp = up {
+            return isUp ? Color("GreenTransparent") : Color("RedTransparent")
+        } else {
+            return Color("Transparent")
+        }
+    }
+
     var body: some View {
         let isAskPeg = (level == depth - 1)
         let isBidPeg = (level == depth)
+
         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : .white)
         Text(price)
             .frame(width: 100, height: 25, alignment: .center)
             .font(.system(.title3))
-            .background(Rectangle().fill(up ? Color("GreenTransparent") : Color("RedTransparent")))
+            .background(Rectangle().fill(bgColor))
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(color, lineWidth: 2)

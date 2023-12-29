@@ -318,6 +318,13 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
 
+    func isUp() -> Bool! {
+        if statsHistory.count >= 2 {
+            let recent = statsHistory[statsHistory.count - 2]
+            return recent.pegValue < stats.pegValue
+        }
+        return nil
+    }
 
     func generateStats() {
         let newStats = Stats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
