@@ -23,27 +23,27 @@ struct ImbalanceLevelsChart: View {
     @EnvironmentObject var book: OrderBookData
     @State var points: [VolumePoint] = []
 
-    func getBidVolume(_ stats: Stats, _ prevStats: Stats!, _ l: Int) -> Double {
+    func getBidVolume(_ stats: Stats, _ prevStats: Stats!, _ totalBidLevelsVolume: Double) -> Double {
         if let pr = prevStats {
             if stats.bestBid > pr.bestBid {
-                return stats.bestBidVolume + book.getBidVolume(levels: l)
+                return stats.bestBidVolume + totalBidLevelsVolume
             } else if stats.bestBid == pr.bestBid {
-                return stats.bestBidVolume - pr.bestBidVolume + book.getBidVolume(levels: l)
+                return stats.bestBidVolume - pr.bestBidVolume + totalBidLevelsVolume
             } else if stats.bestBid < pr.bestBid {
-                return -1 * pr.bestBidVolume + book.getBidVolume(levels: l)
+                return -1 * pr.bestBidVolume + totalBidLevelsVolume
             }
         }
         return stats.bestBidVolume
     }
 
-    func getAskVolume(_ stats: Stats, _ prevStats: Stats!, _ l: Int) -> Double {
+    func getAskVolume(_ stats: Stats, _ prevStats: Stats!, _ totalAskLevelsVolume: Double) -> Double {
         if let pr = prevStats {
             if stats.bestAsk < pr.bestAsk {
-                return stats.bestAskVolume + book.getAskVolume(levels: l)
+                return stats.bestAskVolume + totalAskLevelsVolume
             } else if stats.bestAsk == pr.bestAsk {
-                return stats.bestAskVolume - pr.bestAskVolume + book.getAskVolume(levels: l)
+                return stats.bestAskVolume - pr.bestAskVolume + totalAskLevelsVolume
             } else if stats.bestAsk > pr.bestAsk {
-                return -1 * pr.bestAskVolume + book.getAskVolume(levels: l)
+                return -1 * pr.bestAskVolume + totalAskLevelsVolume
             }
         }
         return stats.bestAskVolume
@@ -56,9 +56,9 @@ struct ImbalanceLevelsChart: View {
             if let st = book.stats {
                 
                 points = []
-                let diff5 = getBidVolume(st, prevStats, 5) - getAskVolume(st, prevStats, 5)
-                let diff10 = getBidVolume(st, prevStats, 10) - getAskVolume(st, prevStats, 10)
-                let diff25 = getBidVolume(st, prevStats, 25) - getAskVolume(st, prevStats, 25)
+                let diff5 = getBidVolume(st, prevStats, st.totalBidVol5) - getAskVolume(st, prevStats, st.totalAskVol5)
+                let diff10 = getBidVolume(st, prevStats, st.totalBidVol10) - getAskVolume(st, prevStats, st.totalAskVol10)
+                let diff25 = getBidVolume(st, prevStats, st.totalBidVol) - getAskVolume(st, prevStats, st.totalAskVol)
                 
                 points.append(VolumePoint(volume: abs(diff5), color: diff5 > 0 ? "Green": "Red", type: "Level5"))
                 

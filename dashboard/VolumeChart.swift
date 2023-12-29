@@ -21,52 +21,45 @@ struct VolumeChart: View {
     @State var totalAskVolume10Perc: Int = 0
     @State var totalAskCellWidth10: Double = 0
     
-    func updateChart(_ publishedStats: Stats!) -> Void {
-
+    func updateChart(_ publishedStats: Stats!) {
         if let stats = publishedStats {
             let totalAskVolume = stats.totalAskVol
             let totalBidVolume = stats.totalBidVol
-            let totalAskVol5 = book.getAskVolume(levels: 5)
-            let totalBidVol5 = book.getBidVolume(levels: 5)
-            let totalAskVol10 = book.getAskVolume(levels: 10)
-            let totalBidVol10 = book.getBidVolume(levels: 10)
-            
+            let totalAskVol5 = stats.totalAskVol5
+            let totalBidVol5 = stats.totalBidVol5
+            let totalAskVol10 = stats.totalAskVol10
+            let totalBidVol10 = stats.totalBidVol10
             
             if totalAskVolume + totalBidVolume > 0 {
                 let totalAskPerc = round(100 * (totalAskVolume / (totalAskVolume + totalBidVolume)))
                 if totalAskPerc > 0 && totalAskPerc <= 100 {
                     self.totalAskVolumePerc = Int(totalAskPerc)
-                    self.totalAskCellWidth = cellWidth * (totalAskPerc / 100)
+                    self.totalAskCellWidth = self.cellWidth * (totalAskPerc / 100)
                 }
             }
             if totalAskVol5 + totalBidVol5 > 0 {
                 let totalAskPerc5 = round(100 * (totalAskVol5 / (totalAskVol5 + totalBidVol5)))
                 if totalAskPerc5 > 0 && totalAskPerc5 < 100 {
                     self.totalAskVolume5Perc = Int(totalAskPerc5)
-                    self.totalAskCellWidth5 = cellWidth * (totalAskPerc5 / 100)
+                    self.totalAskCellWidth5 = self.cellWidth * (totalAskPerc5 / 100)
                 }
-                
             }
             if totalAskVol10 + totalBidVol10 > 0 {
                 let totalAskPerc10 = round(100 * (totalAskVol10 / (totalAskVol10 + totalBidVol10)))
                 if totalAskPerc10 > 0 && totalAskPerc10 < 100 {
                     self.totalAskVolume10Perc = Int(totalAskPerc10)
-                    self.totalAskCellWidth10 = cellWidth * (totalAskPerc10 / 100)
+                    self.totalAskCellWidth10 = self.cellWidth * (totalAskPerc10 / 100)
                 }
             }
-            
-            
         }
-
     }
     
     var body: some View {
-
         HStack {
             VStack {
                 Text("Top 5").font(.caption).frame(height: 25)
-                Text("Top 10").font(.caption).frame( height: 25)
-                Text("Top 25").font(.caption).frame( height: 25)
+                Text("Top 10").font(.caption).frame(height: 25)
+                Text("Top 25").font(.caption).frame(height: 25)
             }
             VStack {
                 VStack {
@@ -81,7 +74,6 @@ struct VolumeChart: View {
                             Text("\(totalAskVolume5Perc) %").foregroundStyle(.white).frame(width: totalAskCellWidth5, height: 25)
                         }.frame(width: cellWidth, height: 25)
                     }
-                    
                 }
                 VStack {
                     ZStack {
@@ -95,7 +87,6 @@ struct VolumeChart: View {
                             Text("\(totalAskVolume10Perc) %").foregroundStyle(.white).frame(width: totalAskCellWidth10, height: 25)
                         }.frame(width: cellWidth, height: 25)
                     }
-                    
                 }
                 VStack {
                     ZStack {
@@ -109,7 +100,6 @@ struct VolumeChart: View {
                             Text("\(totalAskVolumePerc) %").foregroundStyle(.white).frame(width: totalAskCellWidth, height: 25)
                         }.frame(width: cellWidth, height: 25)
                     }
-                    
                 }
             }
         }
