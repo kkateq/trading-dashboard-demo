@@ -37,48 +37,51 @@ struct BellCurve: View {
             Text("Bell curve volume distribution")
             Text("ask - \(book.stats.askVolumeCutOff)")
             Text("bid - \(book.stats.bidVolumeCutOff)")
-            if let askdataset = askData {
-                VStack(alignment: .leading) {
-                    Text("Asks")
-                    Chart(askdataset, id: \.index) { element in
-                        BarMark(
-                            x: .value(
-                                "Volume",
-                                element.range
-                            ),
-                            y: .value(
-                                "Frequency",
-                                element.frequency
-                            )
-                        ).foregroundStyle(Color("Red"))
+            HStack {
+                if let askdataset = askData {
+                    VStack(alignment: .leading) {
+                        Text("Asks")
+                        Chart(askdataset, id: \.index) { element in
+                            BarMark(
+                                x: .value(
+                                    "Volume",
+                                    element.range
+                                ),
+                                y: .value(
+                                    "Frequency",
+                                    element.frequency
+                                )
+                            ).foregroundStyle(Color("Red"))
+                        }
+                        .chartXScale(
+                            domain: .automatic(includesZero: false)
+                        )
                     }
-                    .chartXScale(
-                        domain: .automatic(includesZero: false)
-                    )
                 }
-            }
-            if let biddataset = bidData {
-                VStack(alignment: .leading) {
-                    Text("Bids")
-                    Chart(biddataset, id: \.index) { element in
-                        BarMark(
-                            x: .value(
-                                "Volume",
-                                element.range
-                            ),
-                            y: .value(
-                                "Frequency",
-                                element.frequency
-                            )
-                        ).foregroundStyle(Color("Blue"))
+                if let biddataset = bidData {
+                    VStack(alignment: .leading) {
+                        Text("Bids")
+                        Chart(biddataset, id: \.index) { element in
+                            BarMark(
+                                x: .value(
+                                    "Volume",
+                                    element.range
+                                ),
+                                y: .value(
+                                    "Frequency",
+                                    element.frequency
+                                )
+                            ).foregroundStyle(Color("Blue"))
+                        }
+                        .chartXScale(
+                            domain: .automatic(includesZero: false)
+                        )
                     }
-                    .chartXScale(
-                        domain: .automatic(includesZero: false)
-                    )
                 }
+                
             }
-
         }.onReceive(book.$stats, perform: updateChart)
+            .frame(height: 150)
     }
 }
 

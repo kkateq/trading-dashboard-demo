@@ -150,6 +150,20 @@
          contextName = "ImbalanceChart2.getBidVolume(_:_:):ImbalanceChart2.swift">
       </ContextState>
       <ContextState
+         contextName = "PositionRecomendation.updateChart(_:):PositionRecomendation.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(buys / (buys + sells))">
+            </PersistentString>
+            <PersistentString
+               value = "buyPerc">
+            </PersistentString>
+            <PersistentString
+               value = "(buys / (buys + sells)) * 100">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">
       </ContextState>
       <ContextState

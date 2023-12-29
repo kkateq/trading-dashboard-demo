@@ -12,6 +12,7 @@ struct IndicatorPanView: View {
     
     var body: some View {
         VStack {
+            PositionRecomendation()
             VStack {
                 HStack {
                     VolumeChart()

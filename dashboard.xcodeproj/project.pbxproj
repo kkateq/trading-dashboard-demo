@@ -57,6 +57,7 @@
 		34F401582B3DBC1D00E0DC4A /* VolumeChart2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */; };
 		34F4015A2B3EF02900E0DC4A /* BellCurve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401592B3EF02900E0DC4A /* BellCurve.swift */; };
 		34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4015B2B3F24CE00E0DC4A /* RawVolumeChart.swift */; };
+		34F4015E2B3F28BA00E0DC4A /* PositionRecomendation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4015D2B3F28BA00E0DC4A /* PositionRecomendation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		34F401572B3DBC1D00E0DC4A /* VolumeChart2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeChart2.swift; sourceTree = "<group>"; };
 		34F401592B3EF02900E0DC4A /* BellCurve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BellCurve.swift; sourceTree = "<group>"; };
 		34F4015B2B3F24CE00E0DC4A /* RawVolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawVolumeChart.swift; sourceTree = "<group>"; };
+		34F4015D2B3F28BA00E0DC4A /* PositionRecomendation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionRecomendation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +204,7 @@
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34F401472B3AF8BC00E0DC4A /* ImbalanceChart.swift */,
+				34F4015D2B3F28BA00E0DC4A /* PositionRecomendation.swift */,
 				34F4014F2B3C37B000E0DC4A /* ImbalanceLevelsChart.swift */,
 				34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */,
 				34F4012F2B34393900E0DC4A /* KeychainHandler.swift */,
@@ -455,6 +458,7 @@
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
 				34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */,
+				34F4015E2B3F28BA00E0DC4A /* PositionRecomendation.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 				34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */,
