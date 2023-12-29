@@ -272,9 +272,9 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         let pr = ordertype == "market" ? 0 : price
 
         if stopLoss {
-            let stopPrice = type == "buy" ? price*(1 - stopLossPerc) : price*(1 + stopLossPerc)
-            let msg_st = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(pr)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1), \"close[ordertype]\": \"stop-loss\", \"close[price]\": \(stopPrice)}"
-
+            let stopPrice = roundPrice(price: type == "buy" ? price*(1 - stopLossPerc) : price*(1 + stopLossPerc))
+            let msg_st = "{\"event\":\"addOrder\", \"token\": \"\(auth_token)\", \"ordertype\": \"\(ordertype)\", \"pair\": \"\(pairName!)\", \"price\": \"\(pr)\", \"type\": \"\(type)\", \"volume\": \"\(vol)\", \"reduce_only\": \(reduce_only), \"validate\": \"\(validate)\", \"leverage\": \"\(leverage ?? 1)\", \"close[ordertype]\": \"stop-loss\", \"close[price]\": \"\(stopPrice)\"}"
+            
             return msg_st
         }
 
