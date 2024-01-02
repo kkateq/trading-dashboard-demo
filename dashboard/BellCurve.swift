@@ -35,8 +35,11 @@ struct BellCurve: View {
     var body: some View {
         VStack {
             Text("Bell curve volume distribution")
-            Text("ask - \(book.stats.askVolumeCutOff)")
-            Text("bid - \(book.stats.bidVolumeCutOff)")
+            HStack {
+                Text("ask - \(String(format: "%.0f", round(book.stats.askVolumeCutOff)))").foregroundStyle(.pink)
+                Text(" - ")
+                Text("bid - \(String(format: "%.0f",round(book.stats.bidVolumeCutOff)))").foregroundStyle(.blue)
+            }
             HStack {
                 if let askdataset = askData {
                     VStack(alignment: .leading) {

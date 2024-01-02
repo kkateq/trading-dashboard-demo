@@ -16,7 +16,7 @@ struct LastTradeCell: View {
                 let volume = String(format: "%.0f", round(lastTrade.volume))
                 HStack {
                     Text(lastTrade.priceStr)
-                        .frame(width: 100, height: 25, alignment: .leading)
+                        .frame(width: 60, height: 25, alignment: .leading)
                         .background(.white)
                     Text(volume)
                         .frame(width: 100, height: 25, alignment: .trailing)
@@ -26,7 +26,7 @@ struct LastTradeCell: View {
                 }
 
             } else {
-                Text("No recent").frame(width: 200, height: 25, alignment: .trailing)
+                Text("No recent").frame(width: 100, height: 25, alignment: .trailing)
                     .background(Rectangle().fill(Color.white))
             }
         }

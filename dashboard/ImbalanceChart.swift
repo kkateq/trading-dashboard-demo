@@ -128,35 +128,35 @@ struct ImbalanceChart: View {
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()
             }
-//            VStack {
-//                Text("Imbalance top 10 volume")
-//
-//                Chart {
-//                    ForEach(points10) { point in
-//                        LineMark(
-//                            x: .value("Time", point.x),
-//                            y: .value("Imbalance", point.y)
-//                        )
-//                        .foregroundStyle(.linearGradient(
-//                            colors: [.red, .blue, .green],
-//                            startPoint: .bottom,
-//                            endPoint: .top
-//                        )
-//                        )
-//                    }
-//                    RuleMark(
-//                        y: .value("Threshold", -0.33)
-//                    )
-//                    .foregroundStyle(.green)
-//                    RuleMark(
-//                        y: .value("Threshold", 0.33)
-//                    )
-//                    .foregroundStyle(.purple)
-//                }.frame(width: 710, height: 200)
-//                   
-//                    .chartYScale(domain: -1.0 ... 1.0)
-//                    .padding()
-//            }
+            VStack {
+                Text("Imbalance top 10 volume")
+
+                Chart {
+                    ForEach(points10) { point in
+                        LineMark(
+                            x: .value("Time", point.x),
+                            y: .value("Imbalance", point.y)
+                        )
+                        .foregroundStyle(.linearGradient(
+                            colors: [.red, .blue, .green],
+                            startPoint: .bottom,
+                            endPoint: .top
+                        )
+                        )
+                    }
+                    RuleMark(
+                        y: .value("Threshold", -0.33)
+                    )
+                    .foregroundStyle(.green)
+                    RuleMark(
+                        y: .value("Threshold", 0.33)
+                    )
+                    .foregroundStyle(.purple)
+                }.frame(width: 710, height: 200)
+                   
+                    .chartYScale(domain: -1.0 ... 1.0)
+                    .padding()
+            }
         }.onReceive(book.$stats) { updateChart($0) }
     }
 }

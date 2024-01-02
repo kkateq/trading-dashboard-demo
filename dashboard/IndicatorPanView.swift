@@ -22,7 +22,7 @@ struct IndicatorPanView: View {
             }.frame(height: 100)
            
             ImbalanceChart()
-            ImbalanceLevelsChart()
+//            ImbalanceLevelsChart()
             BellCurve()
            
         }.frame(width: 720)
