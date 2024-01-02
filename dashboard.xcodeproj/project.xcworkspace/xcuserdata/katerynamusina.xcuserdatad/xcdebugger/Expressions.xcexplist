@@ -3,35 +3,13 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "Manager.get_auth_token():Manager.swift">
+         contextName = "KrakenOrderManager.getBalance():KrakenOrderManager.swift">
       </ContextState>
       <ContextState
-         contextName = "KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "&quot;\(yesterday)&quot;">
-            </PersistentString>
-            <PersistentString
-               value = "Calendar.current.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
-         contextName = "Manager.handleOrdersResponse(result:):Manager.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "order">
-            </PersistentString>
-            <PersistentString
-               value = "orders[&quot;open&quot;]! as String">
-            </PersistentString>
-            <PersistentString
-               value = "dict">
-            </PersistentString>
-            <PersistentString
-               value = "result.success">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "Binancebook.parseTextMessage(message:):Binancebook.swift">
       </ContextState>
       <ContextState
          contextName = "Stats.init(pair:all:bid_keys:ask_keys:):Krakenbook.swift">
@@ -42,21 +20,13 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "Manager.sellMarket(pair:vol:scaleInOut:validate:):Manager.swift">
+         contextName = "ImbalanceChart2.getPoints():ImbalanceChart2.swift">
       </ContextState>
       <ContextState
-         contextName = "closure #1 in KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "trade[0] as? Double">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "Manager.get_auth_token():Manager.swift">
       </ContextState>
       <ContextState
-         contextName = "Manager.sellAsk(pair:vol:best_ask:scaleInOut:validate:):Manager.swift">
-      </ContextState>
-      <ContextState
-         contextName = "Manager.subscribeOwnTrades():Manager.swift">
+         contextName = "OrderBookData.update(_:):Krakenbook.swift">
       </ContextState>
       <ContextState
          contextName = "OrderBookData.verifyChecksum(_:):KrakenWS.swift">
@@ -65,35 +35,6 @@
                value = "Decimal(hash)">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ImbalanceChart2.getAskVolume(_:_:):ImbalanceChart2.swift">
-      </ContextState>
-      <ContextState
-         contextName = "Manager.refetchOpenPositions():Manager.swift">
-      </ContextState>
-      <ContextState
-         contextName = "OrderBookData.update(_:):Krakenbook.swift">
-      </ContextState>
-      <ContextState
-         contextName = "RecentTradeCell.sellMarket.getter:RecentTradeCell.swift">
-      </ContextState>
-      <ContextState
-         contextName = "KrakenOrderManager.getBalance():KrakenOrderManager.swift">
-      </ContextState>
-      <ContextState
-         contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in KrakenOHLC.fetchInitialOHLC():KrakenOHLC.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "result">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ImbalanceChart2.getPoints():ImbalanceChart2.swift">
       </ContextState>
       <ContextState
          contextName = "Stats.init(all:bid_keys:ask_keys:):Krakenbook.swift">
@@ -116,27 +57,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
-      </ContextState>
-      <ContextState
-         contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
+         contextName = "closure #1 in KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
          <PersistentStrings>
             <PersistentString
-               value = "position.pairISO">
+               value = "trade[0] as? Double">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
+         contextName = "KrakenRecentTrades.update(trade:):KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
-         contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
+         contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
-         contextName = "Manager.flattenPositionWS(refid:best_bid:best_ask:validate:):Manager.swift">
-      </ContextState>
-      <ContextState
-         contextName = "RecentTradeCell.body.getter:RecentTradeCell.swift">
+         contextName = "Binancebook.subscribe():Binancebook.swift">
       </ContextState>
       <ContextState
          contextName = "Manager.parseTextMessage(message:):Manager.swift">
@@ -147,7 +82,58 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "position.pairISO">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "RecentTradeCell.body.getter:RecentTradeCell.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.handleOrdersResponse(result:):Manager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "order">
+            </PersistentString>
+            <PersistentString
+               value = "orders[&quot;open&quot;]! as String">
+            </PersistentString>
+            <PersistentString
+               value = "dict">
+            </PersistentString>
+            <PersistentString
+               value = "result.success">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
          contextName = "ImbalanceChart2.getBidVolume(_:_:):ImbalanceChart2.swift">
+      </ContextState>
+      <ContextState
+         contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "RecentTradeCell.sellMarket.getter:RecentTradeCell.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in KrakenOHLC.fetchInitialOHLC():KrakenOHLC.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Binancebook.didReceive(event:client:):Binancebook.swift">
       </ContextState>
       <ContextState
          contextName = "PositionRecomendation.updateChart(_:):PositionRecomendation.swift">
@@ -164,13 +150,61 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">
-      </ContextState>
-      <ContextState
-         contextName = "KrakenRecentTrades.update(trade:):KrakenRecentTrades.swift">
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in Binancebook.downloadInitialBookSnapshot():Binancebook.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BinanceOrderBook.update(_:):Binancebook.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "update.uID &gt;= self.lastUpdateId + 1">
+            </PersistentString>
+            <PersistentString
+               value = "all[key] ">
+            </PersistentString>
+            <PersistentString
+               value = "self.lastUpdateId + 1 &gt;= update.UID">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Binancebook.downloadInitialBookSnapshot():Binancebook.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "&quot;MATIC/USD&quot;.replacingOccurrences(of: &quot;/&quot;, with: &quot;&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ImbalanceChart2.getAskVolume(_:_:):ImbalanceChart2.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.sellAsk(pair:vol:best_ask:scaleInOut:validate:):Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.flattenPositionWS(refid:best_bid:best_ask:validate:):Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.refetchOpenPositions():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "&quot;\(yesterday)&quot;">
+            </PersistentString>
+            <PersistentString
+               value = "Calendar.current.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Manager.sellMarket(pair:vol:scaleInOut:validate:):Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Manager.subscribeOwnTrades():Manager.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

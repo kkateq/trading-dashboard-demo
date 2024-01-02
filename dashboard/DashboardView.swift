@@ -10,7 +10,8 @@ import SwiftUI
 struct DashboardView: View {
     var pair: String 
     var kraken_ws: Krakenbook
-    var kraken_recent_trade_ws: KrakenRecentTrades
+    var binancebook: Binancebook
+//    var kraken_recent_trade_ws: KrakenRecentTrades
     var manager: KrakenOrderManager
     @State var isReady: Bool = false
 
@@ -24,8 +25,9 @@ struct DashboardView: View {
     init(pair: String) {
         self.pair = pair
         self.kraken_ws = Krakenbook(pair, 25)
-        self.kraken_recent_trade_ws = KrakenRecentTrades(pair)
+//        self.kraken_recent_trade_ws = KrakenRecentTrades(pair)
         self.manager = KrakenOrderManager()
+        self.binancebook = Binancebook("MATICUSDT", 25)
     }
     
     var body: some View {
@@ -33,7 +35,8 @@ struct DashboardView: View {
             HStack(alignment: .top) {
                 HStack {
                     if isReady {
-                        PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume).environmentObject(kraken_ws.book).environmentObject(manager).environmentObject(kraken_recent_trade_ws.trades)
+                        PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume).environmentObject(kraken_ws.book).environmentObject(manager)
+//                            .environmentObject(kraken_recent_trade_ws.trades)
                     } else {
                         VStack {
                             Text("Connecting ... ").font(.title).foregroundStyle(.blue)
