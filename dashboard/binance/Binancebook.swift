@@ -37,8 +37,8 @@ class BinanceBookRecord: Identifiable, ObservableObject {
 
     init(price: String, volume: String, type: BookRecordType) {
         self.price = price
-        self.pr = Double(price)!
-        self.vol = Double(volume)!
+        pr = Double(price)!
+        vol = Double(volume)!
         self.volume = volume
         self.type = type
     }
@@ -78,7 +78,7 @@ struct BinanceStats {
     var totalAskVol5Raw: Double = 0
     var totalBidVol10Raw: Double = 0
     var totalAskVol10Raw: Double = 0
-    
+
     var bestBid: Double = 0
     var bestAsk: Double = 0
     var bestBidVolume: Double = 0
@@ -92,10 +92,11 @@ struct BinanceStats {
 
     var askVolumeCutOff: Double = 0
     var bidVolumeCutOff: Double = 0
-    
+
     var all: [Double: BinanceBookRecord]
     var bid_keys = [Double]()
     var ask_keys = [Double]()
+    var isUp: Bool = true
 
     init(pair: String, all: [Double: BinanceBookRecord], bid_keys: [Double], ask_keys: [Double]) {
         time = Date()
@@ -104,7 +105,7 @@ struct BinanceStats {
         self.bid_keys = bid_keys
         self.ask_keys = ask_keys
         let ask_volumes = ask_keys.map { all[$0]!.vol }
-        
+
         ask_bins = NumberBins(
             data: ask_volumes,
             desiredCount: 3
@@ -113,67 +114,68 @@ struct BinanceStats {
             grouping: ask_volumes,
             by: ask_bins.index
         )
-        
+
         let bid_volumes = bid_keys.map { all[$0]!.vol }
-        
+
         bid_bins = NumberBins(
             data: bid_volumes,
             desiredCount: 3
         )
-        
+
         bid_groups = Dictionary(
             grouping: bid_volumes,
             by: bid_bins.index
         )
-        
+
         if let avVol = Constants.pairSettings[pair] {
             if ask_groups.values.count > 0 {
                 askVolumeCutOff = ask_groups.suffix(1)[0].value[0]
-                
+
                 if askVolumeCutOff < avVol.averageVolume {
                     askVolumeCutOff = Constants.pairSettings[pair]!.averageVolume
                 }
             }
-            
+
             if bid_groups.values.count > 0 {
                 bidVolumeCutOff = bid_groups.suffix(1)[0].value[0]
-                
+
                 if bidVolumeCutOff < avVol.averageVolume {
                     bidVolumeCutOff = Constants.pairSettings[pair]!.averageVolume
                 }
             }
         }
-        
+
         totalAskVol = getAskVolume()
         totalBidVol = getBidVolume()
         totalAskVol5 = getAskVolume(levels: 5)
         totalBidVol5 = getBidVolume(levels: 5)
         totalAskVol10 = getAskVolume(levels: 10)
         totalBidVol10 = getBidVolume(levels: 10)
-        
+
         totalAskVolRaw = getAskVolume(raw: true)
         totalBidVolRaw = getBidVolume(raw: true)
         totalAskVol5Raw = getAskVolume(levels: 5, raw: true)
         totalBidVol5Raw = getBidVolume(levels: 5, raw: true)
         totalAskVol10Raw = getAskVolume(levels: 10, raw: true)
         totalBidVol10Raw = getBidVolume(levels: 10, raw: true)
-        
+
         bestBid = bid_keys.count > 0 ? all[bid_keys[0]]!.pr : 0.0
         bestAsk = ask_keys.count > 0 ? all[ask_keys[0]]!.pr : 0.0
         bestBidVolume = bid_keys.count > 0 ? all[bid_keys[0]]!.vol : 0.0
         bestAskVolume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
-        
+
         maxVolume = all.values.max(by: { $0.vol < $1.vol })!.vol
+
     }
-    
+
     func filterAskVolume(_ vol: Double) -> Double {
-        return vol >= self.askVolumeCutOff ? 0 : vol
+        return vol >= askVolumeCutOff ? 0 : vol
     }
 
     func filterBidVolume(_ vol: Double) -> Double {
-        return vol >= self.bidVolumeCutOff ? 0 : vol
+        return vol >= bidVolumeCutOff ? 0 : vol
     }
-    
+
     func getBidVolume(levels: Int = 0, raw: Bool = false) -> Double {
         if raw {
             if levels == 0 {
@@ -213,7 +215,7 @@ struct BinanceStats {
     var totalBidVolumePerc: Double {
         return round((totalBidVol / (totalAskVol + totalBidVol)) * 100)
     }
-    
+
     var totalAskRawVolumePerc: Double {
         return round((totalAskVolRaw / (totalAskVolRaw + totalBidVolRaw)) * 100)
     }
@@ -237,8 +239,7 @@ class BinanceOrderBook: ObservableObject, Equatable {
     @Published var bid_keys = [Double]()
     @Published var ask_keys = [Double]()
     @Published var stats: BinanceStats!
-    @Published var statsHistory: [BinanceStats] = []
-    
+
     init(_ response: BinanceOrderBookRecord, _ pair: String, _ depth: Int) {
         self.depth = depth
         self.pair = pair
@@ -247,7 +248,7 @@ class BinanceOrderBook: ObservableObject, Equatable {
 
         initBook(response)
     }
-    
+
     var allList: [BinanceBookRecord] {
         var list: [BinanceBookRecord] = []
         for ask_key in ask_keys.reversed() {
@@ -279,9 +280,9 @@ class BinanceOrderBook: ObservableObject, Equatable {
 
             let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
             let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
-            ask_keys = ask_keys_all
-            bid_keys = bid_keys_all
-            
+            ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
+            bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
+
             generateStats()
         }
     }
@@ -299,23 +300,17 @@ class BinanceOrderBook: ObservableObject, Equatable {
 
             let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
             let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
-            ask_keys = ask_keys_all
-            bid_keys = bid_keys_all
+            ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
+            bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
+
             prevUpdateID = update.uID
-            
+
             generateStats()
         }
-        
     }
-    
+
     func generateStats() {
-        let newStats = BinanceStats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
-      
-        stats = newStats
-        statsHistory.append(newStats)
-        if statsHistory.count > 1500 {
-            statsHistory = statsHistory.suffix(750)
-        }
+        stats = BinanceStats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
     }
 }
 
@@ -333,7 +328,7 @@ class BinanceOrderBook: ObservableObject, Equatable {
 
 class Binancebook: WebSocketDelegate, ObservableObject {
     var pair: String
-    var depth: Int = 10
+    var depth: Int = 25
     var socket: WebSocket!
     @Published var data: BinanceOrderBook!
     var lastUpdateId: Int = -1
@@ -390,9 +385,8 @@ class Binancebook: WebSocketDelegate, ObservableObject {
                     }
                 }
             } else {
-                
                 let update = try JSONDecoder().decode(BinanceOrderBookUpdate.self, from: Data(message.utf8))
-                if self.data != nil {
+                if data != nil {
                     DispatchQueue.main.async {
                         self.data.update(update)
                     }
@@ -405,7 +399,7 @@ class Binancebook: WebSocketDelegate, ObservableObject {
     }
 
     func downloadInitialBookSnapshot() async {
-        let url = "https://api.binance.com/api/v3/depth?symbol=\(pair)&limit=1000"
+        let url = "https://api.binance.com/api/v3/depth?symbol=\(pair)&limit=100"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)

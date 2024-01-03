@@ -96,6 +96,14 @@
          contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
+         contextName = "BinanceStats.init(pair:all:bid_keys:ask_keys:prevStats:):Binancebook.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bestBid">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
          <PersistentStrings>
             <PersistentString
@@ -203,6 +211,35 @@
          <PersistentStrings>
             <PersistentString
                value = "&quot;MATIC/USD&quot;.replacingOccurrences(of: &quot;/&quot;, with: &quot;&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BinanceOrderBook.generateStats():Binancebook.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "statsHistory[statsHistory.count - 1].pegValue">
+            </PersistentString>
+            <PersistentString
+               value = "statsHistory.last!.pegValue">
+            </PersistentString>
+            <PersistentString
+               value = "stats.pegValue">
+            </PersistentString>
+            <PersistentString
+               value = "stats.bestBid">
+            </PersistentString>
+            <PersistentString
+               value = "stats.bestAsk">
+            </PersistentString>
+            <PersistentString
+               value = "statsHistory.count ">
+            </PersistentString>
+            <PersistentString
+               value = "statsHistory[statsHistory.count - 2].bestAsk">
+            </PersistentString>
+            <PersistentString
+               value = "isUp">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

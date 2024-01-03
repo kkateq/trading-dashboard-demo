@@ -9,7 +9,8 @@ import SwiftUI
 
 struct BinanceOrderBookView: View {
     @EnvironmentObject var book: BinanceOrderBook
-
+    @State var prevBid: Double = 0
+    @State var isUp = true
     let cellWidth = 100
     let cellHeight = 25
     let layout = [
@@ -18,63 +19,79 @@ struct BinanceOrderBookView: View {
         GridItem(.fixed(100), spacing: 2)
     ]
 
+    func updateChart(stats: BinanceStats!) {
+        if prevBid > 0 {
+            isUp = stats.bestBid > prevBid
+        }
+        prevBid = stats.bestBid
+    }
+
     var body: some View {
         VStack {
-            LazyVGrid(columns: layout, spacing: 2) {
-                Text("\(book.pair)").font(.title3)
+            ScrollView {
+                LazyVGrid(columns: layout, spacing: 2) {
+                    ForEach(book.allList) { record in
+                        let isAskPeg = record.pr == book.stats.bestAsk
+                        let isBidPeg = record.pr == book.stats.bestBid
 
-                HStack {
-                    Text("\(Int(book.stats.totalAskRawVolumePerc))% - ").foregroundStyle(.red)
-                    Text("\(Int(book.stats.totalBidRawVolumePerc))%").foregroundStyle(.blue)
-                }
+                        let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : .white)
+                        if record.type == BookRecordType.ask {
+                            EmptyCell()
+                            Text(formatPrice(price: record.pr, pair: book.pair))
+                                .frame(width: 100, height: 25, alignment: .center)
+                                .font(.title3)
+                                .background(isUp ? Color("GreenTransparent") : Color("RedTransparent"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .stroke(color, lineWidth: 2)
+                                )
+                            Text(formatVolume(volume: record.vol, pair: book.pair))
+                                .frame(width: 100, height: 25, alignment: .leading)
+                                .font(.title3)
+                                .foregroundColor(Color("AskTextColor"))
+                                .background(.white)
 
-                Text("Depth: \(book.depth)")
-            }
-            VStack {
-                ZStack {
-                    ScrollView {
-                        LazyVGrid(columns: layout, spacing: 2) {
-                            ForEach(book.allList) { record in
-
-                                if record.type == BookRecordType.ask {
-                                    EmptyCell()
-                                    Text(formatPrice(price: record.pr, pair: book.pair))
-                                        .frame(width: 100, height: 25, alignment: .center)
-                                        .font(.title3)
-                                        .background(.white)
-                                    Text(formatVolume(volume: record.vol, pair: book.pair))
-                                        .frame(width: 100, height: 25, alignment: .leading)
-                                        .font(.title3)
-                                        .foregroundColor(Color("AskTextColor"))
-                                        .background(.white)
-
-                                } else {
-                                    Text(formatVolume(volume: record.vol, pair: book.pair))
-                                        .frame(width: 100, height: 25, alignment: .trailing)
-                                        .font(.title3)
-                                        .foregroundColor(Color("BidTextColor"))
-                                        .background(.white)
-                                    Text(formatPrice(price: record.pr, pair: book.pair))
-                                        .frame(width: 100, height: 25, alignment: .center)
-                                        .font(.title3)
-                                        .background(.white)
-                                    EmptyCell()
-                                }
-                            }
+                        } else {
+                            Text(formatVolume(volume: record.vol, pair: book.pair))
+                                .frame(width: 100, height: 25, alignment: .trailing)
+                                .font(.title3)
+                                .foregroundColor(Color("BidTextColor"))
+                                .background(.white)
+                            Text(formatPrice(price: record.pr, pair: book.pair))
+                                .frame(width: 100, height: 25, alignment: .center)
+                                .font(.title3)
+                                .background(isUp ? Color("GreenTransparent") : Color("RedTransparent"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .stroke(color, lineWidth: 2)
+                                )
+                            EmptyCell()
                         }
-                    }.overlay(
-                        RoundedRectangle(cornerRadius: 2)
-                            .stroke(.gray, lineWidth: 1))
-
-                    GridOverlay()
+                        if isAskPeg {
+                            Text("\(Int(book.stats.totalBidRawVolumePerc))%")
+                                .frame(width: 100, height: 25)
+                                .foregroundStyle(.blue)
+                                .background(.white)
+                                .font(.title3)
+                            EmptyCell()
+                            Text("\(Int(book.stats.totalAskRawVolumePerc))%")
+                                .frame(width: 100, height: 25)
+                                .foregroundStyle(.red)
+                                .background(.white)
+                                .font(.title3)
+                        }
+                    }
                 }
-            }
+            }.overlay(
+                RoundedRectangle(cornerRadius: 2)
+                    .stroke(.gray, lineWidth: 1))
         }
         .frame(width: 330)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)
         )
+        .onReceive(book.$stats, perform: updateChart)
     }
 }
 
