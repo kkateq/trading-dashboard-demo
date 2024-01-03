@@ -44,7 +44,33 @@ class BinanceBookRecord: Identifiable, ObservableObject {
     }
 }
 
+class BinanceLastTrade: Decodable, ObservableObject {
+    static let name = "aggTrade"
+    var symbol: String
+    var eventTime: Int
+    var aggregateTradeId: Int
+    var price: String
+    var volume: String
+    var firstTradeId: Int
+    var lastTradeId: Int
+    var tradeTime: Int
+    var isBuy: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case symbol = "s"
+        case eventTime = "E"
+        case aggregateTradeId = "a"
+        case price = "p"
+        case firstTradeId = "f"
+        case lastTradeId = "l"
+        case tradeTime = "T"
+        case isBuy = "m"
+        case volume = "q"
+    }
+    
+}
 struct BinanceOrderBookUpdate: Decodable {
+    static let name = "depthUpdate"
     var eventType: String
     var bids: [OBRecord]
     var asks: [OBRecord]
@@ -165,7 +191,6 @@ struct BinanceStats {
         bestAskVolume = ask_keys.count > 0 ? all[ask_keys[0]]!.vol : 0.0
 
         maxVolume = all.values.max(by: { $0.vol < $1.vol })!.vol
-
     }
 
     func filterAskVolume(_ vol: Double) -> Double {
@@ -240,6 +265,7 @@ class BinanceOrderBook: ObservableObject, Equatable {
     @Published var ask_keys = [Double]()
     @Published var stats: BinanceStats!
 
+    
     init(_ response: BinanceOrderBookRecord, _ pair: String, _ depth: Int) {
         self.depth = depth
         self.pair = pair
@@ -334,7 +360,7 @@ class Binancebook: WebSocketDelegate, ObservableObject {
     var lastUpdateId: Int = -1
     let didChange = PassthroughSubject<Void, Never>()
     private var cancellable: AnyCancellable?
-
+    @Published var lastTrade: BinanceLastTrade!
     @Published var isConnected = false
     @Published var isSubscribed = false
 
@@ -372,6 +398,13 @@ class Binancebook: WebSocketDelegate, ObservableObject {
         }
     }
 
+    func subscribeLastTrade() {
+        if isConnected && !isSubscribed {
+            let msg = "{\"id\":\"2\", \"method\": \"SUBSCRIBE\", \"params\": [ \"\(pair.lowercased())@aggTrade\" ]}"
+            socket.write(string: msg)
+        }
+    }
+
     func parseTextMessage(message: String) {
         do {
             if message == "{\"event\":\"heartbeat\"}" {
@@ -384,13 +417,22 @@ class Binancebook: WebSocketDelegate, ObservableObject {
                         await downloadInitialBookSnapshot()
                     }
                 }
-            } else {
+            } else if message.contains(BinanceLastTrade.name) {
+                let trade = try JSONDecoder().decode(BinanceLastTrade.self, from: Data(message.utf8))
+                if data != nil {
+                    DispatchQueue.main.async {
+                        self.lastTrade = trade
+                    }
+                }
+            }
+            else {
                 let update = try JSONDecoder().decode(BinanceOrderBookUpdate.self, from: Data(message.utf8))
                 if data != nil {
                     DispatchQueue.main.async {
                         self.data.update(update)
                     }
                 }
+            
             }
 
         } catch {
@@ -434,6 +476,7 @@ class Binancebook: WebSocketDelegate, ObservableObject {
             DispatchQueue.main.async {
                 self.isConnected = true
                 self.subscribe()
+                self.subscribeLastTrade()
             }
             LogManager.shared.info("websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
@@ -443,7 +486,7 @@ class Binancebook: WebSocketDelegate, ObservableObject {
 
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-//                print("Received text: \(string)")
+                print("Received text: \(string)")
 
             parseTextMessage(message: string)
         case .binary(let data):

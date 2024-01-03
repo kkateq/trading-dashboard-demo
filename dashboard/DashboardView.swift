@@ -41,6 +41,7 @@ struct DashboardView: View {
                     HStack(alignment: .top) {
                         PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume)
                             .environmentObject(binance_ws.book)
+                            .environmentObject(binance_ws)
                     }
                 }
             } else {

@@ -11,6 +11,9 @@ struct BinanceOrderBookView: View {
     @EnvironmentObject var book: BinanceOrderBook
     @State var prevBid: Double = 0
     @State var isUp = true
+    @State var volume: Double = 0
+    @State var isBuy = false
+    
     let cellWidth = 100
     let cellHeight = 25
     let layout = [
@@ -19,12 +22,14 @@ struct BinanceOrderBookView: View {
         GridItem(.fixed(100), spacing: 2)
     ]
 
-    func updateChart(stats: BinanceStats!) {
+    func updateDirection(stats: BinanceStats!) {
         if prevBid > 0 {
             isUp = stats.bestBid > prevBid
         }
         prevBid = stats.bestBid
     }
+    
+
 
     var body: some View {
         VStack {
@@ -73,7 +78,9 @@ struct BinanceOrderBookView: View {
                                 .foregroundStyle(.blue)
                                 .background(.white)
                                 .font(.title3)
-                            EmptyCell()
+                      
+                            BinanceLastTradeCell()
+                            
                             Text("\(Int(book.stats.totalAskRawVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.red)
@@ -91,7 +98,8 @@ struct BinanceOrderBookView: View {
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)
         )
-        .onReceive(book.$stats, perform: updateChart)
+        .onReceive(book.$stats, perform: updateDirection)
+
     }
 }
 
