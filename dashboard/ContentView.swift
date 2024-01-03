@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedPair = ""
-
     var body: some View {
         VStack(alignment: .leading) {
             if selectedPair == "" {
@@ -18,10 +17,11 @@ struct ContentView: View {
                         Text($0)
                     }
                 }.frame(width: 200)
-                
+              
             }
 
             else {
+//                KrakenDashboardView(pair: selectedPair)
                 DashboardView(pair: selectedPair)
             }
         }

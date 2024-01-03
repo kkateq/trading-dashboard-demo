@@ -1,22 +1,19 @@
 //
-//  DashboardView.swift
+//  BinanceDashboardView.swift
 //  dashboard
 //
-//  Created by km on 28/12/2023.
+//  Created by km on 03/01/2024.
 //
 
 import SwiftUI
 
 struct DashboardView: View {
-    var pair: String 
-    var kraken_ws: Krakenbook
-    var binancebook: Binancebook
-//    var kraken_recent_trade_ws: KrakenRecentTrades
-    var manager: KrakenOrderManager
+    var pair: String
+    var binance_ws: Binancebook
     @State var isReady: Bool = false
 
     
-    func setReady(_ publishedBook: OrderBookData!) -> Void {
+    func setReady(_ publishedBook: BinanceOrderBook!) -> Void {
         if !isReady && publishedBook != nil {
             isReady = true
         }
@@ -24,10 +21,8 @@ struct DashboardView: View {
     
     init(pair: String) {
         self.pair = pair
-        self.kraken_ws = Krakenbook(pair, 25)
-//        self.kraken_recent_trade_ws = KrakenRecentTrades(pair)
-        self.manager = KrakenOrderManager()
-        self.binancebook = Binancebook("MATICUSDT", 25)
+
+        self.binance_ws = Binancebook("MATICUSDT", 25)
     }
     
     var body: some View {
@@ -35,8 +30,9 @@ struct DashboardView: View {
             HStack(alignment: .top) {
                 HStack {
                     if isReady {
-                        PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume).environmentObject(kraken_ws.book).environmentObject(manager)
-//                            .environmentObject(kraken_recent_trade_ws.trades)
+                        PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume)
+                            .environmentObject(binance_ws.book)
+
                     } else {
                         VStack {
                             Text("Connecting ... ").font(.title).foregroundStyle(.blue)
@@ -47,10 +43,10 @@ struct DashboardView: View {
         }
         .frame(minWidth: 1200, maxWidth: .infinity, minHeight: 1000, maxHeight: .infinity, alignment: .leading)
         .padding([.top, .bottom, .leading, .trailing], 2)
-        .onReceive(kraken_ws.$book) { setReady($0) }
+        .onReceive(binance_ws.$book) { setReady($0) }
     }
 }
 
 #Preview {
-    DashboardView(pair: "MATIC/USD")
+    DashboardView(pair: "MATICUSDT")
 }

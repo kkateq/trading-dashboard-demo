@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct OrderBookView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
@@ -18,14 +16,11 @@ struct OrderBookView: View {
     @Binding var sellStopLoss: Double!
     @Binding var buyStopLoss: Double!
     
-    
     @EnvironmentObject var book: OrderBookData
 
     @EnvironmentObject var manager: KrakenOrderManager
     
     let layout = [
-        GridItem(.fixed(100), spacing: 2),
-        GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2)
@@ -36,21 +31,14 @@ struct OrderBookView: View {
     }
     
     func buyLimit(price: String) async {
-        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss: nil)
+        await manager.buyLimit(pair: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss : nil)
     }
     
     var body: some View {
         VStack {
-            let bp = "\(book.stats.totalBidVolumePerc) %"
-            let ap = "\(book.stats.totalAskVolumePerc) %"
-            let bpraw = "\(book.stats.totalBidRawVolumePerc) %"
-            let apraw = "\(book.stats.totalAskRawVolumePerc) %"
             LazyVGrid(columns: layout, spacing: 2) {
                 Text("\(book.pair)").font(.title3)
-                VStack{
-                    Text(bp).foregroundColor(.blue)
-                    Text(bpraw).foregroundColor(.gray).font(.caption)
-                }
+
                 VStack {
                     if book.isValid {
                         Text("Valid").foregroundColor(Color("Green"))
@@ -58,10 +46,7 @@ struct OrderBookView: View {
                         Text("Invalid").foregroundColor(Color("Red"))
                     }
                 }
-                VStack {
-                    Text(ap).foregroundColor(.red)
-                    Text(apraw).foregroundColor(.gray).font(.caption)
-                }
+
                 Text("Depth: \(book.depth)")
             }
             VStack {
@@ -73,18 +58,14 @@ struct OrderBookView: View {
                                 let price = formatPrice(price: record.pr)
                                 
                                 if record.type == BookRecordType.ask {
-                                    NoteCell()
                                     EmptyCell()
                                     PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
-                                    NoteCell()
-                                   
+                                 
                                 } else {
-                                    NoteCell()
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
                                     PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
                                     EmptyCell()
-                                    NoteCell()
                                 }
                             }
                         }
@@ -96,7 +77,7 @@ struct OrderBookView: View {
                 }
             }
         }
-        .frame(width: 530)
+        .frame(width: 330)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)

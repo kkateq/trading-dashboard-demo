@@ -9,6 +9,17 @@
          contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
+         contextName = "formatPrice(price:pair:):Commons.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Constants.PAIRS_ISO_NAMES[pair]">
+            </PersistentString>
+            <PersistentString
+               value = " Constants.pairSettings[pair]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Binancebook.parseTextMessage(message:):Binancebook.swift">
       </ContextState>
       <ContextState
@@ -159,13 +170,31 @@
          contextName = "BinanceOrderBook.update(_:):Binancebook.swift">
          <PersistentStrings>
             <PersistentString
-               value = "update.uID &gt;= self.lastUpdateId + 1">
+               value = "prevUpdateID">
+            </PersistentString>
+            <PersistentString
+               value = "lastUpdateId + 1 &gt;= update.UID">
+            </PersistentString>
+            <PersistentString
+               value = "update.uID == prevUpdateID + 1">
+            </PersistentString>
+            <PersistentString
+               value = "lastUpdateId + 1">
+            </PersistentString>
+            <PersistentString
+               value = "update.uID">
             </PersistentString>
             <PersistentString
                value = "all[key] ">
             </PersistentString>
             <PersistentString
                value = "self.lastUpdateId + 1 &gt;= update.UID">
+            </PersistentString>
+            <PersistentString
+               value = "update.uID &gt;= self.lastUpdateId + 1">
+            </PersistentString>
+            <PersistentString
+               value = " lastUpdateId + 1 &gt;= update.UID">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

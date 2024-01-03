@@ -15,17 +15,22 @@ struct PairSettings {
     var averageVolume: Double
 }
 
+let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
+
 enum Constants {
     static let bookDepth = 25
     static let defaultPair = "MATIC/USD"
     static let pairs = ["MATIC/USD", "ETH/USD", "ADA/USD"]
     static let pairSettings: [String: PairSettings] = [
-        "MATIC/USD": PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000),
+        "MATIC/USD": maticSettings,
+        "MATIC/USDT": maticSettings,
+        "MATICUSDT": maticSettings,
         "ETH/USD": PairSettings(leverage: 5, minimumOrderVolume: 0.04, priceFractionalPoints: 2, volumeFractionalPoints: 2, averageVolume: 10),
         "ADA/USD": PairSettings(leverage: 3, minimumOrderVolume: 100, priceFractionalPoints: 6, volumeFractionalPoints: 0, averageVolume: 100000)
     ]
     static let PAIRS_ISO_NAMES = [
         "MATICUSD": "MATIC/USD",
+        "MATICUSDT": "MATIC/USDT",
         "ETHUSD": "ETH/USD",
         "ADAUSD": "ADA/USD"
     ]
