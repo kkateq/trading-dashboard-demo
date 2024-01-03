@@ -9,11 +9,11 @@ import SwiftUI
 
 struct DashboardView: View {
     var pair: String
+    var depth: Int = 25
     var binance_ws: Binancebook
     @State var isReady: Bool = false
 
-    
-    func setReady(_ publishedBook: BinanceOrderBook!) -> Void {
+    func setReady(_ publishedBook: BinanceOrderBook!) {
         if !isReady && publishedBook != nil {
             isReady = true
         }
@@ -22,22 +22,30 @@ struct DashboardView: View {
     init(pair: String) {
         self.pair = pair
 
-        self.binance_ws = Binancebook("MATICUSDT", 25)
+        self.binance_ws = Binancebook(Constants.PAIRS_ISO_NAMES_REV[pair]!, depth)
     }
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .top) {
-                HStack {
-                    if isReady {
+            VStack(alignment: .leading) {
+                HStack(alignment: .top)  {
+                    Text(pair)
+                    Spacer()
+                    Text("\(depth)")
+                }.padding([.top], 5)
+            }
+            Divider()
+               
+            if isReady {
+                VStack(alignment: .leading) {
+                    HStack(alignment: .top) {
                         PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume)
                             .environmentObject(binance_ws.book)
-
-                    } else {
-                        VStack {
-                            Text("Connecting ... ").font(.title).foregroundStyle(.blue)
-                        }
                     }
+                }
+            } else {
+                VStack {
+                    Text("Connecting ... ").font(.title).foregroundStyle(.blue)
                 }
             }
         }

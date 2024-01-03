@@ -19,8 +19,8 @@ let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFrac
 
 enum Constants {
     static let bookDepth = 25
-    static let defaultPair = "MATIC/USD"
-    static let pairs = ["MATIC/USD", "ETH/USD", "ADA/USD"]
+    static let defaultPair = "MATIC/USDT"
+    static let pairs = ["MATIC/USDT", "MATIC/USD", "ETH/USD", "ADA/USD"]
     static let pairSettings: [String: PairSettings] = [
         "MATIC/USD": maticSettings,
         "MATIC/USDT": maticSettings,
@@ -33,6 +33,13 @@ enum Constants {
         "MATICUSDT": "MATIC/USDT",
         "ETHUSD": "ETH/USD",
         "ADAUSD": "ADA/USD"
+    ]
+    
+    static let PAIRS_ISO_NAMES_REV = [
+        "MATIC/USD": "MATICUSD",
+        "MATIC/USDT": "MATICUSDT",
+        "ETH/USD": "ETHUSD",
+        "ADA/USD": "ADAUSD"
     ]
     static let kraken_fee = 0.02
     static let stop_loss_perc = 0.05
