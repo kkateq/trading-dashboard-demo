@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct VolumeCell: View {
+struct VolumeCell: View, Identifiable {
+    var id=UUID()
     var volume: Double
     var maxVolume: Double
     var type: BookRecordType

@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct PriceCell: View {
+struct PriceCell: View, Identifiable {
     @EnvironmentObject var book: OrderBookData
+    var id = UUID()
     var price: String
     var depth: Int
     var level: Int

@@ -7,37 +7,49 @@
 
 import SwiftUI
 
-struct KrakenDashboardView: View {
-    var pair: String 
+struct KrakenPairView: View {
+    var pair: String
     var kraken_ws: Krakenbook
-//    var binance_ws: Binancebook
     var kraken_recent_trade_ws: KrakenRecentTrades
     var manager: KrakenOrderManager
+    @State private var volume: Double = 100
+    @State private var scaleInOut: Bool = true
+    @State private var validate: Bool = false
+    @State private var useRest: Bool = false
+    @State var stopLossEnabled: Bool = true
+    @State var sellStopLoss: Double!
+    @State var buyStopLoss: Double!
+
     @State var isReady: Bool = false
 
-    
-    func setReady(_ publishedBook: OrderBookData!) -> Void {
+    func setReady(_ publishedBook: OrderBookData!) {
         if !isReady && publishedBook != nil {
             isReady = true
         }
     }
-    
+
     init(pair: String) {
         self.pair = pair
         self.kraken_ws = Krakenbook(pair, 25)
         self.kraken_recent_trade_ws = KrakenRecentTrades(pair)
         self.manager = KrakenOrderManager()
-//        self.binance_ws = Binancebook("MATICUSDT", 25)
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 HStack {
                     if isReady {
-                        PairHomeView(volume: Constants.pairSettings[pair]!.minimumOrderVolume).environmentObject(kraken_ws.book).environmentObject(manager)
+                        HStack {
+                            RecentTradesView()
+                            IndicatorPanView()
+
+                            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                        }
+                        .environmentObject(kraken_ws.book).environmentObject(manager)
 //                            .environmentObject(binance_ws)
-                            .environmentObject(kraken_recent_trade_ws.trades)
+                        .environmentObject(kraken_recent_trade_ws.trades)
                     } else {
                         VStack {
                             Text("Connecting ... ").font(.title).foregroundStyle(.blue)
@@ -53,5 +65,5 @@ struct KrakenDashboardView: View {
 }
 
 #Preview {
-    KrakenDashboardView(pair: "MATIC/USD")
+    KrakenPairView(pair: "MATIC/USD")
 }

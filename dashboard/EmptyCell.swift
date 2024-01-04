@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct EmptyCell: View {
+struct EmptyCell: View, Identifiable {
+    var id = UUID()
     var body: some View {
         Text("")
             .frame(width: 100, height: 25, alignment: .center)

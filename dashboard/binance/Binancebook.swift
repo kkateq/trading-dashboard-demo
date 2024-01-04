@@ -373,8 +373,7 @@ class Binancebook: WebSocketDelegate, ObservableObject {
     init(_ p: String, _ d: Int = 10) {
         pair = p.replacingOccurrences(of: "/", with: "")
         depth = d
-        print(pair)
-
+    
         cancellable = AnyCancellable($data
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -486,8 +485,6 @@ class Binancebook: WebSocketDelegate, ObservableObject {
 
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-                print("Received text: \(string)")
-
             parseTextMessage(message: string)
         case .binary(let data):
             LogManager.shared.info("Received data: \(data.count)")
