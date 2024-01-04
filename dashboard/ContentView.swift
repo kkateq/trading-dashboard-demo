@@ -13,7 +13,7 @@ struct ContentView: View {
         VStack(alignment: .leading) {
             if selectedPair == "" {
                 Picker("Pair", selection: $selectedPair) {
-                    ForEach(Constants.pairs, id: \.self) {
+                    ForEach([""]+Constants.pairs, id: \.self) {
                         Text($0)
                     }
                 }.frame(width: 200)
@@ -21,7 +21,6 @@ struct ContentView: View {
             }
 
             else {
-//                KrakenDashboardView(pair: selectedPair)
                 DashboardView(pair: selectedPair)
             }
         }
