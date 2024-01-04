@@ -10,7 +10,7 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-struct TokenResponse: Decodable {
+struct KrakenTokenResponse: Decodable {
     var token: String
 
     init(from decoder: Decoder) throws {
@@ -33,14 +33,14 @@ extension String {
     }
 }
 
-struct OrderResponse: Identifiable, Equatable {
+struct KrakenOrderResponse: Identifiable, Equatable {
     var id: UUID = .init()
     var txid: String
     var order: String
     var type: String!
 }
 
-struct AddOrderEvent: Decodable {
+struct KrakenAddOrderEvent: Decodable {
     var txid: String!
     var status: String
     var event: String
@@ -48,7 +48,7 @@ struct AddOrderEvent: Decodable {
     var errorMessage: String!
 }
 
-struct PositionResponse: Identifiable, Equatable {
+struct KrakenPositionResponse: Identifiable, Equatable {
     var id: UUID = .init()
     var refid: String
     var pair: String
@@ -82,21 +82,21 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
     private var apiSecret: String = KeychainHandler.KrakenApiSecret
 
     private var socket_token: String = ""
-    @Published var ordersData: [OrderResponse] = []
-    @Published var positionsData: [PositionResponse] = []
+    @Published var ordersData: [KrakenOrderResponse] = []
+    @Published var positionsData: [KrakenPositionResponse] = []
 
     private var ordersCancellable: AnyCancellable?
     private var positionsCancellable: AnyCancellable?
     private var connectedCancellable: AnyCancellable?
     private var auth_token: String = ""
 
-    @Published var orders: [OrderResponse] {
+    @Published var orders: [KrakenOrderResponse] {
         didSet {
             didOrdersChange.send()
         }
     }
 
-    @Published var positions: [PositionResponse] {
+    @Published var positions: [KrakenPositionResponse] {
         didSet {
             didPositionsChange.send()
         }
@@ -179,7 +179,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
                         await getBalance()
                     }
                 } else if message.contains("addOrderStatus") {
-                    let result = try decoder.decode(AddOrderEvent.self, from: Data(message.utf8))
+                    let result = try decoder.decode(KrakenAddOrderEvent.self, from: Data(message.utf8))
                     if result.status == "error" {
                         LogManager.shared.error(result.errorMessage)
                     } else {
@@ -481,7 +481,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         case .success(let positions):
 
             DispatchQueue.main.async {
-                var new_positions: [PositionResponse] = []
+                var new_positions: [KrakenPositionResponse] = []
 
                 let dict = positions as [String: AnyObject]
                 for (key, value) in dict {
@@ -495,7 +495,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
                        let v = value["value"] as? String,
                        let tm = value["time"] as? Double
                     {
-                        let pos = PositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
+                        let pos = KrakenPositionResponse(refid: key, pair: pair, type: t, vol: vol, cost: cost, net: net, ordertype: ordertype, fee: fee, value: v, time: tm)
                         new_positions.append(pos)
                     }
                 }
@@ -515,7 +515,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
         switch result {
         case .success(let orders):
             DispatchQueue.main.async {
-                var new_orders: [OrderResponse] = []
+                var new_orders: [KrakenOrderResponse] = []
                 if let openOrders = orders["open"] {
                     let dict = openOrders as? [String: AnyObject]
                     for (key, value) in dict! {
@@ -523,7 +523,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
                             if let ordertype = value["type"] {
                                 if let descrDict = descr as? [String: AnyObject] {
                                     if let order = descrDict["order"] {
-                                        new_orders.append(OrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
+                                        new_orders.append(KrakenOrderResponse(txid: key, order: "\(order)", type: "\(ordertype ?? "")"))
                                     }
                                 }
                             }

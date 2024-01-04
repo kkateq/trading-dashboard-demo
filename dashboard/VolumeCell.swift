@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct VolumeCell: View, Identifiable {
-    var id=UUID()
+struct VolumeCell: View {
+
     var volume: Double
     var maxVolume: Double
     var type: KrakenBookRecordType
