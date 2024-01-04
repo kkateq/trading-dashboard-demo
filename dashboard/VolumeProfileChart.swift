@@ -67,7 +67,7 @@ let bids = [
 ]
 
 struct VolumeProfileChart: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
     var body: some View {
         ScrollView {

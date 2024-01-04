@@ -76,7 +76,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
     @Published var isOwnTradesSubscribed = false
     @Published var isOpenOrdersSubscribed = false
     @Published var accountBalance: Double = 0
-    @Published var wsStatus: WSStatus = .init()
+    @Published var wsStatus: KrakenWSStatus = .init()
 
     private var apiKey: String = KeychainHandler.KrakenApiKey
     private var apiSecret: String = KeychainHandler.KrakenApiSecret
@@ -145,7 +145,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
             }
             let decoder = JSONDecoder()
             if wsStatus.status == "disconnected" {
-                let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenWSStatus.self, from: Data(message.utf8))
 
                 if result.status == "online" {
                     if !isOwnTradesSubscribed {
@@ -159,7 +159,7 @@ class KrakenOrderManager: ObservableObject, WebSocketDelegate {
                 wsStatus = result
 
             } else if !isOpenOrdersSubscribed || !isOwnTradesSubscribed {
-                let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenChannelSubscriptionStatus.self, from: Data(message.utf8))
 
                 if result.status == "subscribed" {
                     if result.channelName == "ownTrades" {

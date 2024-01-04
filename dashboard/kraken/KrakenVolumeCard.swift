@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct KrakenVolumeCard: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
     var body: some View {
         let bp = "\(book.stats.totalBidVolumePerc) %"

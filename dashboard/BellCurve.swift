@@ -9,14 +9,14 @@ import Charts
 import SwiftUI
 
 struct BellCurve: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
-    @State var askData: [VolumeDistributionElement]!
-    @State var bidData: [VolumeDistributionElement]!
+    @State var askData: [KrakenVolumeDistributionElement]!
+    @State var bidData: [KrakenVolumeDistributionElement]!
 
-    func updateChart(_ publishedStats: Stats!) {
+    func updateChart(_ publishedStats: KrakenStats!) {
         askData = publishedStats.ask_groups.map { key, values in
-            VolumeDistributionElement(
+            KrakenVolumeDistributionElement(
                 index: key,
                 range: publishedStats.ask_bins[key],
                 frequency: values.count
@@ -24,7 +24,7 @@ struct BellCurve: View {
         }
 
         bidData = publishedStats.bid_groups.map { key, values in
-            VolumeDistributionElement(
+            KrakenVolumeDistributionElement(
                 index: key,
                 range: publishedStats.bid_bins[key],
                 frequency: values.count

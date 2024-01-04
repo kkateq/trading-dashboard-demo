@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct PositionRecomendation: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     @State var recommendationHistory: [Int] = []
     @State var buyPerc: Double = 0
     @State var sellPerc: Double = 0
     
     @State var recommendation: Int = 100
     
-    func updateChart(_ publishedStats: Stats!) {
+    func updateChart(_ publishedStats: KrakenStats!) {
         if publishedStats.totalAskVol > publishedStats.totalBidVol && publishedStats.totalAskVolRaw > publishedStats.totalBidVolRaw {
             recommendation = 0
         } else {

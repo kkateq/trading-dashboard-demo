@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct PriceCell: View, Identifiable {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     var id = UUID()
     var price: String
     var depth: Int
-    var level: Int
     var up: Bool
 
     var bgColor: Color {
@@ -25,8 +24,8 @@ struct PriceCell: View, Identifiable {
     }
 
     var body: some View {
-        let isAskPeg = (level == depth - 1)
-        let isBidPeg = (level == depth)
+        let isAskPeg = (Double(price)! == book.stats.bestAsk)
+        let isBidPeg = (Double(price)! == book.stats.bestBid)
 
         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : .white)
         Text(price)
@@ -42,6 +41,6 @@ struct PriceCell: View, Identifiable {
 
 struct PriceCell_Previews: PreviewProvider {
     static var previews: some View {
-        PriceCell(price: "0.5656", depth: 25, level: 1, up: false)
+        PriceCell(price: "0.5656", depth: 25, up: false)
     }
 }

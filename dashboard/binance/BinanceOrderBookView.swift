@@ -40,7 +40,7 @@ struct BinanceOrderBookView: View {
                         let isBidPeg = record.pr == book.stats.bestBid
 
                         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : .white)
-                        if record.type == BookRecordType.ask {
+                        if record.type == BinanceBookRecordType.ask {
                             EmptyCell()
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)

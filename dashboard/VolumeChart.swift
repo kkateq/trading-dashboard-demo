@@ -9,7 +9,7 @@ import Charts
 import SwiftUI
 
 struct VolumeChart: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     let cellWidth = 300.0
     
     @State var totalAskVolumePerc: Int = 0
@@ -21,7 +21,7 @@ struct VolumeChart: View {
     @State var totalAskVolume10Perc: Int = 0
     @State var totalAskCellWidth10: Double = 0
     
-    func updateChart(_ publishedStats: Stats!) {
+    func updateChart(_ publishedStats: KrakenStats!) {
         if let stats = publishedStats {
             let totalAskVolume = stats.totalAskVol
             let totalBidVolume = stats.totalBidVol

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecentTradesView: View {
     @EnvironmentObject var recentTrades: RecentTradesData
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
     let layout = [
         GridItem(.fixed(100), spacing: 2),

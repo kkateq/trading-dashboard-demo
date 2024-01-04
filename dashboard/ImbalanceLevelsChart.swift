@@ -20,10 +20,10 @@ struct VolumePoint: Identifiable {
 
 struct ImbalanceLevelsChart: View {
 
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     @State var points: [VolumePoint] = []
 
-    func getBidVolume(_ stats: Stats, _ prevStats: Stats!, _ totalBidLevelsVolume: Double) -> Double {
+    func getBidVolume(_ stats: KrakenStats, _ prevStats: KrakenStats!, _ totalBidLevelsVolume: Double) -> Double {
         if let pr = prevStats {
             if stats.bestBid > pr.bestBid {
                 return stats.bestBidVolume + totalBidLevelsVolume
@@ -36,7 +36,7 @@ struct ImbalanceLevelsChart: View {
         return stats.bestBidVolume
     }
 
-    func getAskVolume(_ stats: Stats, _ prevStats: Stats!, _ totalAskLevelsVolume: Double) -> Double {
+    func getAskVolume(_ stats: KrakenStats, _ prevStats: KrakenStats!, _ totalAskLevelsVolume: Double) -> Double {
         if let pr = prevStats {
             if stats.bestAsk < pr.bestAsk {
                 return stats.bestAskVolume + totalAskLevelsVolume
@@ -50,7 +50,7 @@ struct ImbalanceLevelsChart: View {
     }
 
 
-    func updateChart(_: Stats!) {
+    func updateChart(_: KrakenStats!) {
         if book.statsHistory.count > 2 {
             let prevStats = book.statsHistory[book.statsHistory.count - 2]
             if let st = book.stats {

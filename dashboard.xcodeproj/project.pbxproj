@@ -19,7 +19,7 @@
 		34905C222B29C12D00A5A649 /* dashboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C212B29C12D00A5A649 /* dashboardTests.swift */; };
 		34905C2C2B29C12D00A5A649 /* dashboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C2B2B29C12D00A5A649 /* dashboardUITests.swift */; };
 		34905C2E2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C2D2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift */; };
-		34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3A2B29C14A00A5A649 /* OrderBookView.swift */; };
+		34905C3B2B29C14A00A5A649 /* KrakenOrderBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3A2B29C14A00A5A649 /* KrakenOrderBookView.swift */; };
 		34905C3E2B29C18300A5A649 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C3D2B29C18300A5A649 /* Starscream */; };
 		34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C3F2B29C1A100A5A649 /* Krakenbook.swift */; };
 		34905C452B2A003F00A5A649 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 34905C442B2A003F00A5A649 /* Collections */; };
@@ -30,7 +30,7 @@
 		34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C592B2B64B800A5A649 /* NoteCell.swift */; };
 		34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5B2B2B67D700A5A649 /* OrdersView.swift */; };
 		34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5D2B2B684700A5A649 /* PositionsView.swift */; };
-		34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5F2B2C4A1800A5A649 /* OrderForm.swift */; };
+		34905C602B2C4A1800A5A649 /* KrakenOrderForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C5F2B2C4A1800A5A649 /* KrakenOrderForm.swift */; };
 		34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C612B2C53F700A5A649 /* ButtonStyles.swift */; };
 		34905C642B2C6A0D00A5A649 /* KrakenOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */; };
 		34905C672B2C7E6800A5A649 /* Kraken+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C662B2C7E6800A5A649 /* Kraken+Types.swift */; };
@@ -64,7 +64,6 @@
 		34F4016B2B456A0100E0DC4A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4016A2B456A0100E0DC4A /* DashboardView.swift */; };
 		34F4016D2B456C2B00E0DC4A /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */; };
 		34F4016F2B45C1F200E0DC4A /* BinanceLastTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4016E2B45C1F200E0DC4A /* BinanceLastTradeCell.swift */; };
-		34F401712B45C5DB00E0DC4A /* BinanceLastTrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401702B45C5DB00E0DC4A /* BinanceLastTrade.swift */; };
 		34F401762B46C5D700E0DC4A /* Bybitbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401752B46C5D700E0DC4A /* Bybitbook.swift */; };
 		34F401782B46C5EF00E0DC4A /* BybitSocketTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */; };
 		34F4017A2B46CF9E00E0DC4A /* BybitbookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401792B46CF9E00E0DC4A /* BybitbookView.swift */; };
@@ -105,7 +104,7 @@
 		34905C272B29C12D00A5A649 /* dashboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dashboardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C2B2B29C12D00A5A649 /* dashboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardUITests.swift; sourceTree = "<group>"; };
 		34905C2D2B29C12D00A5A649 /* dashboardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		34905C3A2B29C14A00A5A649 /* OrderBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookView.swift; sourceTree = "<group>"; };
+		34905C3A2B29C14A00A5A649 /* KrakenOrderBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenOrderBookView.swift; sourceTree = "<group>"; };
 		34905C3F2B29C1A100A5A649 /* Krakenbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Krakenbook.swift; sourceTree = "<group>"; };
 		34905C532B2B5B9E00A5A649 /* BidCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BidCell.swift; sourceTree = "<group>"; };
 		34905C552B2B604500A5A649 /* PriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCell.swift; sourceTree = "<group>"; };
@@ -113,7 +112,7 @@
 		34905C592B2B64B800A5A649 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		34905C5B2B2B67D700A5A649 /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
 		34905C5D2B2B684700A5A649 /* PositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionsView.swift; sourceTree = "<group>"; };
-		34905C5F2B2C4A1800A5A649 /* OrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderForm.swift; sourceTree = "<group>"; };
+		34905C5F2B2C4A1800A5A649 /* KrakenOrderForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenOrderForm.swift; sourceTree = "<group>"; };
 		34905C612B2C53F700A5A649 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenOrderManager.swift; sourceTree = "<group>"; };
 		34905C662B2C7E6800A5A649 /* Kraken+Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kraken+Types.swift"; sourceTree = "<group>"; };
@@ -148,7 +147,6 @@
 		34F4016A2B456A0100E0DC4A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainHandler.swift; path = dashboard/KeychainHandler.swift; sourceTree = SOURCE_ROOT; };
 		34F4016E2B45C1F200E0DC4A /* BinanceLastTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinanceLastTradeCell.swift; sourceTree = "<group>"; };
-		34F401702B45C5DB00E0DC4A /* BinanceLastTrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinanceLastTrade.swift; sourceTree = "<group>"; };
 		34F401752B46C5D700E0DC4A /* Bybitbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bybitbook.swift; sourceTree = "<group>"; };
 		34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitSocketTemplate.swift; sourceTree = "<group>"; };
 		34F401792B46CF9E00E0DC4A /* BybitbookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitbookView.swift; sourceTree = "<group>"; };
@@ -234,8 +232,6 @@
 				34F4013F2B36F2DD00E0DC4A /* LastTradeCell.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
 				34905C592B2B64B800A5A649 /* NoteCell.swift */,
-				34905C3A2B29C14A00A5A649 /* OrderBookView.swift */,
-				34905C5F2B2C4A1800A5A649 /* OrderForm.swift */,
 				34905C5B2B2B67D700A5A649 /* OrdersView.swift */,
 				34066F522B31B4B30090C78A /* PairHomeView.swift */,
 				34F4015D2B3F28BA00E0DC4A /* PositionRecomendation.swift */,
@@ -296,23 +292,11 @@
 			path = rest;
 			sourceTree = "<group>";
 		};
-		34F4012D2B335DD300E0DC4A /* ws */ = {
-			isa = PBXGroup;
-			children = (
-				34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */,
-				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
-				349044952B330DE800975B95 /* KrakenOHLC.swift */,
-				34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */,
-			);
-			path = ws;
-			sourceTree = "<group>";
-		};
 		34F401632B443A6300E0DC4A /* binance */ = {
 			isa = PBXGroup;
 			children = (
 				34F401672B446C2300E0DC4A /* BinanceOrderBookView.swift */,
 				34F4016E2B45C1F200E0DC4A /* BinanceLastTradeCell.swift */,
-				34F401702B45C5DB00E0DC4A /* BinanceLastTrade.swift */,
 				34F401612B44350900E0DC4A /* Binancebook.swift */,
 				34F4017B2B46D7D000E0DC4A /* BinancePairView.swift */,
 			);
@@ -322,10 +306,14 @@
 		34F401692B45697100E0DC4A /* kraken */ = {
 			isa = PBXGroup;
 			children = (
+				34F4017D2B46DBC100E0DC4A /* views */,
+				34905C3F2B29C1A100A5A649 /* Krakenbook.swift */,
+				34F4013B2B35CE2300E0DC4A /* KrakenRecentTrades.swift */,
+				349044952B330DE800975B95 /* KrakenOHLC.swift */,
+				34905C632B2C6A0D00A5A649 /* KrakenOrderManager.swift */,
 				34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */,
 				34F401652B446AA900E0DC4A /* KrakenVolumeCard.swift */,
 				34F401532B3D9BB100E0DC4A /* KrakenPairView.swift */,
-				34F4012D2B335DD300E0DC4A /* ws */,
 				34905C652B2C7E5300A5A649 /* rest */,
 			);
 			path = kraken;
@@ -339,6 +327,15 @@
 				34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */,
 			);
 			path = bybit;
+			sourceTree = "<group>";
+		};
+		34F4017D2B46DBC100E0DC4A /* views */ = {
+			isa = PBXGroup;
+			children = (
+				34905C3A2B29C14A00A5A649 /* KrakenOrderBookView.swift */,
+				34905C5F2B2C4A1800A5A649 /* KrakenOrderForm.swift */,
+			);
+			path = views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -502,16 +499,15 @@
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34F401502B3C37B000E0DC4A /* ImbalanceLevelsChart.swift in Sources */,
 				34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */,
-				34F401712B45C5DB00E0DC4A /* BinanceLastTrade.swift in Sources */,
 				34F401602B44170300E0DC4A /* RecentTradeUnifiedCell.swift in Sources */,
 				34F401762B46C5D700E0DC4A /* Bybitbook.swift in Sources */,
 				34F401522B3D95AE00E0DC4A /* Constants.swift in Sources */,
 				34F401462B3ADCDE00E0DC4A /* Commons.swift in Sources */,
 				34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */,
-				34905C602B2C4A1800A5A649 /* OrderForm.swift in Sources */,
+				34905C602B2C4A1800A5A649 /* KrakenOrderForm.swift in Sources */,
 				34CF57FA2B32F97800226F7A /* PriceChartView.swift in Sources */,
 				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
-				34905C3B2B29C14A00A5A649 /* OrderBookView.swift in Sources */,
+				34905C3B2B29C14A00A5A649 /* KrakenOrderBookView.swift in Sources */,
 				34F4016D2B456C2B00E0DC4A /* KeychainHandler.swift in Sources */,
 				34F401422B37128700E0DC4A /* RecentTradesView.swift in Sources */,
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,

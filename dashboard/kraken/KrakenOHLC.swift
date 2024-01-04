@@ -75,7 +75,7 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
     @Published var isSubscribed = false
     var pair: String = ""
     var interval: Kraken.OHLCInterval = .i5min
-    @Published var wsStatus: WSStatus = .init()
+    @Published var wsStatus: KrakenWSStatus = .init()
     let didDataChange = PassthroughSubject<Void, Never>()
     let didListChange = PassthroughSubject<Void, Never>()
     var channelID: String = ""
@@ -166,7 +166,7 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
             }
             let decoder = JSONDecoder()
             if wsStatus.status == "disconnected" {
-                let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenWSStatus.self, from: Data(message.utf8))
                 isConnected = true
 //                if result.status == "online" && !isSubscribed {
 //                    subscribe()
@@ -175,7 +175,7 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
                 wsStatus = result
 
             } else if !isSubscribed {
-                let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenChannelSubscriptionStatus.self, from: Data(message.utf8))
                 if result.status == "subscribed" && result.channelName == "ohlc" && result.pair == pair {
                     isSubscribed = true
                 }

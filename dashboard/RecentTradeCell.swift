@@ -10,7 +10,7 @@ import SwiftUI
 struct RecentTradeCell: View {
     var trade: RecentTrade
     var recentTrades: RecentTradesData
-    var book: OrderBookData
+    var book: KrakenOrderBookData
     
     let cellHeight: CGFloat = 25
     let cellWidth: CGFloat = 100

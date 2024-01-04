@@ -15,24 +15,24 @@ struct Point: Identifiable {
 }
 
 struct ImbalanceChart: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     @State private var points: [Point] = []
     @State private var points5: [Point] = []
     @State private var points10: [Point] = []
 
-    func imbalance(_ stats: Stats) -> Double {
+    func imbalance(_ stats: KrakenStats) -> Double {
         return ((stats.bestBidVolume - stats.bestAskVolume) / (stats.bestBidVolume + stats.bestAskVolume))
     }
 
-    func imbalance5(_ stats: Stats) -> Double {
+    func imbalance5(_ stats: KrakenStats) -> Double {
         return ((stats.totalBidVol5 - stats.totalAskVol5) / (stats.totalBidVol5 + stats.totalAskVol5))
     }
 
-    func imbalance10(_ stats: Stats) -> Double {
+    func imbalance10(_ stats: KrakenStats) -> Double {
         return ((stats.totalBidVol10 - stats.totalAskVol10) / (stats.totalBidVol10 + stats.totalAskVol10))
     }
 
-    func getPoints(_ statsList: [Stats]!) -> [Point] {
+    func getPoints(_ statsList: [KrakenStats]!) -> [Point] {
         var res: [Point] = []
         for stats in statsList {
             res.append(Point(x: stats.time, y: imbalance(stats)))
@@ -41,7 +41,7 @@ struct ImbalanceChart: View {
         return res
     }
 
-    func getPoints5(_ statsList: [Stats]!) -> [Point] {
+    func getPoints5(_ statsList: [KrakenStats]!) -> [Point] {
         var res: [Point] = []
         for stats in statsList {
             res.append(Point(x: stats.time, y: imbalance5(stats)))
@@ -50,7 +50,7 @@ struct ImbalanceChart: View {
         return res
     }
 
-    func getPoints10(_ statsList: [Stats]!) -> [Point] {
+    func getPoints10(_ statsList: [KrakenStats]!) -> [Point] {
         var res: [Point] = []
         for stats in statsList {
             res.append(Point(x: stats.time, y: imbalance10(stats)))
@@ -59,7 +59,7 @@ struct ImbalanceChart: View {
         return res
     }
 
-    func updateChart(_ publishedStats: Stats!) {
+    func updateChart(_ publishedStats: KrakenStats!) {
 //        withAnimation(.easeOut(duration: 0.08)) {
         points = getPoints(book.statsHistory)
         points5 = getPoints5(book.statsHistory)

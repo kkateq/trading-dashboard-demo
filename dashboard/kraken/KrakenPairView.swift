@@ -22,7 +22,7 @@ struct KrakenPairView: View {
 
     @State var isReady: Bool = false
 
-    func setReady(_ publishedBook: OrderBookData!) {
+    func setReady(_ publishedBook: KrakenOrderBookData!) {
         if !isReady && publishedBook != nil {
             isReady = true
         }
@@ -44,8 +44,8 @@ struct KrakenPairView: View {
                             RecentTradesView()
                             IndicatorPanView()
 
-                            OrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
-                            OrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                            KrakenOrderForm(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                            KrakenOrderBookView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
                         }
                         .environmentObject(kraken_ws.book).environmentObject(manager)
 //                            .environmentObject(binance_ws)

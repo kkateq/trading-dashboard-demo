@@ -16,10 +16,10 @@ struct BarValue: Identifiable {
 }
 
 struct VolumeChart2: View {
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
     @State var data: [BarValue] = []
 
-    func updateChart(_ s: Stats!) {
+    func updateChart(_ s: KrakenStats!) {
 //        let totalAskPerc = round(100 * book.stats.totalAskVol/(book.stats.totalAskVol + book.stats.totalBidVol))
 //
 //        let total5AskPerc = round(100 * book.stats.totalAskVol5/(book.stats.totalAskVol5 + book.stats.totalBidVol5))

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OrderForm: View {
+struct KrakenOrderForm: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
@@ -18,7 +18,7 @@ struct OrderForm: View {
     @Binding var buyStopLoss: Double!
 
     @EnvironmentObject var manager: KrakenOrderManager
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -45,7 +45,7 @@ struct OrderForm: View {
         return volume * book.stats.pegValue > getAllowedMargin() - 1
     }
 
-    func updateStopLoss(_ publishedStats: Stats!) {
+    func updateStopLoss(_ publishedStats: KrakenStats!) {
         sellStopLoss = publishedStats.bestAsk + roundPrice(price: publishedStats.bestAsk * 0.05, pair: book.pair)
         buyStopLoss = publishedStats.bestBid - roundPrice(price: publishedStats.bestBid * 0.05, pair: book.pair)
     }

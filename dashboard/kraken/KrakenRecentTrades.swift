@@ -135,7 +135,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
     @Published var data: RecentTradesData! = nil
     var channelID: Double = 0
     var pair: String = ""
-    @Published var wsStatus: WSStatus = .init()
+    @Published var wsStatus: KrakenWSStatus = .init()
     private var cancellable: AnyCancellable?
 
     @Published var trades: RecentTradesData! {
@@ -198,7 +198,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
             }
             let decoder = JSONDecoder()
             if wsStatus.status == "disconnected" {
-                let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenWSStatus.self, from: Data(message.utf8))
 
                 if result.status == "online" && !isSubscribed {
                     subscribe()
@@ -207,7 +207,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
                 wsStatus = result
 
             } else if !isSubscribed {
-                let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenChannelSubscriptionStatus.self, from: Data(message.utf8))
                 if result.status == "subscribed" && result.channelName == "trade" && result.pair == pair {
                     isSubscribed = true
                     channelID = result.channelID!

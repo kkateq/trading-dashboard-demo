@@ -11,28 +11,28 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-struct WSStatus: Decodable {
+struct KrakenWSStatus: Decodable {
     var event: String = ""
     var connectionID: Double = 0
     var status: String = "disconnected"
     var version: String = ""
 }
 
-struct Subscription: Decodable {
+struct KrakenSubscription: Decodable {
     var depth: Double?
     var name: String
 }
 
-struct ChannelSubscriptionStatus: Decodable {
+struct KrakenChannelSubscriptionStatus: Decodable {
     var channelID: Double?
     var channelName: String
     var event: String
     var pair: String?
     var status: String
-    var subscription: Subscription
+    var subscription: KrakenSubscription
 }
 
-struct PriceRecordResponse: Decodable {
+struct KrakenPriceRecordResponse: Decodable {
     var volume: String
     var price: String
     var timestamp: String
@@ -45,9 +45,9 @@ struct PriceRecordResponse: Decodable {
     }
 }
 
-struct BookRecordResponse: Decodable {
-    var bids: [PriceRecordResponse]
-    var asks: [PriceRecordResponse]
+struct KrakenBookRecordResponse: Decodable {
+    var bids: [KrakenPriceRecordResponse]
+    var asks: [KrakenPriceRecordResponse]
 
     enum CodingKeys: String, CodingKey {
         case bids = "bs"
@@ -55,8 +55,8 @@ struct BookRecordResponse: Decodable {
     }
 }
 
-struct BookInitialResponse: Decodable {
-    var bookRecord: BookRecordResponse! = nil
+struct KrakenBookInitialResponse: Decodable {
+    var bookRecord: KrakenBookRecordResponse! = nil
     var channelID: Double = 0
     var pair: String
     var channelName: String
@@ -64,15 +64,15 @@ struct BookInitialResponse: Decodable {
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         channelID = try container.decode(Double.self)
-        bookRecord = try container.decode(BookRecordResponse.self)
+        bookRecord = try container.decode(KrakenBookRecordResponse.self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
     }
 }
 
-struct BookUpdateRecordResponse: Decodable {
-    var bids: [PriceRecordResponse]!
-    var asks: [PriceRecordResponse]!
+struct KrakenBookUpdateRecordResponse: Decodable {
+    var bids: [KrakenPriceRecordResponse]!
+    var asks: [KrakenPriceRecordResponse]!
     var checksum: String
 
     enum CodingKeys: String, CodingKey {
@@ -82,8 +82,8 @@ struct BookUpdateRecordResponse: Decodable {
     }
 }
 
-struct BookUpdateResponse: Decodable {
-    var bookRecord: BookUpdateRecordResponse! = nil
+struct KrakenBookUpdateResponse: Decodable {
+    var bookRecord: KrakenBookUpdateRecordResponse! = nil
     var channelID: Double = 0
     var pair: String
     var channelName: String
@@ -91,17 +91,17 @@ struct BookUpdateResponse: Decodable {
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         channelID = try container.decode(Double.self)
-        bookRecord = try container.decode(BookUpdateRecordResponse.self)
+        bookRecord = try container.decode(KrakenBookUpdateRecordResponse.self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
     }
 }
 
-enum BookRecordType: String {
+enum KrakenBookRecordType: String {
     case ask, bid
 }
 
-class OrderBookRecord: Identifiable, ObservableObject {
+class KrakenOrderBookRecord: Identifiable, ObservableObject {
     var id: UUID
 
     var volume: String
@@ -109,9 +109,9 @@ class OrderBookRecord: Identifiable, ObservableObject {
     var price: String
     var pr: Double
     var timestamp: Double
-    var type: BookRecordType
+    var type: KrakenBookRecordType
 
-    init(_ price: String, _ volume: String, _ timestamp: Double, _ type: BookRecordType) {
+    init(_ price: String, _ volume: String, _ timestamp: Double, _ type: KrakenBookRecordType) {
         self.volume = volume
         self.price = price
         self.timestamp = timestamp
@@ -122,13 +122,13 @@ class OrderBookRecord: Identifiable, ObservableObject {
     }
 }
 
-struct VolumeDistributionElement {
+struct KrakenVolumeDistributionElement {
     var index: Int
     var range: ChartBinRange<Double>
     var frequency: Int
 }
 
-struct Stats {
+struct KrakenStats {
     var pair: String
     var totalBidVol: Double = 0
     var totalAskVol: Double = 0
@@ -157,11 +157,11 @@ struct Stats {
     var askVolumeCutOff: Double = 0
     var bidVolumeCutOff: Double = 0
     
-    var all: [Double: OrderBookRecord]
+    var all: [Double: KrakenOrderBookRecord]
     var bid_keys = [Double]()
     var ask_keys = [Double]()
 
-    init(pair: String, all: [Double: OrderBookRecord], bid_keys: [Double], ask_keys: [Double]) {
+    init(pair: String, all: [Double: KrakenOrderBookRecord], bid_keys: [Double], ask_keys: [Double]) {
         time = Date()
         self.pair = pair
         self.all = all
@@ -287,21 +287,21 @@ struct Stats {
     }
 }
 
-class OrderBookData: ObservableObject, Equatable {
+class KrakenOrderBookData: ObservableObject, Equatable {
     var channelID: Double
     var depth: Int
     var pair: String
 
-    @Published var all: [Double: OrderBookRecord]
+    @Published var all: [Double: KrakenOrderBookRecord]
     @Published var bid_keys = [Double]()
     @Published var ask_keys = [Double]()
     @Published var isValid: Bool
     @Published var recentPeg: Double!
-    @Published var statsHistory: [Stats] = []
-    @Published var stats: Stats!
+    @Published var statsHistory: [KrakenStats] = []
+    @Published var stats: KrakenStats!
 
-    var allList: [OrderBookRecord] {
-        var list: [OrderBookRecord] = []
+    var allList: [KrakenOrderBookRecord] {
+        var list: [KrakenOrderBookRecord] = []
         for ask_key in ask_keys.reversed() {
             if let ask = all[ask_key] {
                 list.append(ask)
@@ -327,7 +327,7 @@ class OrderBookData: ObservableObject, Equatable {
     }
 
     func generateStats() {
-        let newStats = Stats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
+        let newStats = KrakenStats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
         if let recentStats = stats {
             recentPeg = recentStats.pegValue
         }
@@ -338,11 +338,11 @@ class OrderBookData: ObservableObject, Equatable {
         }
     }
 
-    static func == (lhs: OrderBookData, rhs: OrderBookData) -> Bool {
+    static func == (lhs: KrakenOrderBookData, rhs: KrakenOrderBookData) -> Bool {
         return lhs.channelID == rhs.channelID
     }
 
-    init(response: BookInitialResponse, depth: Int, pair: String) {
+    init(response: KrakenBookInitialResponse, depth: Int, pair: String) {
         channelID = 0
         isValid = true
         self.depth = depth
@@ -353,11 +353,11 @@ class OrderBookData: ObservableObject, Equatable {
 
         for ask in response.bookRecord.asks {
             let key = Double(ask.price)!
-            all[key] = OrderBookRecord(ask.price, ask.volume, Double(ask.timestamp)!, BookRecordType.ask)
+            all[key] = KrakenOrderBookRecord(ask.price, ask.volume, Double(ask.timestamp)!, KrakenBookRecordType.ask)
         }
         for bid in response.bookRecord.bids {
             let key = Double(bid.price)!
-            all[key] = OrderBookRecord(bid.price, bid.volume, Double(bid.timestamp)!, BookRecordType.bid)
+            all[key] = KrakenOrderBookRecord(bid.price, bid.volume, Double(bid.timestamp)!, KrakenBookRecordType.bid)
         }
         generateStats()
     }
@@ -393,7 +393,7 @@ class OrderBookData: ObservableObject, Equatable {
         return res
     }
 
-    func update_side(_ records: [PriceRecordResponse], _ type: BookRecordType) {
+    func update_side(_ records: [KrakenPriceRecordResponse], _ type: KrakenBookRecordType) {
         for record in records {
             let volume = Double(record.volume)
             let timestamp = Double(record.timestamp)!
@@ -404,26 +404,26 @@ class OrderBookData: ObservableObject, Equatable {
             } else {
                 if let prev_record = all[key] {
                     if prev_record.timestamp < timestamp {
-                        all[key] = OrderBookRecord(record.price, record.volume, timestamp, type)
+                        all[key] = KrakenOrderBookRecord(record.price, record.volume, timestamp, type)
                     }
                 } else {
-                    all[key] = OrderBookRecord(record.price, record.volume, timestamp, type)
+                    all[key] = KrakenOrderBookRecord(record.price, record.volume, timestamp, type)
                 }
             }
         }
 
-        let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
-        let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
+        let ask_keys_all = all.filter { $0.value.type == KrakenBookRecordType.ask }.keys.sorted(by: { $0 < $1 })
+        let bid_keys_all = all.filter { $0.value.type == KrakenBookRecordType.bid }.keys.sorted(by: { $0 > $1 })
         ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
         bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
     }
 
-    func update(_ updateResponse: BookUpdateResponse) {
+    func update(_ updateResponse: KrakenBookUpdateResponse) {
         if updateResponse.bookRecord.asks != nil {
-            update_side(updateResponse.bookRecord.asks, BookRecordType.ask)
+            update_side(updateResponse.bookRecord.asks, KrakenBookRecordType.ask)
         }
         if updateResponse.bookRecord.bids != nil {
-            update_side(updateResponse.bookRecord.bids, BookRecordType.bid)
+            update_side(updateResponse.bookRecord.bids, KrakenBookRecordType.bid)
         }
 
         isValid = verifyChecksum(updateResponse.bookRecord.checksum)
@@ -440,13 +440,13 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
     var channelID: Double = 0
     var pair: String = ""
     var depth: Int = 10
-    @Published var data: OrderBookData! = nil
-    @Published var wsStatus: WSStatus = .init()
+    @Published var data: KrakenOrderBookData! = nil
+    @Published var wsStatus: KrakenWSStatus = .init()
     let didChange = PassthroughSubject<Void, Never>()
 
     private var cancellable: AnyCancellable?
 
-    @Published var book: OrderBookData! {
+    @Published var book: KrakenOrderBookData! {
         didSet {
             didChange.send()
         }
@@ -480,7 +480,7 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
             }
             let decoder = JSONDecoder()
             if wsStatus.status == "disconnected" {
-                let result = try decoder.decode(WSStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenWSStatus.self, from: Data(message.utf8))
 
                 if result.status == "online" && !isSubscribed {
                     subscribe()
@@ -489,20 +489,20 @@ class Krakenbook: WebSocketDelegate, ObservableObject {
                 wsStatus = result
 
             } else if !isSubscribed {
-                let result = try decoder.decode(ChannelSubscriptionStatus.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenChannelSubscriptionStatus.self, from: Data(message.utf8))
                 if result.status == "subscribed" && result.channelName == "book-\(depth)" && result.pair == pair {
                     isSubscribed = true
                     channelID = result.channelID!
                 }
             } else if isSubscribed && !isBookInitialized {
-                let result = try decoder.decode(BookInitialResponse.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenBookInitialResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
-                    self.data = OrderBookData(response: result, depth: self.depth, pair: self.pair)
+                    self.data = KrakenOrderBookData(response: result, depth: self.depth, pair: self.pair)
                 }
                 isBookInitialized = true
             } else if isSubscribed && isBookInitialized {
-                let book_update = try decoder.decode(BookUpdateResponse.self, from: Data(message.utf8))
+                let book_update = try decoder.decode(KrakenBookUpdateResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
                     self.data.update(book_update)

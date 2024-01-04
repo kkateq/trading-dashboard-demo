@@ -21,6 +21,10 @@ struct OBRecord: Decodable {
     }
 }
 
+enum BinanceBookRecordType: String {
+case ask, bid
+}
+
 struct BinanceOrderBookRecord: Decodable {
     var lastUpdateId: Int64
     var bids: [OBRecord]
@@ -33,9 +37,9 @@ class BinanceBookRecord: Identifiable, ObservableObject {
     var volume: String
     var pr: Double
     var vol: Double
-    var type: BookRecordType
+    var type: BinanceBookRecordType
 
-    init(price: String, volume: String, type: BookRecordType) {
+    init(price: String, volume: String, type: BinanceBookRecordType) {
         self.price = price
         pr = Double(price)!
         vol = Double(volume)!
@@ -297,15 +301,15 @@ class BinanceOrderBook: ObservableObject, Equatable {
             lastUpdateId = update.lastUpdateId
             for ask in update.asks {
                 let key = Double(ask.price)!
-                all[key] = BinanceBookRecord(price: ask.price, volume: ask.volume, type: BookRecordType.ask)
+                all[key] = BinanceBookRecord(price: ask.price, volume: ask.volume, type: BinanceBookRecordType.ask)
             }
             for bid in update.bids {
                 let key = Double(bid.price)!
-                all[key] = BinanceBookRecord(price: bid.price, volume: bid.volume, type: BookRecordType.bid)
+                all[key] = BinanceBookRecord(price: bid.price, volume: bid.volume, type: BinanceBookRecordType.bid)
             }
 
-            let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
-            let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
+            let ask_keys_all = all.filter { $0.value.type == BinanceBookRecordType.ask }.keys.sorted(by: { $0 < $1 })
+            let bid_keys_all = all.filter { $0.value.type == BinanceBookRecordType.bid }.keys.sorted(by: { $0 > $1 })
             ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
             bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
 
@@ -317,15 +321,15 @@ class BinanceOrderBook: ObservableObject, Equatable {
         if (prevUpdateID == nil && lastUpdateId + 1 >= update.UID && update.uID >= lastUpdateId + 1) || (prevUpdateID != nil && update.UID == prevUpdateID + 1) {
             for ask in update.asks {
                 let key = Double(ask.price)!
-                all[key] = BinanceBookRecord(price: ask.price, volume: ask.volume, type: BookRecordType.ask)
+                all[key] = BinanceBookRecord(price: ask.price, volume: ask.volume, type: BinanceBookRecordType.ask)
             }
             for bid in update.bids {
                 let key = Double(bid.price)!
-                all[key] = BinanceBookRecord(price: bid.price, volume: bid.volume, type: BookRecordType.bid)
+                all[key] = BinanceBookRecord(price: bid.price, volume: bid.volume, type: BinanceBookRecordType.bid)
             }
 
-            let ask_keys_all = all.filter { $0.value.type == BookRecordType.ask }.keys.sorted(by: { $0 < $1 })
-            let bid_keys_all = all.filter { $0.value.type == BookRecordType.bid }.keys.sorted(by: { $0 > $1 })
+            let ask_keys_all = all.filter { $0.value.type == BinanceBookRecordType.ask }.keys.sorted(by: { $0 < $1 })
+            let bid_keys_all = all.filter { $0.value.type == BinanceBookRecordType.bid }.keys.sorted(by: { $0 > $1 })
             ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
             bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
 

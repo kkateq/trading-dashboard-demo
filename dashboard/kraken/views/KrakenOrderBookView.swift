@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OrderBookView: View {
+struct KrakenOrderBookView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
@@ -16,7 +16,7 @@ struct OrderBookView: View {
     @Binding var sellStopLoss: Double!
     @Binding var buyStopLoss: Double!
     
-    @EnvironmentObject var book: OrderBookData
+    @EnvironmentObject var book: KrakenOrderBookData
 
     @EnvironmentObject var manager: KrakenOrderManager
     
@@ -53,18 +53,18 @@ struct OrderBookView: View {
                 ZStack {
                     ScrollView {
                         LazyVGrid(columns: layout, spacing: 2) {
-                            ForEach(0 ..< book.allList.count) { index in
-                                let record = book.allList[index]
+                            ForEach(book.allList) { record in
+                            
                                 let price = formatPrice(price: record.pr)
                                 
-                                if record.type == BookRecordType.ask {
+                                if record.type == KrakenBookRecordType.ask {
                                     EmptyCell()
-                                    PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
+                                    PriceCell(price: price, depth: book.depth, up: book.recentPeg < book.stats.pegValue)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
                                  
                                 } else {
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
-                                    PriceCell(price: price, depth: book.depth, level: index, up: book.recentPeg < book.stats.pegValue)
+                                    PriceCell(price: price, depth: book.depth, up: book.recentPeg < book.stats.pegValue)
                                     EmptyCell()
                                 }
                             }
