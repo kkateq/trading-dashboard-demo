@@ -10,7 +10,7 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-struct RecentTrade: Identifiable, Equatable {
+struct KrakenRecentTrade: Identifiable, Equatable {
     var id: UUID = .init()
     var price: Double
     var sellLimit: Double
@@ -21,7 +21,7 @@ struct RecentTrade: Identifiable, Equatable {
     var lastBuyTimestamp: Double
 }
 
-class TradeRecord {
+class KrakenTradeRecord {
     var price: Double
     var priceStr: String
     var volume: Double
@@ -41,7 +41,7 @@ class TradeRecord {
     }
 }
 
-class TradeRecordUpdateResponse: TradeRecord, Decodable {
+class KrakenTradeRecordUpdateResponse: KrakenTradeRecord, Decodable {
     required init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         let price = try container.decode(String.self)
@@ -54,7 +54,7 @@ class TradeRecordUpdateResponse: TradeRecord, Decodable {
     }
 }
 
-class TradeRecordWSUpdateResponse: TradeRecord, Decodable {
+class KrakenTradeRecordWSUpdateResponse: KrakenTradeRecord, Decodable {
     required init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         let price = try container.decode(String.self)
@@ -67,8 +67,8 @@ class TradeRecordWSUpdateResponse: TradeRecord, Decodable {
     }
 }
 
-struct TradeUpdateResponse: Decodable {
-    var trades: [TradeRecord]
+struct KrakenTradeUpdateResponse: Decodable {
+    var trades: [KrakenTradeRecord]
     var channelID: Double = 0
     var pair: String
     var channelName: String
@@ -76,22 +76,22 @@ struct TradeUpdateResponse: Decodable {
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         channelID = try container.decode(Double.self)
-        trades = try container.decode([TradeRecordWSUpdateResponse].self)
+        trades = try container.decode([KrakenTradeRecordWSUpdateResponse].self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
     }
 }
 
-class RecentTradesData: ObservableObject, Identifiable, Equatable {
-    static func == (lhs: RecentTradesData, rhs: RecentTradesData) -> Bool {
+class KrakenRecentTradesData: ObservableObject, Identifiable, Equatable {
+    static func == (lhs: KrakenRecentTradesData, rhs: KrakenRecentTradesData) -> Bool {
         lhs.id == rhs.id
     }
 
     var id: UUID = .init()
-    @Published var trades: [String: RecentTrade] = [:]
-    @Published var lastTrade: TradeRecord!
+    @Published var trades: [String: KrakenRecentTrade] = [:]
+    @Published var lastTrade: KrakenTradeRecord!
     @Published var lastRecentTradeId: UUID!
-    var alltrades: [RecentTrade] {
+    var alltrades: [KrakenRecentTrade] {
         return trades.values.sorted(by: { $0.price > $1.price })
     }
     
@@ -132,13 +132,13 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
     @Published var isConnected = false
     @Published var isSubscribed = false
     let didChange = PassthroughSubject<Void, Never>()
-    @Published var data: RecentTradesData! = nil
+    @Published var data: KrakenRecentTradesData! = nil
     var channelID: Double = 0
     var pair: String = ""
     @Published var wsStatus: KrakenWSStatus = .init()
     private var cancellable: AnyCancellable?
 
-    @Published var trades: RecentTradesData! {
+    @Published var trades: KrakenRecentTradesData! {
         didSet {
             didChange.send()
         }
@@ -158,7 +158,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
         socket.delegate = self
         socket.connect()
 
-        data = RecentTradesData()
+        data = KrakenRecentTradesData()
 
         Task {
             await fetchRecentTrades()
@@ -180,7 +180,7 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
             DispatchQueue.main.async {
                 if let trades_list = trades[self.pair] as? [AnyObject] {
                     for trade in trades_list {
-                        let recentTrade = TradeRecord(price: trade[0] as! String, volume: trade[1] as! String, timestamp: trade[2] as! Double, side: trade[3] as! String, orderType: trade[4] as! String, misc: trade[5] as! String)
+                        let recentTrade = KrakenTradeRecord(price: trade[0] as! String, volume: trade[1] as! String, timestamp: trade[2] as! Double, side: trade[3] as! String, orderType: trade[4] as! String, misc: trade[5] as! String)
 
                         self.update(trade: recentTrade, key: recentTrade.priceStr)
                     }
@@ -214,12 +214,12 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
                 }
 
             } else if isSubscribed {
-                let trades_update = try decoder.decode(TradeUpdateResponse.self, from: Data(message.utf8))
+                let trades_update = try decoder.decode(KrakenTradeUpdateResponse.self, from: Data(message.utf8))
                 LogManager.shared.action("Recent trade")
                 LogManager.shared.action(message)
                 DispatchQueue.main.async {
                     if self.data != nil {
-                        var last: TradeRecord!
+                        var last: KrakenTradeRecord!
                 
                         for trade in trades_update.trades {
                             self.update(trade: trade, key: trade.priceStr)
@@ -236,18 +236,18 @@ class KrakenRecentTrades: WebSocketDelegate, ObservableObject {
         }
     }
 
-    func update(trade: TradeRecord, key: String)  {
+    func update(trade: KrakenTradeRecord, key: String)  {
         let sellLimit = trade.side == "s" && trade.orderType == "l" ? trade.volume : 0
         let buyLimit = trade.side == "b" && trade.orderType == "l" ? trade.volume : 0
         let sellMarket = trade.side == "s" && trade.orderType == "m" ? trade.volume : 0
         let buyMarket = trade.side == "b" && trade.orderType == "m" ? trade.volume : 0
 
         if let exTrade = data.trades[key] {
-            let newTrade = RecentTrade(price: trade.price, sellLimit: exTrade.sellLimit + sellLimit, buyLimit: exTrade.buyLimit + buyLimit, sellMarket: exTrade.sellMarket + sellMarket, buyMarket: exTrade.buyMarket + buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : exTrade.lastSellTimestamp, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : exTrade.lastBuyTimestamp)
+            let newTrade = KrakenRecentTrade(price: trade.price, sellLimit: exTrade.sellLimit + sellLimit, buyLimit: exTrade.buyLimit + buyLimit, sellMarket: exTrade.sellMarket + sellMarket, buyMarket: exTrade.buyMarket + buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : exTrade.lastSellTimestamp, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : exTrade.lastBuyTimestamp)
             data.trades[key] = newTrade
             self.data.lastRecentTradeId = newTrade.id
         } else {
-            let newTrade = RecentTrade(price: trade.price, sellLimit: sellLimit, buyLimit: buyLimit, sellMarket: sellMarket, buyMarket: buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : 0, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : 0)
+            let newTrade = KrakenRecentTrade(price: trade.price, sellLimit: sellLimit, buyLimit: buyLimit, sellMarket: sellMarket, buyMarket: buyMarket, lastSellTimestamp: trade.side == "sell" ? trade.timestamp : 0, lastBuyTimestamp: trade.side == "buy" ? trade.timestamp : 0)
             data.trades[key] = newTrade
             self.data.lastRecentTradeId = newTrade.id
         }

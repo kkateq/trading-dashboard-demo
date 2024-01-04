@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct RecentTradeCell: View {
-    var trade: RecentTrade
-    var recentTrades: RecentTradesData
+    var trade: KrakenRecentTrade
+    var recentTrades: KrakenRecentTradesData
     var book: KrakenOrderBookData
     
     let cellHeight: CGFloat = 25

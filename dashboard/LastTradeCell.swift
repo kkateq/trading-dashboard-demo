@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LastTradeCell: View {
-    var trade: TradeRecord!
+    var trade: KrakenTradeRecord!
 
     var body: some View {
         VStack {

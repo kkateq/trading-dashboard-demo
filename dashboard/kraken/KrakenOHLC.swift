@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import Starscream
 
-struct OHLCNode: Equatable, Decodable, Identifiable {
+struct KrakenOHLCNode: Equatable, Decodable, Identifiable {
     var id: Double
     var time: Double
     var etime: Double?
@@ -48,8 +48,8 @@ struct OHLCNode: Equatable, Decodable, Identifiable {
     }
 }
 
-struct OHLCUpdateResponse: Decodable {
-    var nodes: [OHLCNode]
+struct KrakenOHLCUpdateResponse: Decodable {
+    var nodes: [KrakenOHLCNode]
     var pair: String
     var channelID: String
     var channelName: String
@@ -57,19 +57,19 @@ struct OHLCUpdateResponse: Decodable {
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         channelID = try container.decode(String.self)
-        nodes = try container.decode([OHLCNode].self)
+        nodes = try container.decode([KrakenOHLCNode].self)
         channelName = try container.decode(String.self)
         pair = try container.decode(String.self)
     }
 }
 
-struct OHLCInitialResponse: Decodable {
-    var records: [String: OHLCNode]
+struct KrakenOHLCInitialResponse: Decodable {
+    var records: [String: KrakenOHLCNode]
 }
 
 class KrakenOHLC: WebSocketDelegate, ObservableObject {
-    @Published var data: [Double: OHLCNode] = [:]
-    @Published var nodeList = [OHLCNode]()
+    @Published var data: [Double: KrakenOHLCNode] = [:]
+    @Published var nodeList = [KrakenOHLCNode]()
     var socket: WebSocket!
     @Published var isConnected = false
     @Published var isSubscribed = false
@@ -82,13 +82,13 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
     private var dataCancellable: AnyCancellable?
     private var nodesCancellable: AnyCancellable?
     
-    @Published var ohlc: [Double: OHLCNode]! {
+    @Published var ohlc: [Double: KrakenOHLCNode]! {
         didSet {
             didDataChange.send()
         }
     }
     
-    @Published var nodes: [OHLCNode]! {
+    @Published var nodes: [KrakenOHLCNode]! {
         didSet {
             didListChange.send()
         }
@@ -180,7 +180,7 @@ class KrakenOHLC: WebSocketDelegate, ObservableObject {
                     isSubscribed = true
                 }
             } else if isSubscribed {
-                let result = try decoder.decode(OHLCUpdateResponse.self, from: Data(message.utf8))
+                let result = try decoder.decode(KrakenOHLCUpdateResponse.self, from: Data(message.utf8))
 
                 DispatchQueue.main.async {
                     for record in result.nodes {

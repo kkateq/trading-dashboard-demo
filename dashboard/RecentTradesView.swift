@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentTradesView: View {
-    @EnvironmentObject var recentTrades: RecentTradesData
+    @EnvironmentObject var recentTrades: KrakenRecentTradesData
     @EnvironmentObject var book: KrakenOrderBookData
 
     let layout = [
