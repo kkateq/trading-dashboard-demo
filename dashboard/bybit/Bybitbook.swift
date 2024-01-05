@@ -195,14 +195,14 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
 
     init(_ p: String) {
         pair = p
-        
-    
 
         bybitSocket = BybitSocketTemplate()
         bybitSocket.delegate = self
+        
         Task {
             await downloadInitialBookSnapshot()
         }
+        
         cancellable = AnyCancellable($data
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -253,7 +253,6 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
                 let subscriptionStatus = try JSONDecoder().decode(BybitSubscriptionStatus.self, from: Data(message.utf8))
                 if subscriptionStatus.success && subscriptionStatus.req_id == req_id {
                     isSubscribed = true
-                  
                 }
             } else if isSubscribed {
                 if message.contains(BybitOrderBookUpdateResponse.topicName) {
