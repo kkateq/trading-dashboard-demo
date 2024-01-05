@@ -15,7 +15,7 @@ struct BybitRecentTradeRecordResponse: Decodable {
     var side: String
     var volume: String
     var price: String
-    var priceDirection: String
+    var priceDirection: String!
     var tradeId: String
     var isBlockTrade: Bool
 
@@ -38,6 +38,8 @@ struct BybitRecentTradeUpdateResponse: Decodable {
     var ts: Int
     var data: [BybitRecentTradeRecordResponse]
 }
+
+
 
 struct BybitTradeHistoryRecord: Decodable {
     var execId: String
@@ -176,7 +178,7 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
                     isSubscribed = true
                 }
             } else if isSubscribed {
-                if message.contains(BybitOrderBookUpdateResponse.topicName) {
+                if message.contains("\(BybitRecentTradeUpdateResponse.name).\(self.pair)") {
                     let update = try JSONDecoder().decode(BybitRecentTradeUpdateResponse.self, from: Data(message.utf8))
 
                     DispatchQueue.main.async {
@@ -192,8 +194,10 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
         }
     }
 
+    
+
     func downloadRecentTradesSnapshot() async {
-        let url = "https://api.bybit.com/v5/market/recent-trasw?category=spot&symbol=\(pair)&limit60"
+        let url = "https://api.bybit.com/v5/market/recent-trade?category=spot&symbol=\(pair)&limit60"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)
