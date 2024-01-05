@@ -45,7 +45,6 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
 
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-                print("Received text: \(string)")
             DispatchQueue.main.async {
                 self.delegate?.parseMessage(message: string)
             }

@@ -12,11 +12,17 @@ struct PairHomeView: View {
 
     var body: some View {
         VStack {
+            
             HStack {
- 
-//                BinancePairView(pair: self.pair)
+                VStack {
+                    Text("Binance").font(.caption)
+                    BinancePairView(pair: self.pair)
+                }
 //                KrakenPairView(pair: self.pair)
-                BybitPairView(pair: self.pair)
+                VStack {
+                    Text("Bybit").font(.caption)
+                    BybitPairView(pair: self.pair)
+                }
             }
         }
     }

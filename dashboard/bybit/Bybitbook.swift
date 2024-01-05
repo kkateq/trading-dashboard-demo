@@ -5,6 +5,7 @@
 //  Created by km on 04/01/2024.
 //
 
+import Combine
 import Foundation
 import Starscream
 
@@ -19,7 +20,6 @@ struct BybitSubscriptionStatus: Decodable {
 struct BybitBookNode: Decodable {
     var price: String
     var volume: String
-
 
     init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
@@ -97,15 +97,20 @@ class BybitBookRecord: Identifiable, ObservableObject {
     }
 }
 
-class BybitOrderBook: ObservableObject {
+class BybitOrderBook: ObservableObject, Equatable {
     var pair: String
     var lastUpdateId: Int
-    let depth:Int = 25
+    let depth: Int = 25
+
+    var id = UUID()
+    static func == (lhs: BybitOrderBook, rhs: BybitOrderBook) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     @Published var all: [Double: BybitBookRecord]
     @Published var bid_keys = [Double]()
     @Published var ask_keys = [Double]()
-    
+
     @Published var stats: BybitStats!
 
     init(_ initialResponse: BybitOrderBookResult) {
@@ -129,9 +134,9 @@ class BybitOrderBook: ObservableObject {
 
         generateStats()
     }
-    
+
     func update(_ updateResponse: BybitOrderBookUpdateResponse) {
-        if updateResponse.data.pair == self.pair  {
+        if updateResponse.data.pair == pair {
             for ask in updateResponse.data.asks {
                 let key = Double(ask.price)!
                 all[key] = BybitBookRecord(price: ask.price, volume: ask.volume, type: BybitBookRecordType.ask)
@@ -140,19 +145,36 @@ class BybitOrderBook: ObservableObject {
                 let key = Double(bid.price)!
                 all[key] = BybitBookRecord(price: bid.price, volume: bid.volume, type: BybitBookRecordType.bid)
             }
-            
+
             let ask_keys_all = all.filter { $0.value.type == BybitBookRecordType.ask }.keys.sorted(by: { $0 < $1 })
             let bid_keys_all = all.filter { $0.value.type == BybitBookRecordType.bid }.keys.sorted(by: { $0 > $1 })
             ask_keys = ask_keys_all.count <= depth ? ask_keys_all : ask_keys_all.dropLast(ask_keys_all.count - depth)
             bid_keys = bid_keys_all.count <= depth ? bid_keys_all : bid_keys_all.dropLast(bid_keys_all.count - depth)
-            self.lastUpdateId = updateResponse.data.updateId
-            
+            lastUpdateId = updateResponse.data.updateId
+
             generateStats()
         }
     }
-    
+
     func generateStats() {
-        self.stats = BybitStats(pair: self.pair, all: self.all, bid_keys: self.bid_keys, ask_keys: self.ask_keys)
+        stats = BybitStats(pair: pair, all: all, bid_keys: bid_keys, ask_keys: ask_keys)
+    }
+
+    var allList: [BybitBookRecord] {
+        var list: [BybitBookRecord] = []
+        for ask_key in ask_keys.reversed() {
+            if let ask = all[ask_key] {
+                list.append(ask)
+            }
+        }
+
+        for bid_key in bid_keys {
+            if let bid = all[bid_key] {
+                list.append(bid)
+            }
+        }
+
+        return list
     }
 }
 
@@ -161,23 +183,40 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
     var bybitSocket: BybitSocketTemplate
     var isSubscribed: Bool = false
     let req_id = "10001"
-    @Published var book: BybitOrderBook!
+    @Published var data: BybitOrderBook!
+    let didChange = PassthroughSubject<Void, Never>()
+    private var cancellable: AnyCancellable?
+
+    @Published var book: BybitOrderBook! {
+        didSet {
+            didChange.send()
+        }
+    }
 
     init(_ p: String) {
         pair = p
+        
+    
+
         bybitSocket = BybitSocketTemplate()
         bybitSocket.delegate = self
+        Task {
+            await downloadInitialBookSnapshot()
+        }
+        cancellable = AnyCancellable($data
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .assign(to: \.book, on: self))
     }
 
     func subscribe(socket: WebSocket) {
-        let msg = "{\"req_id\":\"\(req_id)\", \"op\": \"subscribe\", \"args\": [ \"orderbook.1.\(pair)\" ]}"
+        let msg = "{\"req_id\":\"\(req_id)\", \"op\": \"subscribe\", \"args\": [ \"orderbook.50.\(pair)\" ]}"
 
         socket.write(string: msg)
-        print("Subscribed")
     }
 
     func downloadInitialBookSnapshot() async {
-        let url = "https://api.bybit.com/v5/market/orderbook?category=spot&symbol=\(pair)"
+        let url = "https://api.bybit.com/v5/market/orderbook?category=spot&symbol=\(pair)&limit200"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)
@@ -195,7 +234,7 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
                 DispatchQueue.main.async {
                     do {
                         let v = try JSONDecoder().decode(BybitOrderBookRecord.self, from: data)
-                        self.book = BybitOrderBook(v.result)
+                        self.data = BybitOrderBook(v.result)
                     } catch {
                         print("Error decoding: ", error)
                     }
@@ -207,7 +246,6 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
     }
 
     func parseMessage(message: String) {
-        print(message)
         do {
             if message == "{\"event\":\"heartbeat\"}" {
                 return
@@ -215,14 +253,15 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
                 let subscriptionStatus = try JSONDecoder().decode(BybitSubscriptionStatus.self, from: Data(message.utf8))
                 if subscriptionStatus.success && subscriptionStatus.req_id == req_id {
                     isSubscribed = true
+                  
                 }
             } else if isSubscribed {
                 if message.contains(BybitOrderBookUpdateResponse.topicName) {
                     let update = try JSONDecoder().decode(BybitOrderBookUpdateResponse.self, from: Data(message.utf8))
-                    if update != nil {
-                        DispatchQueue.main.async {
-//                            self.data.update(update)
-                            print("Parsed")
+
+                    DispatchQueue.main.async {
+                        if self.data != nil {
+                            self.data.update(update)
                         }
                     }
                 }

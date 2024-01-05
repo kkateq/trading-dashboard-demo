@@ -9,16 +9,32 @@ import SwiftUI
 
 struct BybitbookView: View {
     var pair: String
-
-    var bybitbook: Bybitbook
-
+    var bybitbook_ws: Bybitbook
+    @State var isReady: Bool = false
+    
     init(pair: String) {
         self.pair = pair
-        self.bybitbook = Bybitbook(self.pair)
+        self.bybitbook_ws = Bybitbook(self.pair)
     }
+    
+    func setReady(_ publishedBook: BybitOrderBook!) {
+        if !isReady && publishedBook != nil {
+            isReady = true
+        }
+    }
+    
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .center) {
+            if isReady {
+                BybitOrderBookView()
+                    .environmentObject(bybitbook_ws.book)
+                
+            } else {
+                Text("Connecting...")
+                    .font(.title3).foregroundStyle(.blue)
+            }
+        }.onReceive(bybitbook_ws.$book, perform: setReady)
     }
 }
 
