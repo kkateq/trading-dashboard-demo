@@ -14,6 +14,7 @@ public protocol BybitSocketDelegate: AnyObject {
     func parseMessage(message:String)
 }
 
+
 class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
     @Published var isConnected = false
     public weak var delegate: BybitSocketDelegate?

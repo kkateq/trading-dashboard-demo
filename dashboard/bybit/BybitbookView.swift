@@ -8,13 +8,20 @@
 import SwiftUI
 
 struct BybitbookView: View {
-    var bybitbook = Bybitbook("MATICUSD", 10)
-    
+    var pair: String
+
+    var bybitbook: Bybitbook
+
+    init(pair: String) {
+        self.pair = pair
+        self.bybitbook = Bybitbook(self.pair)
+    }
+
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    BybitbookView()
+    BybitbookView(pair: "test")
 }

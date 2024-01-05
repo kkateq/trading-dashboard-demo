@@ -14,8 +14,9 @@ struct PairHomeView: View {
         VStack {
             HStack {
  
-                BinancePairView(pair: self.pair)
-                KrakenPairView(pair: self.pair)
+//                BinancePairView(pair: self.pair)
+//                KrakenPairView(pair: self.pair)
+                BybitPairView(pair: self.pair)
             }
         }
     }
