@@ -11,6 +11,7 @@ struct BybitPairView: View {
     var pair: String
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
+//    var bybitprivate_ws: BybitPrivateManager
     
     @State var isBookSocketReady: Bool = false
     @State var isTradesSocketReady: Bool = false
@@ -19,6 +20,7 @@ struct BybitPairView: View {
         self.pair = pair
         self.bybitbook_ws = Bybitbook(self.pair)
         self.bybittrades_ws = BybitLastTrade(self.pair)
+//        self.bybitprivate_ws = BybitPrivateManager()
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -38,11 +40,14 @@ struct BybitPairView: View {
             if isBookSocketReady && isTradesSocketReady {
                 HStack {
                     BybitOrderBookView()
-                        .environmentObject(bybitbook_ws.book)
-                        .environmentObject(bybittrades_ws.recentTrades)
+                        
                     BybitTimesAndSalesView()
-                        .environmentObject(bybittrades_ws.recentTrades)
-                }
+                    
+                    BybitPriceVolumeChart()
+                    
+                 
+                } .environmentObject(bybittrades_ws.recentTrades)
+                    .environmentObject(bybitbook_ws.book)
                 
             } else {
                 Text("Connecting...")

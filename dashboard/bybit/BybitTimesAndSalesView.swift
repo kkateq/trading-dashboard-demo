@@ -13,10 +13,10 @@ struct BybitTimesAndSalesView: View {
     let cellWidth = 100
     let cellHeight = 20
     let layout = [
-        GridItem(.fixed(100), spacing: 1),
-        GridItem(.fixed(100), spacing: 1),
-        GridItem(.fixed(100), spacing: 1),
-        GridItem(.fixed(100), spacing: 1)
+        GridItem(.fixed(70), spacing: 2),
+        GridItem(.fixed(30), spacing: 2),
+//        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(30), spacing: 2)
     ]
     
     var body: some View {
@@ -25,20 +25,27 @@ struct BybitTimesAndSalesView: View {
                 LazyVGrid(columns: layout, spacing: 2) {
                     ForEach(recentTrades.list.reversed()) { record in
                         let color = record.side == .sell ? Color("Red") : Color("Blue")
+                        let bgColor:Color = .white
                         Text("\(formatPrice(price: record.price, pair: record.pair))")
                             .foregroundStyle(color)
+                            .frame(width: 70, height: 20, alignment: .leading)
+                            .background(bgColor)
                         Text("\(record.side == .buy ? "BUY" : "SELL")")
                             .foregroundStyle(color)
-                        Text("\(record.time)")
-                            .foregroundStyle(color)
+                            .frame(width: 30, height: 20, alignment: .leading)
+                            .background(bgColor)
+//                        Text("\(record.time)")
+//                            .foregroundStyle(color)
                         Text("\(formatVolume(volume: record.volume, pair: record.pair))")
                             .foregroundStyle(color)
+                            .frame(width: 30, height: 20, alignment: .leading)
+                            .background(bgColor)
                         
                     }
                 }
             }
-        }.frame(width: 430)
-            .background(.white)
+        }.frame(width: 160)
+            .background(Color("Background"))
             .font(.caption)
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
