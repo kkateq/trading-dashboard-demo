@@ -21,7 +21,7 @@ struct PairHomeView: View {
 //                KrakenPairView(pair: self.pair)
                 VStack {
                     Text("Bybit").font(.caption)
-                    BybitPairView(pair: self.pair)
+                    BybitPairView(pair: Constants.PAIRS_ISO_NAMES_REV[self.pair]!)
                 }
             }
         }

@@ -67,7 +67,7 @@ enum BybitTradeSide: String {
     case buy, sell
 }
 
-struct BybitRecentTradeRecord {
+struct BybitRecentTradeRecord: Identifiable {
     var id: String
     var pair: String
     var price: Double

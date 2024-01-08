@@ -43,6 +43,7 @@
 		34E338EB2B480E2B0013F17D /* BybitOrderBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */; };
 		34E338ED2B480F140013F17D /* BybitLastTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */; };
 		34E338EF2B4813480013F17D /* BybitLastTrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338EE2B4813480013F17D /* BybitLastTrade.swift */; };
+		34E338F12B484AF10013F17D /* BybitTimesAndSalesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -71,7 +72,6 @@
 		34F4016F2B45C1F200E0DC4A /* BinanceLastTradeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4016E2B45C1F200E0DC4A /* BinanceLastTradeCell.swift */; };
 		34F401762B46C5D700E0DC4A /* Bybitbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401752B46C5D700E0DC4A /* Bybitbook.swift */; };
 		34F401782B46C5EF00E0DC4A /* BybitSocketTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */; };
-		34F4017A2B46CF9E00E0DC4A /* BybitbookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401792B46CF9E00E0DC4A /* BybitbookView.swift */; };
 		34F4017C2B46D7D000E0DC4A /* BinancePairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4017B2B46D7D000E0DC4A /* BinancePairView.swift */; };
 /* End PBXBuildFile section */
 
@@ -130,6 +130,7 @@
 		34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitOrderBookView.swift; sourceTree = "<group>"; };
 		34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitLastTradeCell.swift; sourceTree = "<group>"; };
 		34E338EE2B4813480013F17D /* BybitLastTrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitLastTrade.swift; sourceTree = "<group>"; };
+		34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitTimesAndSalesView.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -159,7 +160,6 @@
 		34F4016E2B45C1F200E0DC4A /* BinanceLastTradeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinanceLastTradeCell.swift; sourceTree = "<group>"; };
 		34F401752B46C5D700E0DC4A /* Bybitbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bybitbook.swift; sourceTree = "<group>"; };
 		34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitSocketTemplate.swift; sourceTree = "<group>"; };
-		34F401792B46CF9E00E0DC4A /* BybitbookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitbookView.swift; sourceTree = "<group>"; };
 		34F4017B2B46D7D000E0DC4A /* BinancePairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinancePairView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -311,11 +311,11 @@
 			children = (
 				34E338E82B4708860013F17D /* BybitStats.swift */,
 				34F401752B46C5D700E0DC4A /* Bybitbook.swift */,
-				34F401792B46CF9E00E0DC4A /* BybitbookView.swift */,
 				34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */,
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
 				34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */,
 				34E338EE2B4813480013F17D /* BybitLastTrade.swift */,
+				34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
 			);
 			path = bybit;
@@ -506,7 +506,6 @@
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34E338EF2B4813480013F17D /* BybitLastTrade.swift in Sources */,
 				34F401582B3DBC1D00E0DC4A /* VolumeChart2.swift in Sources */,
-				34F4017A2B46CF9E00E0DC4A /* BybitbookView.swift in Sources */,
 				34F401682B446C2300E0DC4A /* BinanceOrderBookView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
 				34E338EB2B480E2B0013F17D /* BybitOrderBookView.swift in Sources */,
@@ -539,6 +538,7 @@
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34905C542B2B5B9E00A5A649 /* BidCell.swift in Sources */,
 				34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */,
+				34E338F12B484AF10013F17D /* BybitTimesAndSalesView.swift in Sources */,
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
