@@ -35,7 +35,8 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
 
     init(_ isPrivate: Bool = false) {
         self.isPrivate = isPrivate
-        var request = URLRequest(url: URL(string: "wss://stream.bybit.com/v5/public/spot")!)
+        var str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/spot"
+        var request = URLRequest(url: URL(string: str)!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
         socket.delegate = self
@@ -63,8 +64,8 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
                 if !self.isPrivate {
                     self.delegate?.subscribe(socket: self.socket)
                 } else {
-                    self.isBeingAuthenticated = true
                     self.authenticate()
+                    self.delegate?.subscribe(socket: self.socket)
                 }
             }
             LogManager.shared.info("websocket is connected: \(headers)")
@@ -75,22 +76,11 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
 
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            if isPrivate, isConnected, isBeingAuthenticated {
-                do {
-                    let authStatus = try JSONDecoder().decode(BybitAuthMessage.self, from: Data(string.utf8))
-                    if authStatus.success {
-                        DispatchQueue.main.async {
-                            self.isAuthenticated = true
-                        }
-                    }
-                } catch {
-                    LogManager.shared.error("error is \(error.localizedDescription)")
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.delegate?.parseMessage(message: string)
-                }
+
+            DispatchQueue.main.async {
+                self.delegate?.parseMessage(message: string)
             }
+
         case .binary(let data):
             LogManager.shared.info("Received data: \(data.count)")
         case .ping:

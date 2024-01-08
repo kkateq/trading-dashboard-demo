@@ -3,9 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "KrakenOrderManager.getBalance():KrakenOrderManager.swift">
-      </ContextState>
-      <ContextState
          contextName = "OrderBookData.update_side(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
@@ -18,6 +15,9 @@
                value = " Constants.pairSettings[pair]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Manager.subscribeOwnTrades():Manager.swift">
       </ContextState>
       <ContextState
          contextName = "Binancebook.parseTextMessage(message:):Binancebook.swift">
@@ -37,6 +37,9 @@
          contextName = "Manager.get_auth_token():Manager.swift">
       </ContextState>
       <ContextState
+         contextName = "BybitSocketTemplate.didReceive(event:client:):BybitSocketTemplate.swift">
+      </ContextState>
+      <ContextState
          contextName = "OrderBookData.update(_:):Krakenbook.swift">
       </ContextState>
       <ContextState
@@ -46,6 +49,15 @@
                value = "Decimal(hash)">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Bybitbook.parseMessage(message:):Bybitbook.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in Bybitbook.parseMessage(message:):Bybitbook.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitLastTrade.parseMessage(message:):BybitLastTrade.swift">
       </ContextState>
       <ContextState
          contextName = "Stats.init(all:bid_keys:ask_keys:):Krakenbook.swift">
@@ -79,16 +91,35 @@
          contextName = "KrakenRecentTrades.update(trade:):KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
+         contextName = "BybitSocketTemplate.authenticate():BybitSocketTemplate.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Date().addingTimeInterval(10000).timeIntervalSince1970 * 1000">
+            </PersistentString>
+            <PersistentString
+               value = "Date().addingTimeInterval(10000).timeIntervalSince1970">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in PairHomeView.body.getter:PairHomeView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Constants.PAIRS_ISO_NAMES_REV[self.pair]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
          contextName = "Binancebook.subscribe():Binancebook.swift">
       </ContextState>
       <ContextState
-         contextName = "Manager.parseTextMessage(message:):Manager.swift">
+         contextName = "BinanceStats.init(pair:all:bid_keys:ask_keys:prevStats:):Binancebook.swift">
          <PersistentStrings>
             <PersistentString
-               value = "result.status">
+               value = "bestBid">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -96,10 +127,10 @@
          contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
       </ContextState>
       <ContextState
-         contextName = "BinanceStats.init(pair:all:bid_keys:ask_keys:prevStats:):Binancebook.swift">
+         contextName = "Manager.parseTextMessage(message:):Manager.swift">
          <PersistentStrings>
             <PersistentString
-               value = "bestBid">
+               value = "result.status">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -175,22 +206,25 @@
          contextName = "closure #1 in closure #1 in Binancebook.downloadInitialBookSnapshot():Binancebook.swift">
       </ContextState>
       <ContextState
+         contextName = "PriceChart.updateChart(_:):PriceChart.swift">
+      </ContextState>
+      <ContextState
          contextName = "BinanceOrderBook.update(_:):Binancebook.swift">
          <PersistentStrings>
             <PersistentString
-               value = "prevUpdateID">
+               value = " lastUpdateId + 1 &gt;= update.UID">
             </PersistentString>
             <PersistentString
                value = "lastUpdateId + 1 &gt;= update.UID">
             </PersistentString>
             <PersistentString
-               value = "update.uID == prevUpdateID + 1">
+               value = "update.uID">
             </PersistentString>
             <PersistentString
                value = "lastUpdateId + 1">
             </PersistentString>
             <PersistentString
-               value = "update.uID">
+               value = "update.uID == prevUpdateID + 1">
             </PersistentString>
             <PersistentString
                value = "all[key] ">
@@ -202,9 +236,15 @@
                value = "update.uID &gt;= self.lastUpdateId + 1">
             </PersistentString>
             <PersistentString
-               value = " lastUpdateId + 1 &gt;= update.UID">
+               value = "prevUpdateID">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BybitPriceVolumeChart.updateChart(_:):BybitPriceVolumeChart.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitPrivateManager.init():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "Binancebook.downloadInitialBookSnapshot():Binancebook.swift">
@@ -224,19 +264,19 @@
                value = "statsHistory.last!.pegValue">
             </PersistentString>
             <PersistentString
-               value = "stats.pegValue">
+               value = "stats.bestBid">
             </PersistentString>
             <PersistentString
-               value = "stats.bestBid">
+               value = "stats.pegValue">
             </PersistentString>
             <PersistentString
                value = "stats.bestAsk">
             </PersistentString>
             <PersistentString
-               value = "statsHistory.count ">
+               value = "statsHistory[statsHistory.count - 2].bestAsk">
             </PersistentString>
             <PersistentString
-               value = "statsHistory[statsHistory.count - 2].bestAsk">
+               value = "statsHistory.count ">
             </PersistentString>
             <PersistentString
                value = "isUp">
@@ -270,7 +310,7 @@
          contextName = "Manager.sellMarket(pair:vol:scaleInOut:validate:):Manager.swift">
       </ContextState>
       <ContextState
-         contextName = "Manager.subscribeOwnTrades():Manager.swift">
+         contextName = "KrakenOrderManager.getBalance():KrakenOrderManager.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>
