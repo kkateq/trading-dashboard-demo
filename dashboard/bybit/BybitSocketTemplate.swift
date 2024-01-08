@@ -30,17 +30,29 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
     public weak var delegate: BybitSocketDelegate?
     private var api_key = "MAjZf1ldeS8nZfuBkP"
     private var api_secret = "bFkOYqEdMycTW79Z7Ozgh7reGXdTz51x5Zv7"
-
+    private var timer: Timer!
     var socket: WebSocket!
 
     init(_ isPrivate: Bool = false) {
         self.isPrivate = isPrivate
+    
+        
         var str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/spot"
         var request = URLRequest(url: URL(string: str)!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
         socket.delegate = self
         socket.connect()
+        
+   
+    
+        
+    }
+    
+    func ping() {
+        if socket != nil {
+            socket.write(string: "{\"op\": \"ping\"}")
+        }
     }
 
     func authenticate() {
@@ -61,6 +73,9 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
         case .connected(let headers):
             DispatchQueue.main.async {
                 self.isConnected = true
+                self.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+                    self.ping()
+                })
                 if !self.isPrivate {
                     self.delegate?.subscribe(socket: self.socket)
                 } else {
@@ -86,6 +101,7 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
         case .ping:
             break
         case .pong:
+            print("Pong")
             break
         case .viabilityChanged:
             break
