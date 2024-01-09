@@ -28,27 +28,21 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
     @Published var isBeingAuthenticated = false
     private var isPrivate: Bool
     public weak var delegate: BybitSocketDelegate?
-    private var api_key = "MAjZf1ldeS8nZfuBkP"
-    private var api_secret = "bFkOYqEdMycTW79Z7Ozgh7reGXdTz51x5Zv7"
+
     private var timer: Timer!
     var socket: WebSocket!
 
     init(_ isPrivate: Bool = false) {
         self.isPrivate = isPrivate
-    
-        
-        var str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/spot"
+
+        let str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/spot"
         var request = URLRequest(url: URL(string: str)!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
         socket.delegate = self
         socket.connect()
-        
-   
-    
-        
     }
-    
+
     func ping() {
         if socket != nil {
             socket.write(string: "{\"op\": \"ping\"}")
@@ -56,9 +50,9 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
     }
 
     func authenticate() {
-        let expires = String(format: "%.0f", Date().addingTimeInterval(1000).timeIntervalSince1970 * 1000)
-        let signature = sign(key: api_key, expires: expires)
-        let auth_msg = "{\"op\": \"auth\", \"args\": [ \"api_key\": \"\(api_key)\", \"expires\": \(expires), \"signature\": \"\(signature)\" ]}"
+        let expires = String(format: "%.0f", Date().addingTimeInterval(10000).timeIntervalSince1970 * 1000)
+        let signature = sign(key: KeychainHandler.BybitApiSecret, expires: expires)
+        let auth_msg = "{\"op\": \"auth\", \"args\": [\"\(KeychainHandler.BybitApiKey)\", \(expires), \"\(signature)\" ]}"
         socket.write(string: auth_msg)
     }
 
@@ -78,9 +72,10 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
                 })
                 if !self.isPrivate {
                     self.delegate?.subscribe(socket: self.socket)
-                } else {
+                } else if !self.isAuthenticated {
                     self.authenticate()
-                    self.delegate?.subscribe(socket: self.socket)
+                    self.isBeingAuthenticated = true
+//                    self.delegate?.subscribe(socket: self.socket)
                 }
             }
             LogManager.shared.info("websocket is connected: \(headers)")
@@ -93,7 +88,22 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
         case .text(let string):
 
             DispatchQueue.main.async {
-                self.delegate?.parseMessage(message: string)
+                do {
+                    if self.isPrivate, !self.isAuthenticated, self.isBeingAuthenticated {
+                        let res = try JSONDecoder().decode(BybitAuthMessage.self, from: Data(string.utf8))
+                        if res.success {
+                            self.isAuthenticated = true
+                            self.isBeingAuthenticated = false
+                            LogManager.shared.info("Authenticated successfully")
+                        } else {
+                            LogManager.shared.error("Auth failed: \(string)")
+                        }
+                    } else {
+                        self.delegate?.parseMessage(message: string)
+                    }
+                } catch {
+                    LogManager.shared.error("error is \(error.localizedDescription)")
+                }
             }
 
         case .binary(let data):
@@ -102,7 +112,6 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
             break
         case .pong:
             print("Pong")
-            break
         case .viabilityChanged:
             break
         case .reconnectSuggested:

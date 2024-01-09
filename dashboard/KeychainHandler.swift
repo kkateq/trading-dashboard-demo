@@ -39,4 +39,7 @@ class KeychainHandler {
 
     static var KrakenApiKey: String = "AlzaknI1O2d0SUrox8+mG0rCTqeftlzljly2PFdqNUTQcSOkS9mDa30y"
     static var KrakenApiSecret: String = "YPscpvwDwcHa37pAH8ttN4GiWfi8LVo6wDNVGyE1qbBHxosAmCjZCM1aURKHKFSMqMaLDxP7uvUPVmo7hLoQwA=="
+    
+    static var BybitApiKey = "bHX1fkSPFxdbgdwpsu"
+    static var BybitApiSecret = "554nPbYQUZcHx5F59iwP4x4YhJu0fLLTz13l"
 }

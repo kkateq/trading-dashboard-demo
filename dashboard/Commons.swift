@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoSwift
 
 func formatPrice(price: Double, fr: Int = 4) -> String {
     let p = pow(Double(10), Double(fr))
@@ -60,3 +61,10 @@ func formatTimestamp(_ ts: Int) -> String {
     return dayTimePeriodFormatter.string(from: date as Date)
 
 }
+
+func generateSignature(api_secret: String, url: String) -> String {
+    let inputData = Data(url.utf8)
+    let hash = try? HMAC(key: api_secret, variant: .sha2(.sha256)).authenticate(Array(inputData))
+    return hash?.toHexString() ?? ""
+}
+
