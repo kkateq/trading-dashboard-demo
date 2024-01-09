@@ -10,8 +10,6 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-
-
 struct BybitPositionDataResponse: Decodable, Identifiable, Equatable {
     var id = UUID()
     var positionIdx: Int
@@ -62,7 +60,7 @@ struct BybitOrderResponse: Decodable {
 
 struct BybitWalletData: Decodable, Equatable, Identifiable {
     var id = UUID()
-    
+
     var totalWalletBalance: String
     var totalMarginBalance: String
     var totalAvailableBalance: String
@@ -84,10 +82,10 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
     let didChangeOrders = PassthroughSubject<Void, Never>()
     private var cancellableOrders: AnyCancellable?
-    
+
     let didChangeWallet = PassthroughSubject<Void, Never>()
     private var cancellableWallet: AnyCancellable?
-    
+
     @Published var accountBalance: Double = 0
     @Published var dataPositions: [BybitPositionDataResponse]!
     @Published var positions: [BybitPositionDataResponse]! {
@@ -103,14 +101,13 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         }
     }
 
-    
     @Published var dataWallet: [BybitWalletData]!
     @Published var wallet: [BybitWalletData]! {
         didSet {
             didChangeOrders.send()
         }
     }
-    
+
     var isConnected: Bool {
         return bybitSocket.isConnected
     }
@@ -139,7 +136,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         let msg = "{\"op\": \"subscribe\", \"args\": [ \"position\", \"order\", \"wallet\" ]}"
 
         socket.write(string: msg)
-   
+
         isSubscribed = true
     }
 
@@ -174,8 +171,8 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 //                DispatchQueue.main.async {
 //                    do {
 //                        print(data)
-////                        let v = try JSONDecoder().decode(BybitOrderBookRecord.self, from: data)
-////                        self.data = BybitOrderBook(v.result)
+    ////                        let v = try JSONDecoder().decode(BybitOrderBookRecord.self, from: data)
+    ////                        self.data = BybitOrderBook(v.result)
 //                    } catch {
 //                        print("Error decoding: ", error)
 //                    }
@@ -186,9 +183,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
     func parseMessage(message: String) {
         do {
-            if message == "{\"event\":\"heartbeat\"}" {
-                return
-            } else if !isSubscribed {
+            if !isSubscribed {
                 let subscriptionStatus = try JSONDecoder().decode(BybitSubscriptionStatus.self, from: Data(message.utf8))
                 if subscriptionStatus.success {
                     isSubscribed = true

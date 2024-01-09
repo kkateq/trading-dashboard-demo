@@ -60,6 +60,14 @@
          contextName = "BybitLastTrade.parseMessage(message:):BybitLastTrade.swift">
       </ContextState>
       <ContextState
+         contextName = "BybitPrivateManager.parseMessage(message:):BybitPrivateManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.contains(&quot;\&quot;op\&quot;:\&quot;pong\&quot;&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Stats.init(all:bid_keys:ask_keys:):Krakenbook.swift">
          <PersistentStrings>
             <PersistentString
@@ -294,6 +302,9 @@
       </ContextState>
       <ContextState
          contextName = "Manager.refetchOpenPositions():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitPrivateManager.fetchPositions():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">

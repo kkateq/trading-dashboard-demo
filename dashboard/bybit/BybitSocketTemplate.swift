@@ -86,6 +86,9 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
 
             LogManager.shared.info("websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
+            if string.contains("\"op\":\"pong\"") || string.contains("\"op\":\"ping\"") {
+                return
+            }
 
             DispatchQueue.main.async {
                 do {
