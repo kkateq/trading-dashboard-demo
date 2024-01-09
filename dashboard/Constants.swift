@@ -43,4 +43,5 @@ enum Constants {
     ]
     static let kraken_fee = 0.02
     static let stop_loss_perc = 0.05
+    static let bybit_fee = 0.01
 }

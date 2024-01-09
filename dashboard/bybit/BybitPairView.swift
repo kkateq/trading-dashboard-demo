@@ -11,7 +11,14 @@ struct BybitPairView: View {
     var pair: String
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
-    var bybitprivate_ws: BybitPrivateManager
+    var manager: BybitPrivateManager
+    @State private var volume: Double = 100
+    @State private var scaleInOut: Bool = true
+    @State private var validate: Bool = false
+    @State private var useRest: Bool = false
+    @State var stopLossEnabled: Bool = true
+    @State var sellStopLoss: Double!
+    @State var buyStopLoss: Double!
     
     @State var isBookSocketReady: Bool = false
     @State var isTradesSocketReady: Bool = false
@@ -20,7 +27,7 @@ struct BybitPairView: View {
         self.pair = pair
         self.bybitbook_ws = Bybitbook(self.pair)
         self.bybittrades_ws = BybitLastTrade(self.pair)
-        self.bybitprivate_ws = BybitPrivateManager()
+        self.manager = BybitPrivateManager()
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -45,9 +52,11 @@ struct BybitPairView: View {
                     
                     BybitPriceVolumeChart()
                     
-                 
-                } .environmentObject(bybittrades_ws.recentTrades)
+                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                
+                }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
+                    .environmentObject(manager)
                 
             } else {
                 Text("Connecting...")

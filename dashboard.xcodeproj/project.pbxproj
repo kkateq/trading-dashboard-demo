@@ -48,6 +48,8 @@
 		34E338F52B4BFFF30013F17D /* PriceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338F42B4BFFF30013F17D /* PriceChart.swift */; };
 		34E338F72B4C049C0013F17D /* BybitOrderFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */; };
 		34E338F92B4C04B80013F17D /* BybitPrivateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */; };
+		34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */; };
+		34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -139,6 +141,8 @@
 		34E338F42B4BFFF30013F17D /* PriceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChart.swift; sourceTree = "<group>"; };
 		34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitOrderFormView.swift; sourceTree = "<group>"; };
 		34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPrivateManager.swift; sourceTree = "<group>"; };
+		34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitOrdersView.swift; sourceTree = "<group>"; };
+		34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPositionsView.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -323,6 +327,8 @@
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
 				34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */,
 				34E338EE2B4813480013F17D /* BybitLastTrade.swift */,
+				34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */,
+				34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */,
 				34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
@@ -521,8 +527,10 @@
 				34F401682B446C2300E0DC4A /* BinanceOrderBookView.swift in Sources */,
 				34905C562B2B604500A5A649 /* PriceCell.swift in Sources */,
 				34E338EB2B480E2B0013F17D /* BybitOrderBookView.swift in Sources */,
+				34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */,
 				34F4017C2B46D7D000E0DC4A /* BinancePairView.swift in Sources */,
 				34E338F32B4BF2800013F17D /* BybitPriceVolumeChart.swift in Sources */,
+				34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* KrakenPairView.swift in Sources */,
 				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,

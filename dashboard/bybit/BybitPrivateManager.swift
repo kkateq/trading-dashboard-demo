@@ -66,7 +66,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
     let didChangeOrders = PassthroughSubject<Void, Never>()
     private var cancellableOrders: AnyCancellable?
-
+    @Published var accountBalance: Double = 0
     @Published var dataPositions: [BybitPositionDataResponse]!
     @Published var positions: [BybitPositionDataResponse]! {
         didSet {
@@ -79,6 +79,10 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         didSet {
             didChangeOrders.send()
         }
+    }
+    
+    var isConnected: Bool {
+        return self.bybitSocket.isConnected
     }
 
     init() {
