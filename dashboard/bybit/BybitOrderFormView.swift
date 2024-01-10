@@ -37,7 +37,7 @@ struct BybitOrderFormView: View {
     }
 
     func getAllowedMargin() -> Double {
-        let p = manager.accountBalance * Double(getAllowedleverage(pair: book.pair))
+        let p = manager.totalAvailableBalance * Double(getAllowedleverage(pair: book.pair))
         return p - p * Constants.bybit_fee
     }
 
@@ -58,7 +58,7 @@ struct BybitOrderFormView: View {
                         .foregroundColor(.black)
                         .font(.title3)
                     Spacer()
-                    Text("\(Int(manager.accountBalance))$")
+                    Text("\(Int(manager.totalAvailableBalance))$")
                         .foregroundColor(.blue)
                         .font(.title3)
                 }

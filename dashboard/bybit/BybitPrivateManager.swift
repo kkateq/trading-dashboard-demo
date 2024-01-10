@@ -131,7 +131,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
     let didChangeWallet = PassthroughSubject<Void, Never>()
     private var cancellableWallet: AnyCancellable?
-    @Published var accountBalance: Double = 0
+
     @Published var dataPositions: [BybitPositionDataResponse]!
     @Published var positions: [BybitPositionDataResponse]! {
         didSet {
@@ -156,6 +156,18 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var isConnected: Bool {
         return bybitSocket.isConnected
     }
+    
+    var totalAvailableBalance: Double {
+        if let w = self.dataWallet {
+            if w.count > 0 {
+                let item = w[0]
+                return Double(item.totalAvailableBalance)!
+            }
+        }
+        
+        return -1
+    }
+    
 
     init() {
         self.bybitSocket = BybitSocketTemplate(true)
