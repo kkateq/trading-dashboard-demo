@@ -10,19 +10,24 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-
 struct BybitResult<Item: Decodable>: Decodable {
     var list: [Item]!
     var category: String!
 }
 
-struct BybitRestBase<Item:Decodable> : Decodable {
+struct BybitListRestBase<Item: Decodable>: Decodable {
     var retCode: Int
     var retMsg: String
     var result: BybitResult<Item>!
     var time: Int
 }
 
+struct BybitRestBase<Item: Decodable>: Decodable {
+    var retCode: Int
+    var retMsg: String
+    var result: Item!
+    var time: Int
+}
 
 struct BybitPositionData: Decodable, Equatable {
     var positionIdx: Int
@@ -94,7 +99,6 @@ struct BybitCancelOrderData: Decodable {
     var orderId: String
     var orderLinkId: String
 }
-
 
 class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var bybitSocket: BybitSocketTemplate
@@ -182,7 +186,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     func fetchPositions() async {
         await BybitRestApi.fetchPositions(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitRestBase<BybitPositionData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitPositionData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
@@ -198,9 +202,9 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     }
 
     func cancelAllOrders() async {
-        await BybitRestApi.cancellAllOrders(cb: {
+        await BybitRestApi.cancelAllOrders(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitRestBase<BybitCancelOrderData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitCancelOrderData>.self, from: $0)
 
                 if res.retCode == 0 {
                     for o in res.result.list {
@@ -216,18 +220,30 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         await fetchOrders()
     }
 
-    func cancelOrder(id: String, useREST: Bool) async {
-        
+    func cancelOrder(id: String, symbol: String) async {
+        await BybitRestApi.cancelOrder(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitRestBase<BybitCancelOrderData>.self, from: $0)
+
+                if res.retCode == 0 {
+                    LogManager.shared.info("Cancelled order \(res.result.orderId)")
+
+                } else {
+                    LogManager.shared.error("\(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        }, orderLinkId: id, symbol: symbol)
+        await fetchOrders()
     }
-    
-    func closeAllPositions(useREST: Bool, validate: Bool) async {
-       
-    }
+
+    func closeAllPositions(useREST: Bool, validate: Bool) async {}
 
     func fetchOrders() async {
         await BybitRestApi.fetchOrders(cb: {
             do {
-                 let res = try JSONDecoder().decode(BybitRestBase<BybitOrderData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitOrderData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
@@ -246,7 +262,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     func fetchBalance() async {
         await BybitRestApi.fetchTradingBalance(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitRestBase<BybitWalletData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitWalletData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {

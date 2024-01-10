@@ -11,6 +11,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in static BybitRestApi.postPrivate(cb:route:params:):BybitRestApi.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(decoding: response, as: UTF8.self)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "OrderBookData.init(_:_:):KrakenWS.swift">
       </ContextState>
       <ContextState
@@ -135,6 +143,14 @@
          contextName = "closure #1 in closure #1 in BybitPrivateManager.fetchOrders():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
+         contextName = "static BybitRestApi.postPrivate(cb:route:params:):BybitRestApi.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "params.data(using: .utf8)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "KrakenRecentTrades.fetchRecentTrades():KrakenRecentTrades.swift">
          <PersistentStrings>
             <PersistentString
@@ -144,6 +160,9 @@
                value = "Calendar.current.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in BybitPrivateManager.cancelAllOrders():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "OrderBookData.verifyChecksum(_:):KrakenWS.swift">
@@ -180,6 +199,14 @@
       </ContextState>
       <ContextState
          contextName = "ImbalanceChart2.getAskVolume(_:_:):ImbalanceChart2.swift">
+      </ContextState>
+      <ContextState
+         contextName = "static BybitRestApi.fetchPrivate(cb:url:query:method:):BybitRestApi.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "query.data(using: .utf8)">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "closure #1 in BybitPrivateManager.fetchBalance():BybitPrivateManager.swift">
@@ -325,6 +352,14 @@
       </ContextState>
       <ContextState
          contextName = "KrakenWS.parseTextMessage(message:):KrakenWS.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in static BybitRestApi.fetchPrivate(cb:url:query:method:):BybitRestApi.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "response.statusCode">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">

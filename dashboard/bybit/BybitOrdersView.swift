@@ -46,7 +46,7 @@ struct BybitOrdersView: View {
                                 Spacer()
                                 Button(action: {
                                     Task {
-                                        await manager.cancelOrder(id: order.orderId, useREST: useREST)
+                                        await manager.cancelOrder(id: order.orderLinkId, symbol: order.symbol)
                                     }
                                 }) {
                                     HStack {
