@@ -48,13 +48,13 @@ class BybitRestApi {
     static func fetchPositions(cb: @escaping (Data) -> Void) async {
         LogManager.shared.action("Refetch positions...")
 
-        await fetchPrivate(cb: cb, url: "/position/list", query: "category=inverse")
+        await fetchPrivate(cb: cb, url: "/position/list", query: "category=spot")
     }
     
     static func fetchOrders(cb: @escaping (Data) -> Void) async {
         LogManager.shared.action("Refetch orders...")
 
-        await fetchPrivate(cb: cb, url: "/order/realtime", query: "category=inverse")
+        await fetchPrivate(cb: cb, url: "/order/realtime", query: "category=spot")
     }
     
     static func fetchTradingBalance(cb: @escaping (Data) -> Void) async {
@@ -62,4 +62,11 @@ class BybitRestApi {
 
         await fetchPrivate(cb: cb, url: "/account/wallet-balance", query: "accountType=UNIFIED")
     }
+    
+    static func cancellAllOrders(cb: @escaping (Data) -> Void) async {
+        LogManager.shared.action("Cancel all orders...")
+        
+        await fetchPrivate(cb: cb, url: "/order/cancel-all", query: "category=spot")
+    }
+   
 }

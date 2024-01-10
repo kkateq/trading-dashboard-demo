@@ -10,14 +10,21 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-struct BybitMarketTime: Decodable {
+
+struct BybitResult<Item: Decodable>: Decodable {
+    var list: [Item]!
+    var category: String!
+}
+
+struct BybitRestBase<Item:Decodable> : Decodable {
     var retCode: Int
     var retMsg: String
+    var result: BybitResult<Item>!
     var time: Int
 }
 
-struct BybitPositionData: Decodable, Equatable, Identifiable {
-    var id=UUID()
+
+struct BybitPositionData: Decodable, Equatable {
     var positionIdx: Int
     var size: String
     var side: String
@@ -47,16 +54,15 @@ struct BybitPositionResponse: Decodable {
     var data: [BybitPositionData]
 }
 
-struct BybitOrderData: Decodable, Equatable, Identifiable {
-    var id = UUID()
+struct BybitOrderData: Decodable, Equatable {
     var symbol: String
     var orderId: String
     var side: String
     var orderType: String
     var price: String
     var qty: String
-    var positionIdx: String
-    var otderLinkId: String
+    var positionIdx: Int
+    var orderLinkId: String
     var stopLoss: String
     var takeProfit: String
     var reduceOnly: Bool
@@ -84,40 +90,11 @@ struct BybitWalletResponse: Decodable {
     var data: [BybitWalletData]
 }
 
-struct BybitPositionsRestResult: Decodable {
-    var list: [BybitPositionData]!
-    var category: String!
+struct BybitCancelOrderData: Decodable {
+    var orderId: String
+    var orderLinkId: String
 }
 
-struct BybitPositionsRestResponse: Decodable {
-    var retCode: Int
-    var retMsg: String
-    var result: BybitPositionsRestResult!
-    var time: Int
-}
-
-struct BybitOrdersRestResult: Decodable {
-    var list: [BybitOrderData]!
-    var category: String!
-}
-
-struct BybitOrdersRestResponse: Decodable {
-    var retCode: Int
-    var retMsg: String
-    var result: BybitOrdersRestResult!
-    var time: Int
-}
-
-struct BybitWalletRestResult: Decodable {
-    var list: [BybitWalletData]!
-}
-
-struct BybitWalletRestResponse: Decodable {
-    var retCode: Int
-    var retMsg: String
-    var result: BybitWalletRestResult!
-    var time: Int
-}
 
 class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var bybitSocket: BybitSocketTemplate
@@ -205,7 +182,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     func fetchPositions() async {
         await BybitRestApi.fetchPositions(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitPositionsRestResponse.self, from: $0)
+                let res = try JSONDecoder().decode(BybitRestBase<BybitPositionData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
@@ -220,31 +197,48 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         })
     }
 
-    func cancelAllOrders(useREST: Bool) async {}
+    func cancelAllOrders() async {
+        await BybitRestApi.cancellAllOrders(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitRestBase<BybitCancelOrderData>.self, from: $0)
+
+                if res.retCode == 0 {
+                    for o in res.result.list {
+                        LogManager.shared.info("Cancelled order \(o.orderId)")
+                    }
+                } else {
+                    LogManager.shared.error("\(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        })
+        await fetchOrders()
+    }
 
     func cancelOrder(id: String, useREST: Bool) async {
-        // TODO:
-        await fetchOrders()
+        
     }
     
     func closeAllPositions(useREST: Bool, validate: Bool) async {
-        
+       
     }
 
     func fetchOrders() async {
         await BybitRestApi.fetchOrders(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitOrdersRestResponse.self, from: $0)
+                 let res = try JSONDecoder().decode(BybitRestBase<BybitOrderData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
                         self.dataOrders = res.result.list
                     }
                 } else {
-                    LogManager.shared.error("error is \(res.retMsg)")
+                    LogManager.shared.error("\(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
+                print(String(decoding: $0, as: UTF8.self))
             }
         })
     }
@@ -252,17 +246,18 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     func fetchBalance() async {
         await BybitRestApi.fetchTradingBalance(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitWalletRestResponse.self, from: $0)
+                let res = try JSONDecoder().decode(BybitRestBase<BybitWalletData>.self, from: $0)
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
                         self.dataWallet = res.result.list
                     }
                 } else {
-                    LogManager.shared.error("error is \(res.retMsg)")
+                    LogManager.shared.error("\(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
+                print(String(decoding: $0, as: UTF8.self))
             }
         })
     }

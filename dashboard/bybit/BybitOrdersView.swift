@@ -41,7 +41,7 @@ struct BybitOrdersView: View {
                         ForEach(manager.orders, id: \.orderId) { order in
                             HStack {
                                 Text("\(order.side) \(order.orderType) \(order.symbol) @ \(order.price)")
-                                    .foregroundColor(order.side.starts(with: "sell") ? Color("Red") : Color("Green"))
+                                    .foregroundColor(order.side.starts(with: "Sell") ? Color("Red") : Color("Green"))
                                     .font(.caption2)
                                 Spacer()
                                 Button(action: {
@@ -59,27 +59,26 @@ struct BybitOrdersView: View {
                                 }.buttonStyle(PlainButtonStyle())
                             }
                         }
-                            
-                        Button(action: {
-                            Task {
-                                await manager.cancelAllOrders(useREST: useREST)
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: "trash.fill")
-                                Text("Cancel Orders")
-                            }.frame(width: 300, height: 30)
-                                .foregroundColor(Color.white)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                                .imageScale(.large)
-                        }.buttonStyle(PlainButtonStyle())
                     }
 
                 } else {
                     Text("No orders")
                 }
                 Divider()
+                Button(action: {
+                    Task {
+                        await manager.cancelAllOrders()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "trash.fill")
+                        Text("Cancel Orders")
+                    }.frame(width: 300, height: 30)
+                        .foregroundColor(Color.white)
+                        .background(Color.gray)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .imageScale(.large)
+                }.buttonStyle(PlainButtonStyle())
             }
         }.frame(width: 300, height: 200, alignment: .leading)
     }

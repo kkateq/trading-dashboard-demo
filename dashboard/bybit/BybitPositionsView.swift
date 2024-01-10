@@ -41,7 +41,7 @@ struct BybitPositionsView: View {
                 if manager.positions.count > 0 {
                     VStack(alignment: .leading) {
                         HStack(spacing: 2) {
-                            ForEach(manager.positions) { position in
+                            ForEach(manager.positions, id: \.positionIdx) { position in
                                 let net = Double(position.positionValue)!
                                 
                                 Text("\(position.symbol)")
@@ -87,44 +87,45 @@ struct BybitPositionsView: View {
                             }
                         }
                             
-                        VStack {
-                            Button(action: {
-                                Task {
-//                                    await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
-                                }
-                            }) {
-                                HStack {
-                                    Image(systemName: "lightbulb.fill")
-                                    Text("Flatten Positions")
-                                }.frame(width: 300, height: 30)
-                                    .foregroundColor(Color.white)
-                                    .background(Color.teal)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                                    .imageScale(.large)
-                            }.buttonStyle(PlainButtonStyle())
-                                
-                            Button(action: {
-                                Task {
-                                    await manager.closeAllPositions(useREST: useREST, validate: validate)
-                                }
-                            }) {
-                                HStack {
-                                    Image(systemName: "power.circle.fill")
-                                    Text("Close Positions")
-                                }
-                                .frame(width: 300, height: 30)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .imageScale(.large)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                            }.buttonStyle(PlainButtonStyle())
-                        }.padding(.top)
-                            .padding(.bottom)
+                      
                     }
                 }
                 else {
                     Text("No positions")
                 }
+                VStack {
+                    Button(action: {
+                        Task {
+//                                    await manager.flattenAllPositions(best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "lightbulb.fill")
+                            Text("Flatten Positions")
+                        }.frame(width: 300, height: 30)
+                            .foregroundColor(Color.white)
+                            .background(Color.teal)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .imageScale(.large)
+                    }.buttonStyle(PlainButtonStyle())
+                        
+                    Button(action: {
+                        Task {
+                            await manager.closeAllPositions(useREST: useREST, validate: validate)
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "power.circle.fill")
+                            Text("Close Positions")
+                        }
+                        .frame(width: 300, height: 30)
+                        .foregroundColor(Color.white)
+                        .background(Color.black)
+                        .imageScale(.large)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }.buttonStyle(PlainButtonStyle())
+                }.padding(.top)
+                    .padding(.bottom)
                 Divider()
             }
         }.frame(width: 300, height: 200, alignment: .leading)
