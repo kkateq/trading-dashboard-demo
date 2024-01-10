@@ -40,6 +40,14 @@
          contextName = "BybitSocketTemplate.didReceive(event:client:):BybitSocketTemplate.swift">
       </ContextState>
       <ContextState
+         contextName = "closure #1 in static BybitRestApi.fetchPrivate(cb:url:query:):BybitRestApi.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(data)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "OrderBookData.update(_:):Krakenbook.swift">
       </ContextState>
       <ContextState
@@ -116,6 +124,9 @@
                value = "Constants.PAIRS_ISO_NAMES_REV[self.pair]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in BybitPrivateManager.fetchPositions():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "RecentTradesData.maxBuyMarketVolume.getter:KrakenRecentTrades.swift">

@@ -62,8 +62,8 @@ func formatTimestamp(_ ts: Int) -> String {
 
 }
 
-func generateSignature(api_secret: String, url: String) -> String {
-    let inputData = Data(url.utf8)
+func generateSignature(api_secret: String, value: String) -> String {
+    let inputData = Data(value.utf8)
     let hash = try? HMAC(key: api_secret, variant: .sha2(.sha256)).authenticate(Array(inputData))
     return hash?.toHexString() ?? ""
 }

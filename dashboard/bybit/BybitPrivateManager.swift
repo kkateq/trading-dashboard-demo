@@ -10,8 +10,14 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-struct BybitPositionDataResponse: Decodable, Identifiable, Equatable {
-    var id = UUID()
+
+struct BybitMarketTime: Decodable {
+    var retCode: Int
+    var retMsg: String
+    var time: Int
+}
+
+struct BybitPositionDataResponse: Decodable, Equatable {
     var positionIdx: Int
     var size: String
     var side: String
@@ -43,11 +49,17 @@ struct BybitPositionResponse: Decodable {
 
 struct BybitOrderData: Decodable, Equatable, Identifiable {
     var id = UUID()
-
     var symbol: String
     var orderId: String
     var side: String
     var orderType: String
+    var price: String
+    var qty: String
+    var positionIdx: String
+    var otderLinkId: String
+    var stopLoss: String
+    var takeProfit: String
+    var reduceOnly: Bool
 }
 
 struct BybitOrderResponse: Decodable {
@@ -58,9 +70,7 @@ struct BybitOrderResponse: Decodable {
     var data: [BybitOrderData]
 }
 
-struct BybitWalletData: Decodable, Equatable, Identifiable {
-    var id = UUID()
-
+struct BybitWalletData: Decodable, Equatable {
     var totalWalletBalance: String
     var totalMarginBalance: String
     var totalAvailableBalance: String
@@ -74,6 +84,42 @@ struct BybitWalletResponse: Decodable {
     var data: [BybitWalletData]
 }
 
+
+struct BybitPositionsRestResult: Decodable {
+    var list: [BybitPositionDataResponse]!
+    var category: String!
+}
+
+struct BybitPositionsRestResponse: Decodable {
+    var retCode: Int
+    var retMsg: String
+    var result: BybitPositionsRestResult!
+    var time: Int
+}
+
+struct BybitOrdersRestResult: Decodable {
+    var list: [BybitOrderData]!
+    var category: String!
+}
+
+struct BybitOrdersRestResponse: Decodable {
+    var retCode: Int
+    var retMsg: String
+    var result: BybitOrdersRestResult!
+    var time: Int
+}
+
+struct BybitWalletRestResult: Decodable {
+    var list: [BybitWalletData]!
+}
+
+struct BybitWalletRestResponse: Decodable {
+    var retCode: Int
+    var retMsg: String
+    var result: BybitWalletRestResult!
+    var time: Int
+}
+
 class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var bybitSocket: BybitSocketTemplate
     var isSubscribed: Bool = false
@@ -85,7 +131,6 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
     let didChangeWallet = PassthroughSubject<Void, Never>()
     private var cancellableWallet: AnyCancellable?
-
     @Published var accountBalance: Double = 0
     @Published var dataPositions: [BybitPositionDataResponse]!
     @Published var positions: [BybitPositionDataResponse]! {
@@ -130,6 +175,12 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
             .assign(to: \.wallet, on: self))
+
+        Task {
+            await fetchPositions()
+            await fetchOrders()
+            await fetchBalance()
+        }
     }
 
     func subscribe(socket: Starscream.WebSocket) {
@@ -140,46 +191,63 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         isSubscribed = true
     }
 
-//    func fetchPositions() async {
-//        LogManager.shared.action("Refetch positions...")
-//        let queryString = "category=linear"
-//        let url = "https://api.bybit.com/v5/position/list?\(queryString)"
-//        guard let url = URL(string: url) else { fatalError("Missing URL") }
-//        let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
-//        let recv_window = 5000
-//        let str = "\(timestamp)\(KeychainHandler.BybitApiKey)\(recv_window)\(queryString)"
-//        let signature = generateSignature(api_secret: KeychainHandler.BybitApiSecret, url: str)
-//        var urlRequest = URLRequest(url: url)
-//        urlRequest.httpMethod = "GET"
-//        urlRequest.setValue(signature, forHTTPHeaderField: "X-BAPI-SIGN")
-//        urlRequest.setValue(KeychainHandler.BybitApiKey, forHTTPHeaderField: "X-BAPI-API-KEY")
-//
-//        urlRequest.setValue(timestamp, forHTTPHeaderField: "X-BAPI-TIMESTAMP")
-//        urlRequest.setValue("\(recv_window)", forHTTPHeaderField: "X-BAPI-RECV-WINDOW")
-//
-//        let session = URLSession.shared
-//        let dataTask = session.dataTask(with: urlRequest) { data, response, error in
-//            if let error = error {
-//                print("Request error: ", error)
-//                return
-//            }
-//
-//            guard let response = response as? HTTPURLResponse else { return }
-//
-//            if response.statusCode == 200 {
-//                guard let data = data else { return }
-//                DispatchQueue.main.async {
-//                    do {
-//                        print(data)
-    ////                        let v = try JSONDecoder().decode(BybitOrderBookRecord.self, from: data)
-    ////                        self.data = BybitOrderBook(v.result)
-//                    } catch {
-//                        print("Error decoding: ", error)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    func fetchPositions() async {
+        await BybitRestApi.fetchPositions(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitPositionsRestResponse.self, from: $0)
+                
+                if res.retCode == 0 {
+                    
+                    DispatchQueue.main.async {
+                        self.dataPositions = res.result.list
+                    }
+                } else {
+                    LogManager.shared.error("error is \(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        })
+    }
+    
+    func fetchOrders() async {
+        await BybitRestApi.fetchOrders(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitOrdersRestResponse.self, from: $0)
+                
+                if res.retCode == 0 {
+                    
+                    DispatchQueue.main.async {
+                        self.dataOrders = res.result.list
+                    }
+                } else {
+                    LogManager.shared.error("error is \(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        })
+    }
+    
+    func fetchBalance() async {
+        await BybitRestApi.fetchTradingBalance(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitWalletRestResponse.self, from: $0)
+                
+                if res.retCode == 0 {
+                    
+                    DispatchQueue.main.async {
+                        self.dataWallet = res.result.list
+                    }
+                } else {
+                    LogManager.shared.error("error is \(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        })
+    }
+    
 
     func parseMessage(message: String) {
         do {

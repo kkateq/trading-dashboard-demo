@@ -50,6 +50,7 @@
 		34E338F92B4C04B80013F17D /* BybitPrivateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */; };
 		34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */; };
 		34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */; };
+		34E339162B4D75F00013F17D /* BybitRestApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339152B4D75F00013F17D /* BybitRestApi.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -143,6 +144,7 @@
 		34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPrivateManager.swift; sourceTree = "<group>"; };
 		34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitOrdersView.swift; sourceTree = "<group>"; };
 		34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPositionsView.swift; sourceTree = "<group>"; };
+		34E339152B4D75F00013F17D /* BybitRestApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitRestApi.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 				34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
+				34E339152B4D75F00013F17D /* BybitRestApi.swift */,
 				34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */,
 				34E338F42B4BFFF30013F17D /* PriceChart.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
@@ -567,6 +570,7 @@
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
 				34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */,
 				34F4015E2B3F28BA00E0DC4A /* PositionRecomendation.swift in Sources */,
+				34E339162B4D75F00013F17D /* BybitRestApi.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 				34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */,
