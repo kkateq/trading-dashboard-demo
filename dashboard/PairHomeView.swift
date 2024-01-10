@@ -12,15 +12,12 @@ struct PairHomeView: View {
 
     var body: some View {
         VStack {
-            
             HStack {
                 VStack {
-                    Text("Binance").font(.caption)
                     BinancePairView(pair: self.pair)
                 }
 //                KrakenPairView(pair: self.pair)
                 VStack {
-                    Text("Bybit").font(.caption)
                     BybitPairView(pair: Constants.PAIRS_ISO_NAMES_REV[self.pair]!)
                 }
             }

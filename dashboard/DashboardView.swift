@@ -22,7 +22,7 @@ struct DashboardView: View {
                     Spacer()
                 }.padding([.top], 5)
             }
-            Divider()
+           
 
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {

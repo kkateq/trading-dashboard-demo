@@ -83,7 +83,7 @@ struct BinanceOrderBookView: View {
         .frame(width: 330)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
-                .stroke(.gray, lineWidth: 2)
+                .stroke(.blue, lineWidth: 2)
         )
     }
 }
