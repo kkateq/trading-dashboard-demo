@@ -10,14 +10,14 @@ import CryptoSwift
 import Foundation
 import Starscream
 
-
 struct BybitMarketTime: Decodable {
     var retCode: Int
     var retMsg: String
     var time: Int
 }
 
-struct BybitPositionDataResponse: Decodable, Equatable {
+struct BybitPositionData: Decodable, Equatable, Identifiable {
+    var id=UUID()
     var positionIdx: Int
     var size: String
     var side: String
@@ -44,7 +44,7 @@ struct BybitPositionResponse: Decodable {
     var id: String
     var topic: String
     var creationTime: Int
-    var data: [BybitPositionDataResponse]
+    var data: [BybitPositionData]
 }
 
 struct BybitOrderData: Decodable, Equatable, Identifiable {
@@ -84,9 +84,8 @@ struct BybitWalletResponse: Decodable {
     var data: [BybitWalletData]
 }
 
-
 struct BybitPositionsRestResult: Decodable {
-    var list: [BybitPositionDataResponse]!
+    var list: [BybitPositionData]!
     var category: String!
 }
 
@@ -132,22 +131,22 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     let didChangeWallet = PassthroughSubject<Void, Never>()
     private var cancellableWallet: AnyCancellable?
 
-    @Published var dataPositions: [BybitPositionDataResponse]!
-    @Published var positions: [BybitPositionDataResponse]! {
+    @Published var dataPositions: [BybitPositionData] = []
+    @Published var positions: [BybitPositionData] {
         didSet {
             didChangePositions.send()
         }
     }
 
-    @Published var dataOrders: [BybitOrderData]!
-    @Published var orders: [BybitOrderData]! {
+    @Published var dataOrders: [BybitOrderData] = []
+    @Published var orders: [BybitOrderData] {
         didSet {
             didChangeOrders.send()
         }
     }
 
-    @Published var dataWallet: [BybitWalletData]!
-    @Published var wallet: [BybitWalletData]! {
+    @Published var dataWallet: [BybitWalletData] = []
+    @Published var wallet: [BybitWalletData] {
         didSet {
             didChangeOrders.send()
         }
@@ -156,20 +155,20 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var isConnected: Bool {
         return bybitSocket.isConnected
     }
-    
+
     var totalAvailableBalance: Double {
-        if let w = self.dataWallet {
-            if w.count > 0 {
-                let item = w[0]
-                return Double(item.totalAvailableBalance)!
-            }
+        if dataWallet.count > 0 {
+            let item = dataWallet[0]
+            return Double(item.totalAvailableBalance)!
         }
-        
+
         return -1
     }
-    
 
     init() {
+        self.wallet = []
+        self.positions = []
+        self.orders = []
         self.bybitSocket = BybitSocketTemplate(true)
         bybitSocket.delegate = self
 
@@ -207,9 +206,8 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         await BybitRestApi.fetchPositions(cb: {
             do {
                 let res = try JSONDecoder().decode(BybitPositionsRestResponse.self, from: $0)
-                
+
                 if res.retCode == 0 {
-                    
                     DispatchQueue.main.async {
                         self.dataPositions = res.result.list
                     }
@@ -221,14 +219,24 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             }
         })
     }
+
+    func cancelAllOrders(useREST: Bool) async {}
+
+    func cancelOrder(id: String, useREST: Bool) async {
+        // TODO:
+        await fetchOrders()
+    }
     
+    func closeAllPositions(useREST: Bool, validate: Bool) async {
+        
+    }
+
     func fetchOrders() async {
         await BybitRestApi.fetchOrders(cb: {
             do {
                 let res = try JSONDecoder().decode(BybitOrdersRestResponse.self, from: $0)
-                
+
                 if res.retCode == 0 {
-                    
                     DispatchQueue.main.async {
                         self.dataOrders = res.result.list
                     }
@@ -240,14 +248,13 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             }
         })
     }
-    
+
     func fetchBalance() async {
         await BybitRestApi.fetchTradingBalance(cb: {
             do {
                 let res = try JSONDecoder().decode(BybitWalletRestResponse.self, from: $0)
-                
+
                 if res.retCode == 0 {
-                    
                     DispatchQueue.main.async {
                         self.dataWallet = res.result.list
                     }
@@ -259,7 +266,6 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             }
         })
     }
-    
 
     func parseMessage(message: String) {
         do {
