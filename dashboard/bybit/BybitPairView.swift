@@ -46,6 +46,14 @@ struct BybitPairView: View {
         VStack(alignment: .center) {
             if isBookSocketReady && isTradesSocketReady {
                 HStack {
+                    VStack {
+                        HStack {
+                            BybitRawVolumeChart()
+                            BybitFilteredVolumeChart()
+                        }
+                        BybitBellCurve()
+                        BybitImbalanceChart()
+                    }
                     BybitOrderBookView()
                         
                     BybitTimesAndSalesView()
