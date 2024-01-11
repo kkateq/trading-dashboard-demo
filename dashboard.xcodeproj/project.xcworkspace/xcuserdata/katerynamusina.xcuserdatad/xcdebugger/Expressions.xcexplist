@@ -162,6 +162,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in closure #2 in closure #1 in BybitPositionsView.body.getter:BybitPositionsView.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in BybitPrivateManager.cancelAllOrders():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
@@ -231,6 +234,9 @@
          contextName = "KrakenOrderManager.getBalance():KrakenOrderManager.swift">
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in BybitPrivateManager.fetchPositions():BybitPrivateManager.swift">
+      </ContextState>
+      <ContextState
          contextName = "Manager.parseTextMessage(message:):Manager.swift">
          <PersistentStrings>
             <PersistentString
@@ -269,6 +275,11 @@
       </ContextState>
       <ContextState
          contextName = "Bybitbook.parseMessage(message:):Bybitbook.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "BybitLastTrade.parseMessage(message:):BybitLastTrade.swift">
@@ -345,7 +356,13 @@
          contextName = "Manager.sellMarket(pair:vol:scaleInOut:validate:):Manager.swift">
       </ContextState>
       <ContextState
+         contextName = "BybitPrivateManager.totalAvailableBalance.getter:BybitPrivateManager.swift">
+      </ContextState>
+      <ContextState
          contextName = "Manager.get_auth_token():Manager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in BybitPrivateManager.fetchBalance():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "Binancebook.subscribe():Binancebook.swift">

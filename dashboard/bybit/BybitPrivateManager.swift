@@ -223,7 +223,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                         self.dataPositions = res.result.list
                     }
                 } else {
-                    LogManager.shared.error("error is \(res.retMsg)")
+                    LogManager.shared.error("retCode \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -245,7 +245,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                         }
                     }
                 } else {
-                    LogManager.shared.error("\(res.retMsg)")
+                    LogManager.shared.error("retCode \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -265,7 +265,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                     }
 
                 } else {
-                    LogManager.shared.error("\(res.retMsg)")
+                    LogManager.shared.error("retCode \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -274,7 +274,40 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         await fetchOrders()
     }
 
-    func closeAllPositions() async {}
+    func closeAllPositionsByMarket() async {
+        for position in positions {
+            await closeByMarket(id: position.positionIdx)
+        }
+    }
+    
+    func closeAllPositionsByLimit(best_bid: Double, best_ask:Double) async {
+        for position in positions {
+            await closeByLimit(id: position.positionIdx, best_bid: best_bid, best_ask: best_ask)
+        }
+    }
+    
+    func closeByMarket(id: Int) async {
+        if let position = positions.first(where: {$0.positionIdx == id}) {
+            if let size = Double(position.size), size > 0 {
+                let side = position.side == "Sell" ? "Buy" : "Sell"
+                let params = ["category": "linear", "symbol": position.symbol, "side": side, "orderType": "Market", "qty": "\(position.size)", "reduceOnly": true] as [String: Any]
+                
+                await createOrder(params: params)
+            }
+        }
+    }
+    
+    func closeByLimit(id: Int, best_bid: Double, best_ask:Double) async {
+        if let position = positions.first(where: {$0.positionIdx == id}) {
+            if let size = Double(position.size), size > 0 {
+                let side = position.side == "Sell" ? "Buy" : "Sell"
+                let price = side == "Sell" ? best_ask : best_bid
+                let params = ["category":  "linear", "symbol": position.symbol, "price": price, "side": side, "orderType": "Limit", "qty": "\(position.size)", "reduceOnly": true] as [String: Any]
+                
+                await createOrder(params: params)
+            }
+        }
+    }
 
     func fetchOrders() async {
         await BybitRestApi.fetchOrders(cb: {
@@ -286,7 +319,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                         self.dataOrders = res.result.list
                     }
                 } else {
-                    LogManager.shared.error("\(res.retMsg)")
+                    LogManager.shared.error("retCode \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -305,7 +338,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                         self.dataWallet = res.result.list
                     }
                 } else {
-                    LogManager.shared.error("\(res.retMsg)")
+                    LogManager.shared.error("retCode \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -326,7 +359,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                     }
 
                 } else {
-                    LogManager.shared.error("\(res.retMsg)")
+                    LogManager.shared.error(" retCode\(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
@@ -335,26 +368,26 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         await fetchPositions()
     }
 
-    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
-        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+        let params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
 
         await createOrder(params: params)
     }
 
-    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
-        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+        let params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
 
         await createOrder(params: params)
     }
 
-    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
-        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+        let params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
 
         await createOrder(params: params)
     }
 
-    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
-        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+        let params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
 
         await createOrder(params: params)
     }

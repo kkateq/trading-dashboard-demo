@@ -10,6 +10,7 @@ import Foundation
 import Starscream
 
 struct BybitSubscriptionStatus: Decodable {
+    static let topicName = "subscribe"
     var success: Bool
     var ret_msg: String
     var conn_id: String
@@ -32,8 +33,8 @@ struct BybitUpdateData: Decodable {
     var pair: String
     var bids: [BybitBookNode]
     var asks: [BybitBookNode]
-    var updateId: Int
-    var crossSequence: Int
+    var updateId: Int!
+    var crossSequence: Int!
 
     enum CodingKeys: String, CodingKey {
         case pair = "s"
@@ -50,7 +51,7 @@ struct BybitOrderBookUpdateResponse: Decodable {
     var ts: Int
     var type: String
     var data: BybitUpdateData
-    var cts: Int
+    var cts: Int!
 }
 
 struct BybitOrderBookResult: Decodable {
@@ -198,11 +199,11 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
 
         bybitSocket = BybitSocketTemplate()
         bybitSocket.delegate = self
-        
+
         Task {
             await downloadInitialBookSnapshot()
         }
-        
+
         cancellable = AnyCancellable($data
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -249,19 +250,17 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
         do {
             if message == "{\"event\":\"heartbeat\"}" {
                 return
-            } else if !isSubscribed {
+            } else if !isSubscribed && message.contains("\"op\":\"subscribe\""){
                 let subscriptionStatus = try JSONDecoder().decode(BybitSubscriptionStatus.self, from: Data(message.utf8))
                 if subscriptionStatus.success && subscriptionStatus.req_id == req_id {
                     isSubscribed = true
                 }
-            } else if isSubscribed {
-                if message.contains(BybitOrderBookUpdateResponse.topicName) {
-                    let update = try JSONDecoder().decode(BybitOrderBookUpdateResponse.self, from: Data(message.utf8))
+            } else if isSubscribed || message.contains(BybitOrderBookUpdateResponse.topicName) {
+                let update = try JSONDecoder().decode(BybitOrderBookUpdateResponse.self, from: Data(message.utf8))
 
-                    DispatchQueue.main.async {
-                        if self.data != nil {
-                            self.data.update(update)
-                        }
+                DispatchQueue.main.async {
+                    if self.data != nil {
+                        self.data.update(update)
                     }
                 }
             }
