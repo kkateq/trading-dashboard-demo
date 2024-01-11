@@ -29,9 +29,6 @@ struct BybitRestBase<Item: Decodable>: Decodable {
     var time: Int
 }
 
-//
-//{"symbol":"MATICUSDT","leverage":"10","autoAddMargin":0,"avgPrice":"0.9071","liqPrice":"0.991","riskLimitValue":"200000","takeProfit":"","positionValue":"9.071","isReduceOnly":false,"tpslMode":"Full","riskId":221,"trailingStop":"0","unrealisedPnl":"-0.045","markPrice":"0.9116","adlRankIndicator":2,"cumRealisedPnl":"-0.0018142","positionMM":"0.07352046","createdTime":"1704962368989","positionIdx":0,"positionIM":"0.91258796","seq":86182842640,"updatedTime":"1704962555020","side":"Sell","bustPrice":"","positionBalance":"0.91258796","leverageSysUpdatedTime":"","size":"10","positionStatus":"Normal","mmrSysUpdatedTime":"","stopLoss":"","tradeMode":0}
-
 struct BybitPositionData: Decodable, Equatable {
     var positionIdx: Int
     var size: String
@@ -84,10 +81,21 @@ struct BybitOrderResponse: Decodable {
     var data: [BybitOrderData]
 }
 
-struct BybitWalletData: Decodable, Equatable {
+struct Coin: Decodable {
+    var coin: String
+    var availableToBorrow: String
+    var walletBalance: String
+}
+
+struct BybitWalletData: Decodable {
     var totalWalletBalance: String
     var totalMarginBalance: String
+    var totalInitialMargin: String
+    var totalMaintenanceMargin: String
+    var coin: [Coin]
     var totalAvailableBalance: String
+    var totalPerpUPL: String
+    var accountType: String
 }
 
 struct BybitWalletResponse: Decodable {
@@ -141,10 +149,27 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         return bybitSocket.isConnected
     }
 
-    var totalAvailableBalance: Double {
+    var totalAvailableWalletBalance: Double {
+        return getWalletBalance()
+    }
+
+    var totalAvailableUSDT: Double {
         if dataWallet.count > 0 {
-            let item = dataWallet[0]
-            return item.totalAvailableBalance != "" ? Double(item.totalAvailableBalance)! : 0
+            if let item = dataWallet.first(where: { $0.accountType == "UNIFIED" }) {
+                let coins = item.coin
+                if let usdt = coins.first(where: {$0.coin == "USDT"}), usdt.walletBalance != "" {
+                    return Double(usdt.walletBalance)!
+                }
+            }
+        }
+        return -1
+    }
+
+    func getWalletBalance(walletName: String = "UNIFIED") -> Double {
+        if dataWallet.count > 0 {
+            if let item = dataWallet.first(where: { $0.accountType == walletName }) {
+                return item.totalWalletBalance != "" ? Double(item.totalWalletBalance)! : 0
+            }
         }
 
         return -1
@@ -170,7 +195,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
         self.cancellableWallet = AnyCancellable($dataWallet
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .removeDuplicates()
+//            .removeDuplicates()
             .assign(to: \.wallet, on: self))
 
         Task {
@@ -196,7 +221,6 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
                         self.dataPositions = res.result.list
-                     
                     }
                 } else {
                     LogManager.shared.error("error is \(res.retMsg)")
@@ -227,7 +251,6 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
         }, symbol: pair)
-        
     }
 
     func cancelOrder(id: String, symbol: String) async {
@@ -290,9 +313,8 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             }
         })
     }
-    
-    
-    func createOrder(params: [String:Any]) async -> Void {
+
+    func createOrder(params: [String: Any]) async {
         await BybitRestApi.createOrder(cb: {
             do {
                 let res = try JSONDecoder().decode(BybitRestBase<BybitMutateOrderData>.self, from: $0)
@@ -312,28 +334,28 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         }, params: params)
         await fetchPositions()
     }
-    
-    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
-        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
-        
+
+    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
+        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+
         await createOrder(params: params)
     }
-    
-    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
-        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
-        
+
+    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
+        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+
         await createOrder(params: params)
     }
-    
-    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
-        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
-        
+
+    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
+        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+
         await createOrder(params: params)
     }
-    
-    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
-        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
-        
+
+    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async {
+        let params = ["category": "linear", "symbol": symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": positions.count > 0 ? scaleInOut : false] as [String: Any]
+
         await createOrder(params: params)
     }
 

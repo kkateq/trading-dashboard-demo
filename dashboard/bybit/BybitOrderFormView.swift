@@ -10,7 +10,7 @@ import SwiftUI
 struct BybitOrderFormView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
-    @Binding var validate: Bool
+
 
     @Binding var stopLossEnabled: Bool
     @Binding var sellStopLoss: Double!
@@ -32,11 +32,13 @@ struct BybitOrderFormView: View {
     }()
 
     func getAllowedleverage(pair: String) -> Int {
-        return Constants.pairSettings[pair]!.leverage
+//        return Constants.pairSettings[pair]!.leverage
+//        It's variable on BYbit'
+        return 2
     }
 
     func getAllowedMargin() -> Double {
-        let p = manager.totalAvailableBalance * Double(getAllowedleverage(pair: book.pair))
+        let p = manager.totalAvailableUSDT * Double(getAllowedleverage(pair: book.pair))
         return p - p * Constants.bybit_fee
     }
 
@@ -57,7 +59,7 @@ struct BybitOrderFormView: View {
                         .foregroundColor(.black)
                         .font(.title3)
                     Spacer()
-                    Text("\(Int(manager.totalAvailableBalance))$")
+                    Text("\(Int(manager.totalAvailableUSDT))$")
                         .foregroundColor(.blue)
                         .font(.title3)
                 }
@@ -214,12 +216,7 @@ struct BybitOrderFormView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .imageScale(.large)
                 Divider()
-                HStack {
-                    Toggle("Validate orders", isOn: $validate)
-                        .toggleStyle(.checkbox)
-                    Spacer()
-                }.frame(width: 300, height: 20)
-                Divider()
+   
             }
 
             Spacer()

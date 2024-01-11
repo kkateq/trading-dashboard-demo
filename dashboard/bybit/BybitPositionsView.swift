@@ -40,48 +40,50 @@ struct BybitPositionsView: View {
                     VStack(alignment: .leading) {
                         HStack(spacing: 2) {
                             ForEach(manager.positions, id: \.positionIdx) { position in
-                                let net = Double(position.unrealisedPnl)!
-                                
-                                Text("\(position.symbol)")
-                                Spacer()
-                                Text(position.side)
-                                    .foregroundColor(position.side == "Sell" ? Color("Red") : Color("Green"))
-                                    .font(.caption2)
-                                Spacer()
-                                Text("\(formatPrice(price: (Double(position.positionValue)! / Double(position.size)!), pair:book.pair))")
-                                    .foregroundColor(.blue)
-                                    .font(.caption2)
-                                Spacer()
-                                Text("\(formatPrice(price: net, pair: book.pair))$")
-                                    .foregroundColor(net < 0 ?Color("Red") : Color("Green"))
-                                    .font(.caption2)
-                                Spacer()
-                                Button(action: {
-                                    Task {
-//                                        await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "rectangle.portrait.and.arrow.right.fill")
-                                    }.frame(width: 20, height: 20)
-                                        .foregroundColor(Color.white)
-                                        .background(Color.teal)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                        .imageScale(.medium)
-                                }.buttonStyle(PlainButtonStyle())
-                                Button(action: {
-                                    Task {
-//                                        await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "xmark")
-                                    }.frame(width: 20, height: 20)
-                                        .foregroundColor(Color.white)
-                                        .background(Color.orange)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                        .imageScale(.medium)
-                                }.buttonStyle(PlainButtonStyle())
+                                if Double(position.size)! > 0 {
+                                    let net = Double(position.unrealisedPnl)!
+                                    
+                                    Text("\(position.symbol)")
+                                    Spacer()
+                                    Text(position.side)
+                                        .foregroundColor(position.side == "Sell" ? Color("Red") : Color("Green"))
+                                        .font(.caption2)
+                                    Spacer()
+                                    Text("\(formatPrice(price: (Double(position.positionValue)! / Double(position.size)!), pair:book.pair))")
+                                        .foregroundColor(.blue)
+                                        .font(.caption2)
+                                    Spacer()
+                                    Text("\(formatPrice(price: net, pair: book.pair))$")
+                                        .foregroundColor(net < 0 ?Color("Red") : Color("Green"))
+                                        .font(.caption2)
+                                    Spacer()
+                                    Button(action: {
+                                        Task {
+                                            //                                        await manager.flattenPosition(refid: position.refid, best_bid: book.stats.bestBid, best_ask: book.stats.bestAsk, useREST: useREST, validate: validate)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "rectangle.portrait.and.arrow.right.fill")
+                                        }.frame(width: 20, height: 20)
+                                            .foregroundColor(Color.white)
+                                            .background(Color.teal)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                            .imageScale(.medium)
+                                    }.buttonStyle(PlainButtonStyle())
+                                    Button(action: {
+                                        Task {
+                                            //                                        await manager.closePositionMarket(refid: position.refid, useREST: useREST, validate: validate)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "xmark")
+                                        }.frame(width: 20, height: 20)
+                                            .foregroundColor(Color.white)
+                                            .background(Color.orange)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                            .imageScale(.medium)
+                                    }.buttonStyle(PlainButtonStyle())
+                                }
                             }
                         }
                             

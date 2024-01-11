@@ -51,7 +51,7 @@ struct BybitPairView: View {
                     
                     BybitPriceVolumeChart()
                     
-                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
                 
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)

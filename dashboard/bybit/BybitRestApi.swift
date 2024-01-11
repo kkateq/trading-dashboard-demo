@@ -137,7 +137,7 @@ enum BybitRestApi {
     static func fetchTradingBalance(cb: @escaping (Data) -> Void) async {
         LogManager.shared.action("Refetch trading account balance...")
 
-        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType": "UNIFIED"])
+        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType": "UNIFIED", "coin": "USDT"])
     }
 
     static func cancelAllOrders(cb: @escaping (Data) -> Void, symbol: String) async {
