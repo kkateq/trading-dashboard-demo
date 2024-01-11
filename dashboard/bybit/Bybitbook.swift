@@ -216,7 +216,7 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
     }
 
     func downloadInitialBookSnapshot() async {
-        let url = "https://api.bybit.com/v5/market/orderbook?category=spot&symbol=\(pair)&limit200"
+        let url = "https://api.bybit.com/v5/market/orderbook?category=linear&symbol=\(pair)&limit200"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)

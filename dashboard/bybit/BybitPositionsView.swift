@@ -10,9 +10,7 @@ import SwiftUI
 struct BybitPositionsView: View {
     @EnvironmentObject var manager: BybitPrivateManager
     @EnvironmentObject var book: BybitOrderBook
-    
-    var useREST: Bool
-    var validate: Bool
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -42,15 +40,15 @@ struct BybitPositionsView: View {
                     VStack(alignment: .leading) {
                         HStack(spacing: 2) {
                             ForEach(manager.positions, id: \.positionIdx) { position in
-                                let net = Double(position.positionValue)!
+                                let net = Double(position.unrealisedPnl)!
                                 
                                 Text("\(position.symbol)")
                                 Spacer()
                                 Text(position.side)
-                                    .foregroundColor(position.side == "sell" ? Color("Red") : Color("Green"))
+                                    .foregroundColor(position.side == "Sell" ? Color("Red") : Color("Green"))
                                     .font(.caption2)
                                 Spacer()
-                                Text(position.entryPrice)
+                                Text("\(formatPrice(price: (Double(position.positionValue)! / Double(position.size)!), pair:book.pair))")
                                     .foregroundColor(.blue)
                                     .font(.caption2)
                                 Spacer()
@@ -111,7 +109,7 @@ struct BybitPositionsView: View {
                         
                     Button(action: {
                         Task {
-                            await manager.closeAllPositions(useREST: useREST, validate: validate)
+                            await manager.closeAllPositions()
                         }
                     }) {
                         HStack {
@@ -133,5 +131,5 @@ struct BybitPositionsView: View {
 }
 
 #Preview {
-    BybitPositionsView(useREST: true, validate: true)
+    BybitPositionsView()
 }

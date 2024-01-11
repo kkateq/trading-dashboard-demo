@@ -11,7 +11,6 @@ struct BybitOrderFormView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
     @Binding var validate: Bool
-    @Binding var useRest: Bool
 
     @Binding var stopLossEnabled: Bool
     @Binding var sellStopLoss: Double!
@@ -126,7 +125,7 @@ struct BybitOrderFormView: View {
                     VStack {
                         Button(action: {
                             Task {
-//                                await manager.sellMarket(pair: book.pair, vol: volume, price: 0, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? sellStopLoss : nil)
+                                await manager.sellMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -140,7 +139,7 @@ struct BybitOrderFormView: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-//                                await manager.buyMarket(pair: book.pair, vol: volume, price: 0, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss : nil)
+                                await manager.buyMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -156,7 +155,7 @@ struct BybitOrderFormView: View {
                     VStack {
                         Button(action: {
                             Task {
-//                                await manager.sellAsk(pair: book.pair, vol: volume, best_ask: book.stats.bestAsk, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? sellStopLoss : nil)
+                                await manager.sellLimit(symbol: book.pair, vol: volume, price: book.stats.bestAsk, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -170,7 +169,7 @@ struct BybitOrderFormView: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-//                                await manager.buyBid(pair: book.pair, vol: volume, best_bid: book.stats.bestBid, scaleInOut: scaleInOut, validate: validate, stopLoss: stopLossEnabled ? buyStopLoss : nil)
+                                await manager.buyLimit(symbol: book.pair, vol: volume, price: book.stats.bestBid, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil)
                             }
                         }) {
                             HStack {
@@ -188,12 +187,12 @@ struct BybitOrderFormView: View {
                 .padding(.bottom)
 
             VStack {
-                BybitOrdersView(useREST: useRest)
+                BybitOrdersView()
             }
             .padding(.top)
 
             VStack {
-                BybitPositionsView(useREST: useRest, validate: validate)
+                BybitPositionsView()
             }
 
             VStack {
@@ -221,12 +220,6 @@ struct BybitOrderFormView: View {
                     Spacer()
                 }.frame(width: 300, height: 20)
                 Divider()
-                HStack {
-                    Toggle("Use REST API", isOn: $useRest)
-                        .toggleStyle(.checkbox)
-                    Spacer()
-                }.frame(width: 300)
-                Divider()
             }
 
             Spacer()
@@ -238,5 +231,3 @@ struct BybitOrderFormView: View {
             .background(Color("Background"))
     }
 }
-
-

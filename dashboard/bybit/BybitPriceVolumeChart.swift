@@ -65,7 +65,7 @@ struct BybitPriceVolumeChart: View {
             }
         }
         .onReceive(recentTrades.$list, perform: updateChart)
-        .frame(width: 300, height: 500)
+        .frame(width: 300, height: 1100)
         .fixedSize(horizontal: true, vertical: false)
     }
 }

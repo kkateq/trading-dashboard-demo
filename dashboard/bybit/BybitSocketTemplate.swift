@@ -35,7 +35,7 @@ class BybitSocketTemplate: WebSocketDelegate, ObservableObject {
     init(_ isPrivate: Bool = false) {
         self.isPrivate = isPrivate
 
-        let str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/spot"
+        let str = isPrivate ? "wss://stream.bybit.com/v5/private" : "wss://stream.bybit.com/v5/public/linear"
         var request = URLRequest(url: URL(string: str)!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)

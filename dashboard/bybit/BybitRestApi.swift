@@ -8,8 +8,6 @@
 import Foundation
 
 extension Dictionary {
-    
-
     /// Convert Dictionary to JSON string
     /// - Throws: exception if dictionary cannot be converted to JSON data or when data cannot be converted to UTF8 string
     /// - Returns: JSON string
@@ -39,18 +37,17 @@ enum BybitRestApi {
         urlComponents.queryItems = parameters
         return urlComponents.url?.query ?? ""
     }
-    
-    
-    private static func paramsToJson(params: [String: String] = [:]) -> String {
+
+    private static func paramsToJson(params: [String: Any] = [:]) -> String {
         do {
             return try params.toJson()
         } catch {
             print("Error converting params to json")
         }
-        
+
         return ""
     }
-    
+
     private static func fetchPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:]) async {
         let query = encode(params: params)
         let url = "https://api.bybit.com/v5\(route)?\(query)"
@@ -73,6 +70,8 @@ enum BybitRestApi {
                 print("Request error: ", error)
                 return
             }
+            
+            let p = String(decoding: data!, as: UTF8.self)
 
             guard let response = response as? HTTPURLResponse else { return }
 
@@ -85,9 +84,7 @@ enum BybitRestApi {
         dataTask.resume()
     }
 
-
-
-    private static func postPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:]) async {
+    private static func postPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: Any] = [:]) async {
         let url = "https://api.bybit.com/v5\(route)"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
         let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
@@ -112,8 +109,8 @@ enum BybitRestApi {
                 return
             }
 //
-//            let p = String(decoding: data!, as: UTF8.self)
-    
+            let p = String(decoding: data!, as: UTF8.self)
+
             guard let response = response as? HTTPURLResponse else { return }
 
             if response.statusCode == 200 {
@@ -125,33 +122,37 @@ enum BybitRestApi {
         dataTask.resume()
     }
 
-    static func fetchPositions(cb: @escaping (Data) -> Void) async {
+    static func fetchPositions(cb: @escaping (Data) -> Void, symbol: String) async {
         LogManager.shared.action("Refetch positions...")
 
-        await fetchPrivate(cb: cb, route: "/position/list", params: ["category": "spot"])
+        await fetchPrivate(cb: cb, route: "/position/list", params: ["category": "linear", "symbol": symbol])
     }
 
-    static func fetchOrders(cb: @escaping (Data) -> Void) async {
+    static func fetchOrders(cb: @escaping (Data) -> Void, symbol: String) async {
         LogManager.shared.action("Refetch orders...")
 
-        await fetchPrivate(cb: cb, route: "/order/realtime", params: ["category": "spot"])
+        await fetchPrivate(cb: cb, route: "/order/realtime", params: ["category": "linear", "symbol": symbol])
     }
 
     static func fetchTradingBalance(cb: @escaping (Data) -> Void) async {
         LogManager.shared.action("Refetch trading account balance...")
 
-        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType":  "UNIFIED"])
+        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType": "UNIFIED"])
     }
 
-    static func cancelAllOrders(cb: @escaping (Data) -> Void) async {
+    static func cancelAllOrders(cb: @escaping (Data) -> Void, symbol: String) async {
         LogManager.shared.action("Cancel all orders...")
 
-        await postPrivate(cb: cb, route: "/order/cancel-all", params: ["category": "spot"])
+        await postPrivate(cb: cb, route: "/order/cancel-all", params: ["category": "linear", "symbol": symbol])
     }
-    
-    static func cancelOrder(cb: @escaping (Data) -> Void, orderLinkId: String, symbol: String) async {
-        LogManager.shared.action("Cancel order \(orderLinkId)")
 
-        await postPrivate(cb: cb, route: "/order/cancel", params: ["category": "spot", "symbol" : symbol, "orderLinkId": orderLinkId])
+    static func cancelOrder(cb: @escaping (Data) -> Void, orderId: String, symbol: String) async {
+        LogManager.shared.action("Cancel order \(orderId)")
+
+        await postPrivate(cb: cb, route: "/order/cancel", params: ["category": "linear", "symbol": symbol, "orderId": orderId])
+    }
+
+    static func createOrder(cb: @escaping (Data) -> Void, params: [String: Any]) async {
+        await postPrivate(cb: cb, route: "/order/create", params: params)
     }
 }

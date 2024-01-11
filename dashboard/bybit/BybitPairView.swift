@@ -15,7 +15,6 @@ struct BybitPairView: View {
     @State private var volume: Double = 100
     @State private var scaleInOut: Bool = true
     @State private var validate: Bool = false
-    @State private var useRest: Bool = false
     @State var stopLossEnabled: Bool = true
     @State var sellStopLoss: Double!
     @State var buyStopLoss: Double!
@@ -27,7 +26,7 @@ struct BybitPairView: View {
         self.pair = pair
         self.bybitbook_ws = Bybitbook(self.pair)
         self.bybittrades_ws = BybitLastTrade(self.pair)
-        self.manager = BybitPrivateManager()
+        self.manager = BybitPrivateManager(self.pair)
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -52,7 +51,7 @@ struct BybitPairView: View {
                     
                     BybitPriceVolumeChart()
                     
-                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, useRest: $useRest, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, validate: $validate, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
                 
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)

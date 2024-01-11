@@ -9,8 +9,7 @@ import SwiftUI
 
 struct BybitOrdersView: View {
     @EnvironmentObject var manager: BybitPrivateManager
-    var useREST: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Divider()
@@ -46,7 +45,7 @@ struct BybitOrdersView: View {
                                 Spacer()
                                 Button(action: {
                                     Task {
-                                        await manager.cancelOrder(id: order.orderLinkId, symbol: order.symbol)
+                                        await manager.cancelOrder(id: order.orderId, symbol: order.symbol)
                                     }
                                 }) {
                                     HStack {
@@ -85,5 +84,5 @@ struct BybitOrdersView: View {
 }
 
 #Preview {
-    BybitOrdersView(useREST: false)
+    BybitOrdersView()
 }

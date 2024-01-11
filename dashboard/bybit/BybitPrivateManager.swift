@@ -29,12 +29,15 @@ struct BybitRestBase<Item: Decodable>: Decodable {
     var time: Int
 }
 
+//
+//{"symbol":"MATICUSDT","leverage":"10","autoAddMargin":0,"avgPrice":"0.9071","liqPrice":"0.991","riskLimitValue":"200000","takeProfit":"","positionValue":"9.071","isReduceOnly":false,"tpslMode":"Full","riskId":221,"trailingStop":"0","unrealisedPnl":"-0.045","markPrice":"0.9116","adlRankIndicator":2,"cumRealisedPnl":"-0.0018142","positionMM":"0.07352046","createdTime":"1704962368989","positionIdx":0,"positionIM":"0.91258796","seq":86182842640,"updatedTime":"1704962555020","side":"Sell","bustPrice":"","positionBalance":"0.91258796","leverageSysUpdatedTime":"","size":"10","positionStatus":"Normal","mmrSysUpdatedTime":"","stopLoss":"","tradeMode":0}
+
 struct BybitPositionData: Decodable, Equatable {
     var positionIdx: Int
     var size: String
     var side: String
     var symbol: String
-    var entryPrice: String
+    var entryPrice: String!
     var leverage: String
     var positionValue: String
     var positionBalance: String
@@ -95,12 +98,13 @@ struct BybitWalletResponse: Decodable {
     var data: [BybitWalletData]
 }
 
-struct BybitCancelOrderData: Decodable {
+struct BybitMutateOrderData: Decodable {
     var orderId: String
     var orderLinkId: String
 }
 
 class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
+    var pair: String
     var bybitSocket: BybitSocketTemplate
     var isSubscribed: Bool = false
     let didChangePositions = PassthroughSubject<Void, Never>()
@@ -140,13 +144,14 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     var totalAvailableBalance: Double {
         if dataWallet.count > 0 {
             let item = dataWallet[0]
-            return Double(item.totalAvailableBalance)!
+            return item.totalAvailableBalance != "" ? Double(item.totalAvailableBalance)! : 0
         }
 
         return -1
     }
 
-    init() {
+    init(_ pair: String) {
+        self.pair = pair
         self.wallet = []
         self.positions = []
         self.orders = []
@@ -191,24 +196,29 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
                         self.dataPositions = res.result.list
+                     
                     }
                 } else {
                     LogManager.shared.error("error is \(res.retMsg)")
                 }
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
+                print(String(decoding: $0, as: UTF8.self))
             }
-        })
+        }, symbol: pair)
     }
 
     func cancelAllOrders() async {
         await BybitRestApi.cancelAllOrders(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitListRestBase<BybitCancelOrderData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitMutateOrderData>.self, from: $0)
 
                 if res.retCode == 0 {
                     for o in res.result.list {
                         LogManager.shared.info("Cancelled order \(o.orderId)")
+                        Task {
+                            await self.fetchOrders()
+                        }
                     }
                 } else {
                     LogManager.shared.error("\(res.retMsg)")
@@ -216,17 +226,20 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
-        })
-        await fetchOrders()
+        }, symbol: pair)
+        
     }
 
     func cancelOrder(id: String, symbol: String) async {
         await BybitRestApi.cancelOrder(cb: {
             do {
-                let res = try JSONDecoder().decode(BybitRestBase<BybitCancelOrderData>.self, from: $0)
+                let res = try JSONDecoder().decode(BybitRestBase<BybitMutateOrderData>.self, from: $0)
 
                 if res.retCode == 0 {
                     LogManager.shared.info("Cancelled order \(res.result.orderId)")
+                    Task {
+                        await self.fetchOrders()
+                    }
 
                 } else {
                     LogManager.shared.error("\(res.retMsg)")
@@ -234,11 +247,11 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
-        }, orderLinkId: id, symbol: symbol)
+        }, orderId: id, symbol: symbol)
         await fetchOrders()
     }
 
-    func closeAllPositions(useREST: Bool, validate: Bool) async {}
+    func closeAllPositions() async {}
 
     func fetchOrders() async {
         await BybitRestApi.fetchOrders(cb: {
@@ -256,7 +269,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 LogManager.shared.error("error is \(error.localizedDescription)")
                 print(String(decoding: $0, as: UTF8.self))
             }
-        })
+        }, symbol: pair)
     }
 
     func fetchBalance() async {
@@ -276,6 +289,52 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 print(String(decoding: $0, as: UTF8.self))
             }
         })
+    }
+    
+    
+    func createOrder(params: [String:Any]) async -> Void {
+        await BybitRestApi.createOrder(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitRestBase<BybitMutateOrderData>.self, from: $0)
+
+                if res.retCode == 0 {
+                    LogManager.shared.info("Created order \(res.result.orderId)")
+                    Task {
+                        await self.fetchOrders()
+                    }
+
+                } else {
+                    LogManager.shared.error("\(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+            }
+        }, params: params)
+        await fetchPositions()
+    }
+    
+    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
+        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
+        
+        await createOrder(params: params)
+    }
+    
+    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
+        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": price, "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
+        
+        await createOrder(params: params)
+    }
+    
+    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
+        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
+        
+        await createOrder(params: params)
+    }
+    
+    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, isLeverage: Int = 0) async -> Void {
+        let params = ["category": "linear", "symbol" : symbol, "isLeverage": isLeverage, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": self.positions.count > 0 ? scaleInOut : false] as [String : Any]
+        
+        await createOrder(params: params)
     }
 
     func parseMessage(message: String) {
