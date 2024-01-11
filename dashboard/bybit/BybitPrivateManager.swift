@@ -372,31 +372,55 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         await fetchPositions()
     }
 
-    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+    func buyLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, takeProfit: Double! = nil) async {
         LogManager.shared.action("Buy limit \(symbol) @ \(price)")
-        let params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": formatPrice(price: price, pair: symbol), "reduceOnly": scaleInOut] as [String: Any]
-
+        var params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Limit", "qty": "\(vol)", "price": formatPrice(price: price, pair: symbol), "reduceOnly": scaleInOut] as [String: Any]
+        if let tp = takeProfit {
+            params["takeProfit"] = formatPrice(price: tp, pair: symbol)
+        }
+        
+        if let sl = stopLoss {
+            params["stopLoss"] = formatPrice(price: sl, pair: symbol)
+        }
         await createOrder(params: params)
     }
 
-    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+    func sellLimit(symbol: String, vol: Double, price: Double, scaleInOut: Bool, stopLoss: Double! = nil, takeProfit: Double! = nil) async {
         LogManager.shared.action("Sell limit \(symbol) @ \(price)")
-        let params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": formatPrice(price: price, pair: symbol), "reduceOnly": scaleInOut] as [String: Any]
-
+        var params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Limit", "qty": "\(vol)", "price": formatPrice(price: price, pair: symbol), "reduceOnly": scaleInOut] as [String: Any]
+        if let tp = takeProfit {
+            params["takeProfit"] = formatPrice(price: tp, pair: symbol)
+        }
+        
+        if let sl = stopLoss {
+            params["stopLoss"] = formatPrice(price: sl, pair: symbol)
+        }
         await createOrder(params: params)
     }
 
-    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+    func buyMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, takeProfit: Double! = nil) async {
         LogManager.shared.action("Buy market \(symbol)")
-        let params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": scaleInOut] as [String: Any]
-
+        var params = ["category": "linear", "symbol": symbol, "side": "Buy", "orderType": "Market", "qty": "\(vol)", "reduceOnly": scaleInOut] as [String: Any]
+        if let tp = takeProfit {
+            params["takeProfit"] = formatPrice(price: tp, pair: symbol)
+        }
+        
+        if let sl = stopLoss {
+            params["stopLoss"] = formatPrice(price: sl, pair: symbol)
+        }
         await createOrder(params: params)
     }
 
-    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil) async {
+    func sellMarket(symbol: String, vol: Double, scaleInOut: Bool, stopLoss: Double! = nil, takeProfit: Double! = nil) async {
         LogManager.shared.action("Sell market \(symbol)")
-        let params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": scaleInOut] as [String: Any]
-
+        var params = ["category": "linear", "symbol": symbol, "side": "Sell", "orderType": "Market", "qty": "\(vol)", "reduceOnly": scaleInOut] as [String: Any]
+        if let tp = takeProfit {
+            params["takeProfit"] = formatPrice(price: tp, pair: symbol)
+        }
+        
+        if let sl = stopLoss {
+            params["stopLoss"] = formatPrice(price: sl, pair: symbol)
+        }
         await createOrder(params: params)
     }
 

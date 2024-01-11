@@ -11,10 +11,12 @@ struct BybitOrderFormView: View {
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
 
-
     @Binding var stopLossEnabled: Bool
+    @Binding var takeProfitEnabled: Bool
     @Binding var sellStopLoss: Double!
     @Binding var buyStopLoss: Double!
+    @Binding var sellTakeProfit: Double!
+    @Binding var buyTakeProfit: Double!
 
     @EnvironmentObject var manager: BybitPrivateManager
     @EnvironmentObject var book: BybitOrderBook
@@ -49,6 +51,11 @@ struct BybitOrderFormView: View {
     func updateStopLoss(_ publishedStats: BybitStats!) {
         sellStopLoss = publishedStats.bestAsk + roundPrice(price: publishedStats.bestAsk * 0.05, pair: book.pair)
         buyStopLoss = publishedStats.bestBid - roundPrice(price: publishedStats.bestBid * 0.05, pair: book.pair)
+    }
+
+    func updateTakeProfit(_ publishedStats: BybitStats!) {
+        sellTakeProfit = publishedStats.bestAsk - roundPrice(price: publishedStats.bestAsk * 0.1, pair: book.pair)
+        buyTakeProfit = publishedStats.bestBid + roundPrice(price: publishedStats.bestBid * 0.1, pair: book.pair)
     }
 
     var body: some View {
@@ -118,6 +125,26 @@ struct BybitOrderFormView: View {
                     }
                 }.padding([.bottom])
 
+                HStack {
+                    Toggle("Take profit", isOn: $takeProfitEnabled)
+                        .toggleStyle(.checkbox)
+                    Spacer()
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Sell take profit").font(.caption).foregroundStyle(.gray)
+                        TextField("Sell take profit", value: $sellTakeProfit, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onReceive(book.$stats, perform: updateTakeProfit)
+                            .disabled(!takeProfitEnabled)
+                    }
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Buy take profit").font(.caption).foregroundStyle(.gray)
+                        TextField("Buy take profit", value: $buyTakeProfit, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onReceive(book.$stats, perform: updateTakeProfit)
+                            .disabled(!takeProfitEnabled)
+                    }
+                }.padding([.bottom])
+
                 Toggle("Scale In/Out", isOn: $scaleInOut)
                     .toggleStyle(.checkbox)
             }.padding(.leading)
@@ -127,7 +154,7 @@ struct BybitOrderFormView: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil)
+                                await manager.sellMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil, takeProfit: takeProfitEnabled ? sellTakeProfit: nil)
                             }
                         }) {
                             HStack {
@@ -141,7 +168,7 @@ struct BybitOrderFormView: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                await manager.buyMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil)
+                                await manager.buyMarket(symbol: book.pair, vol: volume, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil, takeProfit: takeProfitEnabled ? buyTakeProfit: nil)
                             }
                         }) {
                             HStack {
@@ -157,7 +184,7 @@ struct BybitOrderFormView: View {
                     VStack {
                         Button(action: {
                             Task {
-                                await manager.sellLimit(symbol: book.pair, vol: volume, price: book.stats.bestAsk, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil)
+                                await manager.sellLimit(symbol: book.pair, vol: volume, price: book.stats.bestAsk, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil, takeProfit: takeProfitEnabled ? sellTakeProfit: nil)
                             }
                         }) {
                             HStack {
@@ -171,7 +198,7 @@ struct BybitOrderFormView: View {
                             .disabled(isFormInvalid())
                         Button(action: {
                             Task {
-                                await manager.buyLimit(symbol: book.pair, vol: volume, price: book.stats.bestBid, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil)
+                                await manager.buyLimit(symbol: book.pair, vol: volume, price: book.stats.bestBid, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil, takeProfit: takeProfitEnabled ? buyTakeProfit: nil)
                             }
                         }) {
                             HStack {
@@ -216,7 +243,6 @@ struct BybitOrderFormView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .imageScale(.large)
                 Divider()
-   
             }
 
             Spacer()

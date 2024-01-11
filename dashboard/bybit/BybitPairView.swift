@@ -17,7 +17,9 @@ struct BybitPairView: View {
     @State var stopLossEnabled: Bool = false
     @State var sellStopLoss: Double!
     @State var buyStopLoss: Double!
-    
+    @State var takeProfitEnabled: Bool = false
+    @State var sellTakeProfit: Double!
+    @State var buyTakeProfit: Double!
     @State var isBookSocketReady: Bool = false
     @State var isTradesSocketReady: Bool = false
     
@@ -50,7 +52,7 @@ struct BybitPairView: View {
                     
                     BybitPriceVolumeChart()
                     
-                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss)
+                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
                 
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
