@@ -25,7 +25,7 @@ struct LogView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Divider()
+         
             HStack {
                 Text("Log")
                     .font(.caption)
@@ -38,7 +38,7 @@ struct LogView: View {
                     .foregroundColor(getColor(level: log.level))
             }.listStyle(.bordered)
             Divider()
-        }.frame(width: 300)
+        }.frame(width: 400)
     }
 }
 

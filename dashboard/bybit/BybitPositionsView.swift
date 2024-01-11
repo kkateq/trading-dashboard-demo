@@ -64,7 +64,7 @@ struct BybitPositionsView: View {
                                         HStack {
 //                                            Image(systemName: "rectangle.portrait.and.arrow.right.fill")
                                             Text("Limit")
-                                        }.frame(width: 20, height: 20)
+                                        }.frame(width: 50, height: 20)
                                             .foregroundColor(Color.white)
                                             .background(Color.teal)
                                             .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -78,7 +78,7 @@ struct BybitPositionsView: View {
                                         HStack {
 //                                            Image(systemName: "xmark")
                                             Text("Market")
-                                        }.frame(width: 20, height: 20)
+                                        }.frame(width: 50, height: 20)
                                             .foregroundColor(Color.white)
                                             .background(Color.orange)
                                             .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -100,8 +100,8 @@ struct BybitPositionsView: View {
                     }) {
                         HStack {
                             Image(systemName: "lightbulb.fill")
-                            Text("Flatten Positions")
-                        }.frame(width: 300, height: 30)
+                            Text("Close All Limit")
+                        }.frame(width: 400, height: 30)
                             .foregroundColor(Color.white)
                             .background(Color.teal)
                             .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -115,9 +115,9 @@ struct BybitPositionsView: View {
                     }) {
                         HStack {
                             Image(systemName: "power.circle.fill")
-                            Text("Close Positions")
+                            Text("Close All Market")
                         }
-                        .frame(width: 300, height: 30)
+                        .frame(width: 400, height: 30)
                         .foregroundColor(Color.white)
                         .background(Color.black)
                         .imageScale(.large)
@@ -127,7 +127,7 @@ struct BybitPositionsView: View {
                     .padding(.bottom)
                 Divider()
             }
-        }.frame(width: 300, height: 200, alignment: .leading)
+        }.frame(width: 400, height: 200, alignment: .leading)
     }
 }
 

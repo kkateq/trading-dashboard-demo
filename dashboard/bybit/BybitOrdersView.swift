@@ -79,7 +79,7 @@ struct BybitOrdersView: View {
                         .imageScale(.large)
                 }.buttonStyle(PlainButtonStyle())
             }
-        }.frame(width: 300, height: 200, alignment: .leading)
+        }.frame(width: 400, height: 200, alignment: .leading)
     }
 }
 

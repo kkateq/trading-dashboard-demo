@@ -212,7 +212,7 @@ struct BybitOrderFormView: View {
                     }
                     Spacer()
 
-                }.frame(width: 300, height: 20)
+                }.frame(width: 400, height: 20)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .imageScale(.large)
                 Divider()
@@ -220,7 +220,7 @@ struct BybitOrderFormView: View {
             }
 
             Spacer()
-        }.frame(maxWidth: 320, maxHeight: .infinity)
+        }.frame(maxWidth: 420, maxHeight: .infinity)
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 2)

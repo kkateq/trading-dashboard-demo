@@ -12,10 +12,9 @@ struct BybitPairView: View {
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
     var manager: BybitPrivateManager
-    @State private var volume: Double = 100
-    @State private var scaleInOut: Bool = true
-    @State private var validate: Bool = false
-    @State var stopLossEnabled: Bool = true
+    @State private var volume: Double = 10
+    @State private var scaleInOut: Bool = false
+    @State var stopLossEnabled: Bool = false
     @State var sellStopLoss: Double!
     @State var buyStopLoss: Double!
     
