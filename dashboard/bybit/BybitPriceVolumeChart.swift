@@ -23,7 +23,9 @@ struct BybitBarValue: Identifiable {
 
 struct BybitPriceVolumeChart: View {
     @EnvironmentObject var recentTrades: BybitRecentTradeData
+    @EnvironmentObject var book: BybitOrderBook
     @State var data: [BybitBarValue] = []
+
     
     func updateChart(_ updatedList: [BybitRecentTradeRecord] ) -> Void {
         var res:[String:Double] = [:]
@@ -56,6 +58,10 @@ struct BybitPriceVolumeChart: View {
                 }
             
             }
+            RuleMark(y: .value("Ask", formatPrice(price: book.stats.bestAsk, pair: book.pair)))
+                            .foregroundStyle(.red)
+            RuleMark(y: .value("Bid", formatPrice(price: book.stats.bestBid, pair: book.pair)))
+                            .foregroundStyle(.green)
         }
 
         .chartYAxis {

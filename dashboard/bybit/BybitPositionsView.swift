@@ -62,7 +62,6 @@ struct BybitPositionsView: View {
                                         }
                                     }) {
                                         HStack {
-//                                            Image(systemName: "rectangle.portrait.and.arrow.right.fill")
                                             Text("Limit")
                                         }.frame(width: 50, height: 20)
                                             .foregroundColor(Color.white)
@@ -76,7 +75,6 @@ struct BybitPositionsView: View {
                                         }
                                     }) {
                                         HStack {
-//                                            Image(systemName: "xmark")
                                             Text("Market")
                                         }.frame(width: 50, height: 20)
                                             .foregroundColor(Color.white)
