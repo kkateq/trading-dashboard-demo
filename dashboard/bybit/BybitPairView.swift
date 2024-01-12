@@ -12,7 +12,7 @@ struct BybitPairView: View {
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
     var manager: BybitPrivateManager
-    @State private var volume: Double = 10
+    @State private var volume: Double
     @State private var scaleInOut: Bool = false
     @State var stopLossEnabled: Bool = false
     @State var sellStopLoss: Double!
@@ -28,6 +28,7 @@ struct BybitPairView: View {
         self.bybitbook_ws = Bybitbook(self.pair)
         self.bybittrades_ws = BybitLastTrade(self.pair)
         self.manager = BybitPrivateManager(self.pair)
+        self.volume = Constants.pairSettings[pair]!.minimumOrderVolume
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -60,7 +61,7 @@ struct BybitPairView: View {
                         BybitBellCurve()
                         BybitImbalanceChart()
                     }
-                    BybitOrderBookView()
+                    BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
                         
                     BybitTimesAndSalesView()
                     

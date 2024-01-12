@@ -7,11 +7,14 @@
 
 import SwiftUI
 
-struct VolumeCell: View {
+enum RecordType: String {
+    case ask, bid
+}
 
+struct VolumeCell: View {
     var volume: Double
     var maxVolume: Double
-    var type: KrakenBookRecordType
+    var type: RecordType
     @State var isHover = false
     var price: String
     var onLimit: (String) async -> Void
@@ -80,13 +83,10 @@ struct VolumeCell: View {
                             GridItem(.fixed(100), spacing: 2),
                             GridItem(.fixed(100), spacing: 2),
                             GridItem(.fixed(100), spacing: 2)], spacing: 2) {
-//            NoteCell()
+
             EmptyCell()
             PriceCell(price: "0.9888", depth: 25, up: true)
             VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
-//            NoteCell()
-            
-
         }
     }.frame(width: 400, height: 500)
 }

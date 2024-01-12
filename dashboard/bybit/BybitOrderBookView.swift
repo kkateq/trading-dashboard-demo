@@ -9,7 +9,17 @@ import SwiftUI
 
 struct BybitOrderBookView: View {
     @EnvironmentObject var book: BybitOrderBook
+    @EnvironmentObject var manager: BybitPrivateManager
+    @Binding var volume: Double
+    @Binding var scaleInOut: Bool
 
+    @Binding var stopLossEnabled: Bool
+    @Binding var takeProfitEnabled: Bool
+    @Binding var sellStopLoss: Double!
+    @Binding var buyStopLoss: Double!
+    @Binding var sellTakeProfit: Double!
+    @Binding var buyTakeProfit: Double!
+    
     let cellWidth = 100
     let cellHeight = 25
     let layout = [
@@ -17,6 +27,14 @@ struct BybitOrderBookView: View {
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2)
     ]
+    
+    func sellLimit(price: String) async {
+        await manager.sellLimit(symbol: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? sellStopLoss : nil, takeProfit: takeProfitEnabled ? sellTakeProfit: nil)
+    }
+    
+    func buyLimit(price: String) async {
+        await manager.buyLimit(symbol: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil, takeProfit: takeProfitEnabled ? buyTakeProfit: nil)
+    }
 
     var body: some View {
         VStack {
@@ -37,18 +55,10 @@ struct BybitOrderBookView: View {
                                     RoundedRectangle(cornerRadius: 1)
                                         .stroke(color, lineWidth: 1)
                                 )
-                            Text(formatVolume(volume: record.vol, pair: book.pair))
-                                .frame(width: 100, height: 25, alignment: .leading)
-                                .font(.title3)
-                                .foregroundColor(Color("AskTextColor"))
-                                .background(.white)
+                            VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: record.price, onLimit: sellLimit)
 
                         } else {
-                            Text(formatVolume(volume: record.vol, pair: book.pair))
-                                .frame(width: 100, height: 25, alignment: .trailing)
-                                .font(.title3)
-                                .foregroundColor(Color("BidTextColor"))
-                                .background(.white)
+                            VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: record.price, onLimit: buyLimit)
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)
                                 .font(.title3)
@@ -88,6 +98,6 @@ struct BybitOrderBookView: View {
     }
 }
 
-#Preview {
-    BybitOrderBookView()
-}
+//#Preview {
+//    BybitOrderBookView()
+//}
