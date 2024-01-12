@@ -27,15 +27,15 @@ struct BybitImbalanceChart: View {
     }
 
     func updateChart(_ publishedStats: BybitStats!) {
-//        if points.count > 500 {
-//            points = points.dropFirst(200)
-//        }
-//        if points.count > 500 {
-//            points = points.dropFirst(200)
-//        }
-//        if points.count > 500 {
-//            points = points.dropFirst(200)
-//        }
+        if points.count > 500 {
+            points = points.suffix(200)
+        }
+        if points.count > 500 {
+            points = points.suffix(200)
+        }
+        if points.count > 500 {
+            points = points.suffix(200)
+        }
         points.append(Point(x: publishedStats.time, y: imbalance(publishedStats)))
         points5.append(Point(x: publishedStats.time, y: imbalance5(publishedStats)))
         points10.append(Point(x: publishedStats.time, y: imbalance10(publishedStats)))

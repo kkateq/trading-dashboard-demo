@@ -16,12 +16,7 @@ struct DashboardView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                HStack(alignment: .top) {
-                    Text(pair)
-                    Spacer()
-                }.padding([.top], 5)
-            }
+           
            
 
             VStack(alignment: .leading) {
