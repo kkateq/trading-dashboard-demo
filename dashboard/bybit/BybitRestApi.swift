@@ -47,7 +47,34 @@ enum BybitRestApi {
 
         return ""
     }
+    
+    private static func fetchPublic(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:]) async {
+        let query = encode(params: params)
+        let url = "https://api.bybit.com/v5\(route)?\(query)"
+        guard let url = URL(string: url) else { fatalError("Missing URL") }
+      
+        var urlRequest = URLRequest(url: url)
+        let session = URLSession.shared
 
+        let dataTask = session.dataTask(with: urlRequest) { data, response, error in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+            
+//            let p = String(decoding: data!, as: UTF8.self)
+
+            guard let response = response as? HTTPURLResponse else { return }
+
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+
+                cb(data)
+            }
+        }
+        dataTask.resume()
+    }
+    
     private static func fetchPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:]) async {
         let query = encode(params: params)
         let url = "https://api.bybit.com/v5\(route)?\(query)"
@@ -71,7 +98,7 @@ enum BybitRestApi {
                 return
             }
             
-            let p = String(decoding: data!, as: UTF8.self)
+//            let p = String(decoding: data!, as: UTF8.self)
 
             guard let response = response as? HTTPURLResponse else { return }
 
@@ -154,5 +181,17 @@ enum BybitRestApi {
 
     static func createOrder(cb: @escaping (Data) -> Void, params: [String: Any]) async {
         await postPrivate(cb: cb, route: "/order/create", params: params)
+    }
+    
+    static func openInterest(cb: @escaping (Data) -> Void, symbol: String) async {
+        LogManager.shared.action("Fetch open interest...")
+
+        await fetchPublic(cb: cb, route: "/market/open-interest", params: ["symbol": symbol, "category": "linear", "interval": "5min"])
+    }
+    
+    static func getKline(cb: @escaping (Data) -> Void, symbol: String) async {
+        LogManager.shared.action("Fetch historical data...")
+
+        await fetchPublic(cb: cb, route: "/market/open-interest", params: ["symbol": symbol, "category": "linear", "interval": "1"])
     }
 }

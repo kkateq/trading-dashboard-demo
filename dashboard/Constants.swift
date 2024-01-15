@@ -16,7 +16,7 @@ struct PairSettings {
 }
 
 let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
-let avaxSettings = PairSettings(leverage: 4, minimumOrderVolume: 1, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10000)
+let avaxSettings = PairSettings(leverage: 4, minimumOrderVolume: 5, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10000)
 let aptSettings = PairSettings(leverage: 3, minimumOrderVolume: 5, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
 
 enum Constants {
