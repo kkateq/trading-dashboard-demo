@@ -124,7 +124,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     func update(_ update: BybitRecentTradeUpdateResponse) {
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
-            list.append(record)
+            list.insert(record, at: 0)
         }
         self.lastTrade = list.last
     }

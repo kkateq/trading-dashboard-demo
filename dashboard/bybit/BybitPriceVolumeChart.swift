@@ -46,10 +46,11 @@ struct BybitPriceVolumeChart: View {
     var body: some View {
         Chart {
             ForEach(data) { shape in
+                
                 BarMark(
                     x: .value("Volume", shape.volume),
                     y: .value("Price", shape.price),
-                    width: .fixed(10)
+                    width: .automatic
          
                 )  .annotation(position: .trailing) {
                     Text("\(Int(shape.volume))")
@@ -71,7 +72,7 @@ struct BybitPriceVolumeChart: View {
             }
         }
         .onReceive(recentTrades.$list, perform: updateChart)
-        .frame(width: 300, height: 1100)
+        .frame(width: 300, height: 1150)
         .fixedSize(horizontal: true, vertical: false)
     }
 }

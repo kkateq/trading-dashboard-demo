@@ -30,11 +30,11 @@ struct BybitImbalanceChart: View {
         if points.count > 500 {
             points = points.suffix(200)
         }
-        if points.count > 500 {
-            points = points.suffix(200)
+        if points5.count > 500 {
+            points5 = points5.suffix(200)
         }
-        if points.count > 500 {
-            points = points.suffix(200)
+        if points10.count > 500 {
+            points10 = points10.suffix(200)
         }
         points.append(Point(x: publishedStats.time, y: imbalance(publishedStats)))
         points5.append(Point(x: publishedStats.time, y: imbalance5(publishedStats)))
@@ -67,7 +67,7 @@ struct BybitImbalanceChart: View {
                         y: .value("Threshold", 0.33)
                     )
                     .foregroundStyle(.purple)
-                }.frame(width: 710, height: 200)
+                }.frame(width: 710, height: 150)
 
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()
@@ -96,7 +96,7 @@ struct BybitImbalanceChart: View {
                         y: .value("Threshold", 0.33)
                     )
                     .foregroundStyle(.purple)
-                }.frame(width: 710, height: 200)
+                }.frame(width: 710, height: 150)
 
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()
@@ -125,7 +125,7 @@ struct BybitImbalanceChart: View {
                         y: .value("Threshold", 0.33)
                     )
                     .foregroundStyle(.purple)
-                }.frame(width: 710, height: 200)
+                }.frame(width: 710, height: 150)
 
                     .chartYScale(domain: -1.0 ... 1.0)
                     .padding()

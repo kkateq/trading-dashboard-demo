@@ -47,26 +47,30 @@ struct BybitPairView: View {
         VStack(alignment: .center) {
             if isBookSocketReady && isTradesSocketReady {
                 HStack {
-                    VStack {
+                    BybitTimesAndSalesView()
+                    BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
+                        
+                    BybitPriceVolumeChart()
+                    VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
                             HStack(alignment: .top) {
                                 Text(pair)
                                 Spacer()
                             }.padding([.top], 5)
                         }
-                        HStack {
-                            BybitRawVolumeChart()
-                            BybitFilteredVolumeChart()
+                        VStack {
+                            HStack {
+                                BybitRawVolumeChart()
+                                BybitFilteredVolumeChart()
+                            }
+                            BybitBellCurve()
+                            
+                            BuySellTransactionsChart()
+                            BybitImbalanceChart()
                         }
-                        BybitBellCurve()
-                        BybitImbalanceChart()
+                        Spacer()
                     }
-                    BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
-                        
-                    BybitTimesAndSalesView()
-                    
-                    BybitPriceVolumeChart()
-                    
+            
                     BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
                 
                 }.environmentObject(bybittrades_ws.recentTrades)
