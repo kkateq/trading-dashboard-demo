@@ -122,11 +122,15 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     }
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
+        var upres:[BybitRecentTradeRecord] = []
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
-            list.insert(record, at: 0)
+            upres.append(record)
         }
-        self.lastTrade = list.last
+        
+        upres.sort(by: {$0.time < $1.time})
+        self.list = upres + self.list
+        self.lastTrade = list.first
     }
 }
 

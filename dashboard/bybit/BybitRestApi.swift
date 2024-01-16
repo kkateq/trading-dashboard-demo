@@ -53,7 +53,7 @@ enum BybitRestApi {
         let url = "https://api.bybit.com/v5\(route)?\(query)"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
       
-        var urlRequest = URLRequest(url: url)
+        let urlRequest = URLRequest(url: url)
         let session = URLSession.shared
 
         let dataTask = session.dataTask(with: urlRequest) { data, response, error in
