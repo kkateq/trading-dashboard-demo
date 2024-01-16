@@ -11,24 +11,27 @@ struct BybitLastTradeCell: View {
     @EnvironmentObject var recentTrades: BybitRecentTradeData
     var price: String
     @State var volume: Double = 0
-    @State var lastPrice: String
-    @State var isBuy = false
+    @State var lastPrice: String = ""
 
-    func updateLastTrade(_ record: BybitRecentTradeRecord!) {
-        if record != nil {
-            volume = record.volume
-            lastPrice = record.priceStr
-            isBuy = record.side == .buy
-        }
-    }
+
 
     var body: some View {
-        let text = price == lastPrice ? formatVolume(volume: volume, pair: recentTrades.lastTrade.pair) : ""
-        Text(text)
-            .onReceive(recentTrades.$lastTrade, perform: updateLastTrade)
-            .frame(width: 50, height: 25)
-            .font(.title3)
-            .foregroundColor(.white)
-            .background(isBuy ? Color("GreenDarker") : Color("RedDarker"))
+    
+        if  let lastTrade = recentTrades.lastTradesBatch[price] {
+            
+            let text = formatVolume(volume: lastTrade.0, pair: recentTrades.lastTrade.pair)
+            let bgColor = lastTrade.1 == .buy ? Color("GreenDarker") : Color("RedDarker")
+            
+            Text(text)
+
+                .frame(width: 46, height: 25)
+                .font(.title3)
+                .foregroundColor(.white)
+                .background(bgColor)
+        } else {
+            Text("")
+                .frame(width: 46, height: 25)
+                .background(.white)
+        }
     }
 }

@@ -109,31 +109,32 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     @Published var priceDictBuys: [String: Double] = [:]
     @Published var priceDictSellsTemp: [String: Double] = [:]
     @Published var priceDictBuysTemp: [String: Double] = [:]
-    
+    @Published var lastTradesBatch: [String: (Double, BybitTradeSide)] = [:]
+
     static func == (lhs: BybitRecentTradeData, rhs: BybitRecentTradeData) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     func clean() {
-        self.priceDictSellsTemp = [:]
-        self.priceDictBuysTemp = [:]
+        priceDictSellsTemp = [:]
+        priceDictBuysTemp = [:]
     }
 
     init(_ initialData: BybitTradesHistoryResult!) {
         if let data = initialData {
             for item in data.list {
                 let record = BybitRecentTradeRecord(trade: item)
-                
+
                 if record.side == .sell {
                     let ecx = priceDictSells[record.priceStr] ?? 0
                     priceDictSells[record.priceStr] = record.volume + ecx
-                   
+
                     let temp = priceDictSellsTemp[record.priceStr] ?? 0
                     priceDictSellsTemp[record.priceStr] = record.volume + temp
                 } else {
                     let ecx = priceDictBuys[record.priceStr] ?? 0
                     priceDictBuys[record.priceStr] = record.volume + ecx
-                    
+
                     let temp = priceDictBuysTemp[record.priceStr] ?? 0
                     priceDictBuysTemp[record.priceStr] = record.volume + temp
                 }
@@ -147,29 +148,34 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
         var upres: [BybitRecentTradeRecord] = []
+        lastTradesBatch = [:]
+
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
             upres.append(record)
-            
+
+            lastTradesBatch[record.priceStr] = (volume: record.volume, side: record.side)
+
             if record.side == .sell {
                 let ecx = priceDictSells[record.priceStr] ?? 0
                 priceDictSells[record.priceStr] = record.volume + ecx
-               
+
                 let temp = priceDictSellsTemp[record.priceStr] ?? 0
                 priceDictSellsTemp[record.priceStr] = record.volume + temp
             } else {
                 let ecx = priceDictBuys[record.priceStr] ?? 0
                 priceDictBuys[record.priceStr] = record.volume + ecx
-                
+
                 let temp = priceDictBuysTemp[record.priceStr] ?? 0
                 priceDictBuysTemp[record.priceStr] = record.volume + temp
             }
-
         }
 
         upres.sort(by: { $0.time < $1.time })
+
         list = upres + list
         lastTrade = list.first
+        print("Last trade \(lastTrade.price)")
     }
 }
 

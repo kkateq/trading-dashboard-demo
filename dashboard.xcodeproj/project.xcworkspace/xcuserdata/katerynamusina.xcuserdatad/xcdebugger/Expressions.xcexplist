@@ -165,6 +165,14 @@
          contextName = "closure #1 in closure #1 in closure #1 in closure #2 in closure #1 in BybitPositionsView.body.getter:BybitPositionsView.swift">
       </ContextState>
       <ContextState
+         contextName = "BybitLastTradeCell.body.getter:BybitLastTradeCell.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "recentTrades.lastTradesBatch">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in BybitPrivateManager.cancelAllOrders():BybitPrivateManager.swift">
       </ContextState>
       <ContextState
@@ -245,6 +253,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "BybitLastTradeCell.updateLastTrade(_:):BybitLastTradeCell.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in Binancebook.downloadInitialBookSnapshot():Binancebook.swift">
       </ContextState>
       <ContextState
@@ -266,6 +277,9 @@
       </ContextState>
       <ContextState
          contextName = "BybitPrivateManager.init():BybitPrivateManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitRecentTradeData.update(_:):BybitLastTrade.swift">
       </ContextState>
       <ContextState
          contextName = "RecentTradeCell.sellMarket.getter:RecentTradeCell.swift">
@@ -320,6 +334,12 @@
                value = "result.success">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BybitPrivateManager.buyLimit(symbol:vol:price:scaleInOut:stopLoss:):BybitPrivateManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitInstrumentStats.parseMessage(message:):BybitInstrumentStats.swift">
       </ContextState>
       <ContextState
          contextName = "Manager.closePositionMarketREST(refid:validate:leverage:):Manager.swift">
@@ -377,6 +397,12 @@
                value = "response.statusCode">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BybitPrivateManager.closeByLimit(id:best_bid:best_ask:):BybitPrivateManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BybitPrivateManager.buyMarket(symbol:vol:scaleInOut:stopLoss:takeProfit:):BybitPrivateManager.swift">
       </ContextState>
       <ContextState
          contextName = "KrakenRecentTrades.parseTextMessage(message:):KrakenRecentTrades.swift">
