@@ -5,8 +5,8 @@
 //  Created by km on 26/12/2023.
 //
 
-import Foundation
 import CryptoSwift
+import Foundation
 
 extension Date {
     func currentTimeMillis() -> Int64 {
@@ -65,11 +65,10 @@ func formatTimestamp(_ ts: Int) -> String {
     dayTimePeriodFormatter.dateFormat = "MMM dd YYYY hh:mm a"
 
     return dayTimePeriodFormatter.string(from: date as Date)
-
 }
 
 func getDate(timestamp: Int) -> Date {
-    return NSDate(timeIntervalSince1970: TimeInterval(timestamp)) as Date
+    return Date(timeIntervalSince1970: TimeInterval(timestamp / 1000))
 }
 
 func generateSignature(api_secret: String, value: String) -> String {
@@ -77,4 +76,3 @@ func generateSignature(api_secret: String, value: String) -> String {
     let hash = try? HMAC(key: api_secret, variant: .sha2(.sha256)).authenticate(Array(inputData))
     return hash?.toHexString() ?? ""
 }
-

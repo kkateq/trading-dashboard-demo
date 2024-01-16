@@ -43,6 +43,7 @@ struct BybitPriceVolumeChart: View {
         
         data = res.sorted(by: {Double($0.price)! > Double($1.price)!})
     }
+    
     let yValues = stride(from: 0, to: 2, by: 0.0001).map { $0 }
     var body: some View {
         Chart {

@@ -110,7 +110,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     @Published var priceDictBuys: [String: Double] = [:]
     @Published var priceDictSellsTemp: [String: Double] = [:]
     @Published var priceDictBuysTemp: [String: Double] = [:]
-    @Published var lastTradesBatch: [String: (Double, BybitTradeSide)] = [:]
+    @Published var lastTradesBatch: [String: (Double, BybitTradeSide, Int)] = [:]
     var lastMessageTs: Int64
 
     static func == (lhs: BybitRecentTradeData, rhs: BybitRecentTradeData) -> Bool {
@@ -155,16 +155,14 @@ class BybitRecentTradeData: ObservableObject, Equatable {
         if ts - self.lastMessageTs > 100000 {
             lastTradesBatch = [:]
             self.lastMessageTs = ts
-            print ("cleaned")
-        } else {
-            print("skipped")
-        }
+        
+        } 
 
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
             upres.append(record)
 
-            lastTradesBatch[record.priceStr] = (volume: record.volume, side: record.side)
+            lastTradesBatch[record.priceStr] = (volume: record.volume, side: record.side, ts: record.time)
 
             if record.side == .sell {
                 let ecx = priceDictSells[record.priceStr] ?? 0

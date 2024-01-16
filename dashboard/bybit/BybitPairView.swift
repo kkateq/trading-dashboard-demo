@@ -63,10 +63,11 @@ struct BybitPairView: View {
                                 BybitRawVolumeChart()
                                 BybitFilteredVolumeChart()
                             }
-                            BybitBellCurve()
+//                            BybitBellCurve()
 //                            BybitTickerStats(pair: pair)
 //                            BuySellTransactionsChart()
-                            BybitImbalanceChart()
+//                            BybitImbalanceChart()
+                            BybitVolumeChart()
                         }
                         Spacer()
                     }

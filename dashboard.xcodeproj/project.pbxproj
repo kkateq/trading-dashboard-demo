@@ -59,6 +59,7 @@
 		34E339262B5555320013F17D /* BybitKline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339252B5555320013F17D /* BybitKline.swift */; };
 		34E339282B5678010013F17D /* RecentTrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339272B5678010013F17D /* RecentTrade.swift */; };
 		34E3392A2B568AF60013F17D /* BybitPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339292B568AF60013F17D /* BybitPriceCell.swift */; };
+		34E3392C2B56A4DE0013F17D /* BybitVolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -161,6 +162,7 @@
 		34E339252B5555320013F17D /* BybitKline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitKline.swift; sourceTree = "<group>"; };
 		34E339272B5678010013F17D /* RecentTrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrade.swift; sourceTree = "<group>"; };
 		34E339292B568AF60013F17D /* BybitPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPriceCell.swift; sourceTree = "<group>"; };
+		34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitVolumeChart.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				34E339192B501D850013F17D /* BybitFilteredVolumeChart.swift */,
 				34E3391D2B501FA80013F17D /* BybitImbalanceChart.swift */,
 				34E339212B5547460013F17D /* BybitInstrumentStats.swift */,
+				34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */,
 				34E339252B5555320013F17D /* BybitKline.swift */,
 				34E338EE2B4813480013F17D /* BybitLastTrade.swift */,
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
@@ -595,6 +598,7 @@
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */,
+				34E3392C2B56A4DE0013F17D /* BybitVolumeChart.swift in Sources */,
 				34E338F12B484AF10013F17D /* BybitTimesAndSalesView.swift in Sources */,
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
