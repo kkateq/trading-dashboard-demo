@@ -10,14 +10,16 @@ import Charts
 
 
 struct BybitBarValue: Identifiable {
-//    var color: String
+    var color: String
+    var side: BybitTradeSide
     var price: String
     var volume: Double
     var id = UUID()
-    init(price: String, volume: Double, id: UUID = UUID()) {
+    init(price: String, volume: Double, side: BybitTradeSide) {
         self.price = price
         self.volume = volume
-        self.id = id
+        self.side = side
+        self.color = side == .buy ? "Green" : "Red"
     }
 }
 
@@ -28,19 +30,19 @@ struct BybitPriceVolumeChart: View {
 
     
     func updateChart(_ updatedList: [BybitRecentTradeRecord] ) -> Void {
-        var res:[String:Double] = [:]
+        var res:[BybitBarValue] = []
         
-        for e in updatedList {
-            let price = formatPrice(price: e.price, pair: e.pair)
-            let volume = e.volume
-            if res.contains(where: {$0.key == price}) {
-                res[price] = res[price]! + volume
-            } else {
-                res[price] = volume
-            }
+        
+        recentTrades.priceDictBuys.forEach { key, value in
+            res.append(BybitBarValue(price: key, volume: value, side: .buy))
         }
         
-        data = res.keys.map({ BybitBarValue(price: $0, volume: res[$0]!)}).sorted(by: {Double($0.price)! > Double($1.price)!})
+        recentTrades.priceDictSells.forEach { key, value in
+            res.append(BybitBarValue(price: key, volume: value, side: .sell))
+        }
+        
+        
+        data = res.sorted(by: {Double($0.price)! > Double($1.price)!})
     }
     let yValues = stride(from: 0, to: 2, by: 0.0001).map { $0 }
     var body: some View {
@@ -57,6 +59,8 @@ struct BybitPriceVolumeChart: View {
                         .foregroundColor(.secondary)
                         .font(.caption)
                 }
+                .foregroundStyle(by: .value("Shape Color", shape.color))
+                
             
             }
             RuleMark(y: .value("Ask", formatPrice(price: book.stats.bestAsk, pair: book.pair)))
@@ -64,6 +68,9 @@ struct BybitPriceVolumeChart: View {
             RuleMark(y: .value("Bid", formatPrice(price: book.stats.bestBid, pair: book.pair)))
                             .foregroundStyle(.green)
         }
+        .chartForegroundStyleScale([
+            "Green": Color("BidChartColor"), "Red": Color("AskChartColor"),
+        ])
 
         .chartYAxis {
             AxisMarks(preset: .extended, position: .leading) { _ in
