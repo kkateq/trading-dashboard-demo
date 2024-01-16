@@ -58,14 +58,14 @@ struct KrakenOrderBookView: View {
                                 let price = formatPrice(price: record.pr)
                                 
                                 if record.type == KrakenBookRecordType.ask {
-                                    EmptyCell()
+                                    EmptyCell(width: 100)
                                     PriceCell(price: price, depth: book.depth, up: book.recentPeg < book.stats.pegValue)
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: price, onLimit: sellLimit)
                                  
                                 } else {
                                     VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: price, onLimit: buyLimit)
                                     PriceCell(price: price, depth: book.depth, up: book.recentPeg < book.stats.pegValue)
-                                    EmptyCell()
+                                    EmptyCell(width: 100)
                                 }
                             }
                         }

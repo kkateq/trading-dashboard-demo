@@ -28,7 +28,7 @@ struct BinanceOrderBookView: View {
 
                         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : Color("Background"))
                         if record.type == BinanceBookRecordType.ask {
-                            EmptyCell()
+                            EmptyCell(width: 100)
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)
                                 .font(.title3)
@@ -57,7 +57,7 @@ struct BinanceOrderBookView: View {
                                     RoundedRectangle(cornerRadius: 1)
                                         .stroke(color, lineWidth: 1)
                                 )
-                            EmptyCell()
+                            EmptyCell(width: 100)
                         }
                         if isAskPeg {
                             Text("\(Int(book.stats.totalBidRawVolumePerc))%")

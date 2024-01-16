@@ -26,7 +26,7 @@ struct BybitOrderBookView: View {
     let layout = [
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
-        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(150), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2)
     ]
@@ -51,7 +51,7 @@ struct BybitOrderBookView: View {
                         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : Color("Background"))
                         if record.type == BybitBookRecordType.ask {
                             RecentTrade(price: record.price, side: .buy, pair: book.pair)
-                            EmptyCell()
+                            EmptyCell(width: 100)
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)
                                 .font(.title3)
@@ -74,25 +74,26 @@ struct BybitOrderBookView: View {
                                     RoundedRectangle(cornerRadius: 1)
                                         .stroke(color, lineWidth: 1)
                                 )
-                            EmptyCell()
+                            EmptyCell(width: 100)
                             RecentTrade(price: record.price, side: .sell, pair: book.pair)
                         }
                         if isAskPeg {
-                            EmptyCell()
+                            EmptyCell(width: 100)
+                        
                             Text("\(Int(book.stats.totalBidRawVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.blue)
                                 .background(.white)
                                 .font(.title3)
 
-                            BybitLastTradeCell()
+                            EmptyCell(width: 150)
 
                             Text("\(Int(book.stats.totalAskRawVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.red)
                                 .background(.white)
                                 .font(.title3)
-                            EmptyCell()
+                            EmptyCell(width: 100)
                         }
                     }
                 }
@@ -100,7 +101,7 @@ struct BybitOrderBookView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
         }
-        .frame(width: 530)
+        .frame(width: 580)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)

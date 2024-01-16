@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct EmptyCell: View {
-
+    var width: CGFloat
     var body: some View {
         Text("")
-            .frame(width: 100, height: 25, alignment: .center)
+            .frame(width: width, height: 25, alignment: .center)
             .font(.system(.title3))
             .background(Rectangle().fill(Color.white))
     }
@@ -19,6 +19,6 @@ struct EmptyCell: View {
 
 struct EmptyCell_Previews: PreviewProvider {
     static var previews: some View {
-        EmptyCell()
+        EmptyCell(width: 100)
     }
 }

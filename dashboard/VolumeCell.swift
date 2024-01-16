@@ -84,7 +84,7 @@ struct VolumeCell: View {
                             GridItem(.fixed(100), spacing: 2),
                             GridItem(.fixed(100), spacing: 2)], spacing: 2) {
 
-            EmptyCell()
+            EmptyCell(width: 100)
             PriceCell(price: "0.9888", depth: 25, up: true)
             VolumeCell(volume: 800, maxVolume: 200000, type: .ask, price: "0.999", onLimit: { print("\($0)") })
         }
