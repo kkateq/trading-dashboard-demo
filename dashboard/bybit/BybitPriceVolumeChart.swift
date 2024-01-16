@@ -41,7 +41,6 @@ struct BybitPriceVolumeChart: View {
             res.append(BybitBarValue(price: key, volume: value, side: .sell))
         }
         
-        
         data = res.sorted(by: {Double($0.price)! > Double($1.price)!})
     }
     let yValues = stride(from: 0, to: 2, by: 0.0001).map { $0 }
@@ -54,11 +53,12 @@ struct BybitPriceVolumeChart: View {
                     y: .value("Price", shape.price),
                     width: .automatic
          
-                )  .annotation(position: .trailing) {
-                    Text("\(Int(shape.volume))")
-                        .foregroundColor(.secondary)
-                        .font(.caption)
-                }
+                )  
+//                .annotation(position: .trailing) {
+//                    Text("\(Int(shape.volume))")
+//                        .foregroundColor(.secondary)
+//                        .font(.caption)
+//                }
                 .foregroundStyle(by: .value("Shape Color", shape.color))
                 
             

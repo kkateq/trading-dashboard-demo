@@ -14,11 +14,8 @@ struct BybitLastTradeCell: View {
     @State var lastPrice: String = ""
 
 
-
     var body: some View {
-    
         if  let lastTrade = recentTrades.lastTradesBatch[price] {
-            
             let text = formatVolume(volume: lastTrade.0, pair: recentTrades.lastTrade.pair)
             let bgColor = lastTrade.1 == .buy ? Color("GreenDarker") : Color("RedDarker")
             

@@ -100,6 +100,7 @@ struct BybitRecentTradeRecord: Identifiable {
     }
 }
 
+
 class BybitRecentTradeData: ObservableObject, Equatable {
     var id = UUID()
 
@@ -110,6 +111,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     @Published var priceDictSellsTemp: [String: Double] = [:]
     @Published var priceDictBuysTemp: [String: Double] = [:]
     @Published var lastTradesBatch: [String: (Double, BybitTradeSide)] = [:]
+    var lastMessageTs: Int64
 
     static func == (lhs: BybitRecentTradeData, rhs: BybitRecentTradeData) -> Bool {
         return lhs.id == rhs.id
@@ -121,6 +123,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     }
 
     init(_ initialData: BybitTradesHistoryResult!) {
+        lastMessageTs = Date().currentTimeMillis()
         if let data = initialData {
             for item in data.list {
                 let record = BybitRecentTradeRecord(trade: item)
@@ -148,7 +151,14 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
         var upres: [BybitRecentTradeRecord] = []
-        lastTradesBatch = [:]
+        let ts = Date().currentTimeMillis()
+        if ts - self.lastMessageTs > 100000 {
+            lastTradesBatch = [:]
+            self.lastMessageTs = ts
+            print ("cleaned")
+        } else {
+            print("skipped")
+        }
 
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
@@ -175,7 +185,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
         list = upres + list
         lastTrade = list.first
-        print("Last trade \(lastTrade.price)")
+   
     }
 }
 

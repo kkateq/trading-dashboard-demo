@@ -8,6 +8,12 @@
 import Foundation
 import CryptoSwift
 
+extension Date {
+    func currentTimeMillis() -> Int64 {
+        return Int64(self.timeIntervalSince1970 * 1000)
+    }
+}
+
 func formatPrice(price: Double, fr: Int = 4) -> String {
     let p = pow(Double(10), Double(fr))
     return "\(round(p * price) / p)"
