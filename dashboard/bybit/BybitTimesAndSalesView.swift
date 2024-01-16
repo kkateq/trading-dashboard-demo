@@ -28,17 +28,32 @@ struct BybitTimesAndSalesView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                VStack {
-                    Text("Filter volume").font(.caption)
-                    TextField("FilterVolume", value: $filterVolume, formatter: formatter)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack {
+                HStack {
+                    VStack {
+                        Text("Filter volume").font(.caption)
+                        TextField("FilterVolume", value: $filterVolume, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    }
+                    VStack {
+                        Text("Highlight volume").font(.caption)
+                        TextField("Volume", value: $highlightVolume, formatter: formatter)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    }
                 }
-                VStack {
-                    Text("Highlight volume").font(.caption)
-                    TextField("Volume", value: $highlightVolume, formatter: formatter)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                }
+                Button(action: {
+                    Task {
+                        recentTrades.clean()
+                    }
+                }) {
+                    HStack {
+                        Text("Clear recent")
+                    }.frame(width: 200, height: 30)
+                        .foregroundColor(Color.white)
+                        .background(Color.teal)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .imageScale(.large)
+                }.buttonStyle(PlainButtonStyle())
             }
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {

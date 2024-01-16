@@ -10,6 +10,7 @@ import SwiftUI
 struct BybitOrderBookView: View {
     @EnvironmentObject var book: BybitOrderBook
     @EnvironmentObject var manager: BybitPrivateManager
+
     @Binding var volume: Double
     @Binding var scaleInOut: Bool
 
@@ -25,6 +26,8 @@ struct BybitOrderBookView: View {
     let layout = [
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
+        GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2)
     ]
     
@@ -36,6 +39,7 @@ struct BybitOrderBookView: View {
         await manager.buyLimit(symbol: book.pair, vol: volume, price: Double(price)!, scaleInOut: scaleInOut, stopLoss: stopLossEnabled ? buyStopLoss : nil, takeProfit: takeProfitEnabled ? buyTakeProfit: nil)
     }
 
+
     var body: some View {
         VStack {
             ScrollView {
@@ -46,6 +50,7 @@ struct BybitOrderBookView: View {
 
                         let color = isAskPeg ? Color("Red") : (isBidPeg ? Color("Green") : Color("Background"))
                         if record.type == BybitBookRecordType.ask {
+                            RecentTrade(price: record.price, side: .buy, pair: book.pair)
                             EmptyCell()
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)
@@ -56,8 +61,10 @@ struct BybitOrderBookView: View {
                                         .stroke(color, lineWidth: 1)
                                 )
                             VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .ask, price: record.price, onLimit: sellLimit)
+                            RecentTrade(price: record.price, side: .sell, pair: book.pair)
 
                         } else {
+                            RecentTrade(price: record.price, side: .buy, pair: book.pair)
                             VolumeCell(volume: record.vol, maxVolume: book.stats.maxVolume, type: .bid, price: record.price, onLimit: buyLimit)
                             Text(formatPrice(price: record.pr, pair: book.pair))
                                 .frame(width: 100, height: 25, alignment: .center)
@@ -68,8 +75,10 @@ struct BybitOrderBookView: View {
                                         .stroke(color, lineWidth: 1)
                                 )
                             EmptyCell()
+                            RecentTrade(price: record.price, side: .sell, pair: book.pair)
                         }
                         if isAskPeg {
+                            EmptyCell()
                             Text("\(Int(book.stats.totalBidRawVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.blue)
@@ -83,6 +92,7 @@ struct BybitOrderBookView: View {
                                 .foregroundStyle(.red)
                                 .background(.white)
                                 .font(.title3)
+                            EmptyCell()
                         }
                     }
                 }
@@ -90,7 +100,7 @@ struct BybitOrderBookView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 1))
         }
-        .frame(width: 330)
+        .frame(width: 530)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)

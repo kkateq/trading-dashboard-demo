@@ -39,8 +39,6 @@ struct BybitRecentTradeUpdateResponse: Decodable {
     var data: [BybitRecentTradeRecordResponse]
 }
 
-
-
 struct BybitTradeHistoryRecord: Decodable {
     var execId: String
     var symbol: String
@@ -72,6 +70,7 @@ struct BybitRecentTradeRecord: Identifiable {
     var pair: String
     var price: Double
     var volume: Double
+    var priceStr: String
     var side: BybitTradeSide
     var time: Int
     var isBlockTrade: Bool
@@ -80,6 +79,7 @@ struct BybitRecentTradeRecord: Identifiable {
     init(trade: BybitTradeHistoryRecord) {
         self.id = trade.execId
         self.pair = trade.symbol
+        self.priceStr = trade.price
         self.price = Double(trade.price)!
         self.volume = Double(trade.size)!
         self.side = trade.side == "Buy" ? .buy : .sell
@@ -90,6 +90,7 @@ struct BybitRecentTradeRecord: Identifiable {
     init(update: BybitRecentTradeRecordResponse) {
         self.id = update.tradeId
         self.pair = update.pair
+        self.priceStr = update.price
         self.price = Double(update.price)!
         self.volume = Double(update.volume)!
         self.side = update.side == "Buy" ? .buy : .sell
@@ -104,33 +105,71 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
     @Published var list: [BybitRecentTradeRecord] = []
     @Published var lastTrade: BybitRecentTradeRecord!
-
+    @Published var priceDictSells: [String: Double] = [:]
+    @Published var priceDictBuys: [String: Double] = [:]
+    @Published var priceDictSellsTemp: [String: Double] = [:]
+    @Published var priceDictBuysTemp: [String: Double] = [:]
+    
     static func == (lhs: BybitRecentTradeData, rhs: BybitRecentTradeData) -> Bool {
         return lhs.id == rhs.id
+    }
+    
+    func clean() {
+        self.priceDictSellsTemp = [:]
+        self.priceDictBuysTemp = [:]
     }
 
     init(_ initialData: BybitTradesHistoryResult!) {
         if let data = initialData {
             for item in data.list {
                 let record = BybitRecentTradeRecord(trade: item)
+                
+                if record.side == .sell {
+                    let ecx = priceDictSells[record.priceStr] ?? 0
+                    priceDictSells[record.priceStr] = record.volume + ecx
+                   
+                    let temp = priceDictSellsTemp[record.priceStr] ?? 0
+                    priceDictSellsTemp[record.priceStr] = record.volume + temp
+                } else {
+                    let ecx = priceDictBuys[record.priceStr] ?? 0
+                    priceDictBuys[record.priceStr] = record.volume + ecx
+                    
+                    let temp = priceDictBuysTemp[record.priceStr] ?? 0
+                    priceDictBuysTemp[record.priceStr] = record.volume + temp
+                }
+
                 list.append(record)
             }
-            list.sort(by: {$0.time < $1.time})
+            list.sort(by: { $0.time < $1.time })
             self.lastTrade = list.last
         }
-        
     }
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
-        var upres:[BybitRecentTradeRecord] = []
+        var upres: [BybitRecentTradeRecord] = []
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
             upres.append(record)
+            
+            if record.side == .sell {
+                let ecx = priceDictSells[record.priceStr] ?? 0
+                priceDictSells[record.priceStr] = record.volume + ecx
+               
+                let temp = priceDictSellsTemp[record.priceStr] ?? 0
+                priceDictSellsTemp[record.priceStr] = record.volume + temp
+            } else {
+                let ecx = priceDictBuys[record.priceStr] ?? 0
+                priceDictBuys[record.priceStr] = record.volume + ecx
+                
+                let temp = priceDictBuysTemp[record.priceStr] ?? 0
+                priceDictBuysTemp[record.priceStr] = record.volume + temp
+            }
+
         }
-        
-        upres.sort(by: {$0.time < $1.time})
-        self.list = upres + self.list
-        self.lastTrade = list.first
+
+        upres.sort(by: { $0.time < $1.time })
+        list = upres + list
+        lastTrade = list.first
     }
 }
 
@@ -182,7 +221,7 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
                     isSubscribed = true
                 }
             } else if isSubscribed {
-                if message.contains("\(BybitRecentTradeUpdateResponse.name).\(self.pair)") {
+                if message.contains("\(BybitRecentTradeUpdateResponse.name).\(pair)") {
                     let update = try JSONDecoder().decode(BybitRecentTradeUpdateResponse.self, from: Data(message.utf8))
 
                     DispatchQueue.main.async {
@@ -197,8 +236,6 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
             LogManager.shared.error("error is \(error.localizedDescription)")
         }
     }
-
-    
 
     func downloadRecentTradesSnapshot() async {
         let url = "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=\(pair)&limit60"
