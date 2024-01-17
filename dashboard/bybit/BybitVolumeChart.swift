@@ -31,10 +31,46 @@ struct BybitVolumeChart: View {
 
     func updateChart(_ list: [BybitRecentTradeRecord]) {
         var p: [BybitChartValue] = []
+        var sells: [String: (Double, Int)] = [:]
+        var buys: [String: (Double, Int)] = [:]
+        var prevBuyTime = 0
+        var prevSellTime = 0
         for record in list {
-            p.append(BybitChartValue(pair: book.pair, price: record.priceStr, volume: record.volume, side: record.side, ts: record.time))
+            if record.side == .buy {
+                if let exb = buys[record.priceStr] {
+                    if exb.1 - prevBuyTime < 500 {
+                        buys[record.priceStr] = (exb.0 + record.volume, record.time)
+                    } else {
+                        buys[record.priceStr] = (record.volume, record.time)
+                    }
+                } else {
+                    buys[record.priceStr] = (record.volume, record.time)
+                }
+                prevBuyTime = record.time
+            } else {
+                if let exs = sells[record.priceStr] {
+                    if exs.1 - prevSellTime < 500 {
+                        sells[record.priceStr] = (exs.0 + record.volume, record.time)
+                    } else {
+                        sells[record.priceStr] = (record.volume, record.time)
+                    }
+                } else {
+                    sells[record.priceStr] = (record.volume, record.time)
+                }
+                prevSellTime = record.time
+            }
+            
         }
+        
+        for value in buys {
+            p.append(BybitChartValue(pair: book.pair, price: value.key, volume: value.value.0, side: .buy, ts: value.value.1))
+        }
+        for value in sells {
+            p.append(BybitChartValue(pair: book.pair, price: value.key, volume: value.value.0, side: .sell, ts: value.value.1))
+        }
+      
         p.sort(by: { $0.time < $1.time })
+        
         data = p
     }
 
@@ -142,6 +178,7 @@ struct BybitVolumeChart: View {
                 //            "Green": Color("BidChartColor"), "Red": Color("AskChartColor"),
                 //        ])
                 //
+                .padding()
                 .onReceive(recentTrades.$list, perform: updateChart)
                 .frame(width: 1200, height: 750)
 //                .fixedSize(horizontal: false, vertical: true)
