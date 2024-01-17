@@ -60,6 +60,9 @@
 		34E339282B5678010013F17D /* RecentTrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339272B5678010013F17D /* RecentTrade.swift */; };
 		34E3392A2B568AF60013F17D /* BybitPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339292B568AF60013F17D /* BybitPriceCell.swift */; };
 		34E3392C2B56A4DE0013F17D /* BybitVolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */; };
+		34E3392E2B57E5530013F17D /* PriceLevelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392D2B57E5530013F17D /* PriceLevelManager.swift */; };
+		34E339302B57E8630013F17D /* BybitPriceLevelFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */; };
+		34E339322B58017B0013F17D /* BidAskSellsBuysChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339312B58017B0013F17D /* BidAskSellsBuysChart.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -163,6 +166,9 @@
 		34E339272B5678010013F17D /* RecentTrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrade.swift; sourceTree = "<group>"; };
 		34E339292B568AF60013F17D /* BybitPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPriceCell.swift; sourceTree = "<group>"; };
 		34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitVolumeChart.swift; sourceTree = "<group>"; };
+		34E3392D2B57E5530013F17D /* PriceLevelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLevelManager.swift; sourceTree = "<group>"; };
+		34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPriceLevelFormView.swift; sourceTree = "<group>"; };
+		34E339312B58017B0013F17D /* BidAskSellsBuysChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BidAskSellsBuysChart.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -343,23 +349,23 @@
 		34F401742B46C5BA00E0DC4A /* bybit */ = {
 			isa = PBXGroup;
 			children = (
+				34E339312B58017B0013F17D /* BidAskSellsBuysChart.swift */,
 				34E3391F2B514FA40013F17D /* BuySellTransactionsChart.swift */,
 				34E3391B2B501E300013F17D /* BybitBellCurve.swift */,
 				34F401752B46C5D700E0DC4A /* Bybitbook.swift */,
 				34E339192B501D850013F17D /* BybitFilteredVolumeChart.swift */,
 				34E3391D2B501FA80013F17D /* BybitImbalanceChart.swift */,
 				34E339212B5547460013F17D /* BybitInstrumentStats.swift */,
-				34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */,
 				34E339252B5555320013F17D /* BybitKline.swift */,
 				34E338EE2B4813480013F17D /* BybitLastTrade.swift */,
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
 				34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */,
-				34E339292B568AF60013F17D /* BybitPriceCell.swift */,
-				34E339272B5678010013F17D /* RecentTrade.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
 				34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
 				34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */,
+				34E339292B568AF60013F17D /* BybitPriceCell.swift */,
+				34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */,
 				34E339172B501CBF0013F17D /* BybitRawVolumeChart.swift */,
@@ -368,7 +374,10 @@
 				34E338E82B4708860013F17D /* BybitStats.swift */,
 				34E339232B554F800013F17D /* BybitTickerStats.swift */,
 				34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */,
+				34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */,
 				34E338F42B4BFFF30013F17D /* PriceChart.swift */,
+				34E3392D2B57E5530013F17D /* PriceLevelManager.swift */,
+				34E339272B5678010013F17D /* RecentTrade.swift */,
 			);
 			path = bybit;
 			sourceTree = "<group>";
@@ -593,6 +602,7 @@
 				34905C582B2B648400A5A649 /* EmptyCell.swift in Sources */,
 				34E338E92B4708860013F17D /* BybitStats.swift in Sources */,
 				34905C6D2B2C7EE000A5A649 /* Utils.swift in Sources */,
+				34E339302B57E8630013F17D /* BybitPriceLevelFormView.swift in Sources */,
 				34F4015A2B3EF02900E0DC4A /* BellCurve.swift in Sources */,
 				34F401782B46C5EF00E0DC4A /* BybitSocketTemplate.swift in Sources */,
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
@@ -606,8 +616,10 @@
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
 				34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */,
 				34F4015E2B3F28BA00E0DC4A /* PositionRecomendation.swift in Sources */,
+				34E3392E2B57E5530013F17D /* PriceLevelManager.swift in Sources */,
 				34E339162B4D75F00013F17D /* BybitRestApi.swift in Sources */,
 				34905C402B29C1A100A5A649 /* Krakenbook.swift in Sources */,
+				34E339322B58017B0013F17D /* BidAskSellsBuysChart.swift in Sources */,
 				34905C5C2B2B67D700A5A649 /* OrdersView.swift in Sources */,
 				34F401442B39C25100E0DC4A /* AverageVolumeIndicator.swift in Sources */,
 				34905C692B2C7E9300A5A649 /* Kraken.swift in Sources */,

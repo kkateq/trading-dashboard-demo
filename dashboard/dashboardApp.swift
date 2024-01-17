@@ -14,6 +14,7 @@ struct dashboardApp: App {
         
         WindowGroup {
             ContentView().environmentObject(LogManager.shared)
+        
                 
         }
     }

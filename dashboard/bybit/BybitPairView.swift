@@ -12,6 +12,7 @@ struct BybitPairView: View {
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
     var manager: BybitPrivateManager
+
     @State private var volume: Double
     @State private var scaleInOut: Bool = false
     @State var stopLossEnabled: Bool = false
@@ -47,10 +48,12 @@ struct BybitPairView: View {
         VStack(alignment: .center) {
             if isBookSocketReady && isTradesSocketReady {
                 HStack {
-                    BybitTimesAndSalesView()
+                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
+                    BybitPriceVolumeChart()
                     BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
                         
-                    BybitPriceVolumeChart()
+                
+                    BybitTimesAndSalesView()
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
                             HStack(alignment: .top) {
@@ -67,12 +70,14 @@ struct BybitPairView: View {
 //                            BybitTickerStats(pair: pair)
 //                            BuySellTransactionsChart()
 //                            BybitImbalanceChart()
+//                            BidAskSellsBuysChart()
                             BybitVolumeChart()
+                          
                         }
                         Spacer()
                     }
             
-                    BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
+    
                 
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
