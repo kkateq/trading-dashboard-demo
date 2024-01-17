@@ -9,17 +9,18 @@ import SwiftUI
 
 struct BybitTimesAndSalesView: View {
     @EnvironmentObject var recentTrades: BybitRecentTradeData
-    @State var filterVolume: Double = 10.0
+    @State var filterVolume: Double = 0.0
     @State var highlightVolume: Double = 50.0
     let cellWidth = 100
     let cellHeight = 20
     let layout = [
+        GridItem(.fixed(50), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(30), spacing: 2),
         GridItem(.fixed(50), spacing: 2),
-//        GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(50), spacing: 2)
     ]
+    @State var data:[BybitRecentTradeRecord] = []
     
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -37,6 +38,10 @@ struct BybitTimesAndSalesView: View {
         default:
             return("circle", Color("Transparent"))
         }
+    }
+    
+    func updateData( _ d: [BybitRecentTradeRecord]) {
+        self.data = d.sorted(by: {$0.time > $1.time})
     }
     
     var body: some View {
@@ -70,7 +75,7 @@ struct BybitTimesAndSalesView: View {
             }
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {
-                    let records = recentTrades.list.filter {$0.volume > filterVolume}
+                    let records = data.filter {$0.volume > filterVolume}
                     
                     ForEach(records) { record in
                         let color = record.side == .sell ? Color("Red") : Color("Blue")
@@ -78,6 +83,10 @@ struct BybitTimesAndSalesView: View {
                         let shouldHighlight = record.volume > highlightVolume
                         let bgColor = shouldHighlight ? (record.side == .sell ?Color("AskHover") : Color("BidHover")) : .white
                         let direction = returnDirection(direction: record.direction)
+                        Text("\(formatTimestamp(record.time, "hh:mm"))")
+                            .frame(width: 50, height: 20, alignment: .center)
+                            .foregroundStyle(color)
+                            .background(bgColor)
                         
                         Text("\(formatPrice(price: record.price, pair: record.pair))")
                             .foregroundStyle(color)
@@ -101,8 +110,8 @@ struct BybitTimesAndSalesView: View {
                             .background(bgColor)
                     }
                 }
-            }
-        }.frame(width: 250)
+            }.onReceive(recentTrades.$list, perform: updateData)
+        }.frame(width: 320)
             .background(Color("Background"))
             .font(.caption)
             .overlay(

@@ -58,11 +58,11 @@ func roundPrice(price: Double, pair: String) -> Double {
     return round(p * price) / p
 }
 
-func formatTimestamp(_ ts: Int) -> String {
-    let date = NSDate(timeIntervalSince1970: TimeInterval(ts))
+func formatTimestamp(_ ts: Int, _ dataFormat: String = "MMM dd YYYY hh:mm a") -> String {
+    let date = NSDate(timeIntervalSince1970: TimeInterval(ts / 1000))
 
     let dayTimePeriodFormatter = DateFormatter()
-    dayTimePeriodFormatter.dateFormat = "MMM dd YYYY hh:mm a"
+    dayTimePeriodFormatter.dateFormat = dataFormat
 
     return dayTimePeriodFormatter.string(from: date as Date)
 }

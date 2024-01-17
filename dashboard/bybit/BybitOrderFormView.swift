@@ -36,7 +36,7 @@ struct BybitOrderFormView: View {
     func getAllowedleverage(pair: String) -> Int {
 //        return Constants.pairSettings[pair]!.leverage
 //        It's variable on BYbit'
-        return 2
+        return 3
     }
 
     func getAllowedMargin() -> Double {

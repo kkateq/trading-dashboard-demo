@@ -144,13 +144,12 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
                 list.append(record)
             }
-            list.sort(by: { $0.time < $1.time })
+    
             self.lastTrade = list.last
         }
     }
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
-        var upres: [BybitRecentTradeRecord] = []
         let ts = Date().currentTimeMillis()
         if ts - self.lastMessageTs > 100000 {
             lastTradesBatch = [:]
@@ -160,8 +159,8 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
-            upres.append(record)
-
+            list.append(record)
+            lastTrade = record
             lastTradesBatch[record.priceStr] = (volume: record.volume, side: record.side, ts: record.time)
 
             if record.side == .sell {
@@ -178,11 +177,6 @@ class BybitRecentTradeData: ObservableObject, Equatable {
                 priceDictBuysTemp[record.priceStr] = record.volume + temp
             }
         }
-
-        upres.sort(by: { $0.time < $1.time })
-
-        list = upres + list
-        lastTrade = list.first
    
     }
 }
