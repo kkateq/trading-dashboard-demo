@@ -45,22 +45,47 @@ struct BybitVolumeChart: View {
     }()
 
     func getFrameWidth(volume: Double) -> CGFloat {
-        if volume < 1 {
+        if volume <= 10 {
             return 2
         }
-        if volume > 100 {
-            return 20
+        if volume > 10 && volume < 50 {
+            return 5
         }
 
-        return CGFloat(Int(volume))
+        if volume > 50 && volume < 100 {
+            return 10
+        }
+        if volume > 100 && volume < 150 {
+            return 15
+        }
+
+        return CGFloat(Int(volume / 10))
     }
 
     var body: some View {
-     
-
         VStack {
             VStack {
                 Chart {
+                    PointMark(
+                        x: .value("Time", Date()),
+                        y: .value("Price", book.stats.bestAsk)
+                    )
+                    .symbol {
+                        Circle()
+                            .fill(Color("AskChartColor"))
+                            .frame(width: getFrameWidth(volume: book.stats.bestAskVolume))
+                    }
+                    
+                    PointMark(
+                        x: .value("Time", Date()),
+                        y: .value("Price", book.stats.bestBid)
+                    )
+                    .symbol {
+                        Circle()
+                            .fill(Color("BidChartColor"))
+                            .frame(width: getFrameWidth(volume: book.stats.bestBidVolume))
+                    }
+                    
                     ForEach(data) { record in
                         LineMark(
                             x: .value("Time", record.time),
@@ -70,7 +95,6 @@ struct BybitVolumeChart: View {
                     }
 
                     ForEach(data) { record in
-
                         PointMark(
                             x: .value("Time", record.time),
                             y: .value("Price", record.price)
@@ -83,7 +107,6 @@ struct BybitVolumeChart: View {
                     }
 
                     ForEach(PriceLevelManager.manager.levels) { mark in
-
                         RuleMark(y: .value("Price", Double(mark.price)!))
                             .foregroundStyle(mark.color.0)
                             .lineStyle(.init(lineWidth: mark.color.1))
@@ -92,21 +115,27 @@ struct BybitVolumeChart: View {
                                 Text(mark.price)
                             }
                     }
-                    
+
                     RuleMark(y: .value("Price", roundPrice(price: book.stats.bestAsk, pair: book.pair)))
                         .foregroundStyle(.red)
-                   
+
                         .annotation(position: .top,
-                                    alignment: .topTrailing) {
+                                    alignment: .topLeading) {
                             Text("\(book.stats.bestAsk)")
                         }
                     RuleMark(y: .value("Price", roundPrice(price: book.stats.bestBid, pair: book.pair)))
                         .foregroundStyle(.green)
-                   
+
                         .annotation(position: .bottom,
-                                    alignment: .bottomTrailing) {
+                                    alignment: .bottomLeading) {
                             Text("\(book.stats.bestBid)")
                         }
+                    
+                
+
+  
+
+  
                 }
 
                 //        .chartForegroundStyleScale([
@@ -117,10 +146,10 @@ struct BybitVolumeChart: View {
                 .frame(width: 1200, height: 750)
 //                .fixedSize(horizontal: false, vertical: true)
 //                .chartScrollableAxes(.horizontal)
+                .aspectRatio(1, contentMode: .fit)
                 .chartYScale(
                     domain: .automatic(includesZero: false)
                 )
-         
             }
 
         }.overlay(

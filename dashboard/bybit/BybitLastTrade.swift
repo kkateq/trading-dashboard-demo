@@ -110,6 +110,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     @Published var priceDictBuys: [String: Double] = [:]
     @Published var priceDictSellsTemp: [String: Double] = [:]
     @Published var priceDictBuysTemp: [String: Double] = [:]
+
     @Published var lastTradesBatch: [String: (Double, BybitTradeSide, Int)] = [:]
     var lastMessageTs: Int64
 
@@ -127,7 +128,8 @@ class BybitRecentTradeData: ObservableObject, Equatable {
         if let data = initialData {
             for item in data.list {
                 let record = BybitRecentTradeRecord(trade: item)
-
+                
+           
                 if record.side == .sell {
                     let ecx = priceDictSells[record.priceStr] ?? 0
                     priceDictSells[record.priceStr] = record.volume + ecx
@@ -144,6 +146,8 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
                 list.append(record)
             }
+        
+        
     
             self.lastTrade = list.last
         }
