@@ -250,7 +250,7 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
     }
 
     func downloadRecentTradesSnapshot() async {
-        let url = "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=\(pair)&limit60"
+        let url = "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=\(pair)&limit=1000"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)

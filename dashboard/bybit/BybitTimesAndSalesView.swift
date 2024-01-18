@@ -100,7 +100,7 @@ struct BybitTimesAndSalesView: View {
                          
                             .frame(width: 30, height: 20, alignment: .leading)
                             .background(bgColor)
-                        Text("\(record.side == .buy ? "BUY" : "SELL")")
+                        Text("\(record.side == .buy ? "At Ask" : "At Bid")")
                             .foregroundStyle(color)
                             .frame(width: 50, height: 20, alignment: .center)
                             .background(bgColor)

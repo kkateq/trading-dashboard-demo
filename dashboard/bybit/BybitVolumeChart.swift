@@ -7,6 +7,7 @@
 
 import Charts
 import SwiftUI
+import Accelerate
 
 struct BybitChartValue: Identifiable {
     var color: String
@@ -28,6 +29,8 @@ struct BybitVolumeChart: View {
     @EnvironmentObject var recentTrades: BybitRecentTradeData
     @EnvironmentObject var book: BybitOrderBook
     @State var data: [BybitChartValue] = []
+    @State var speedAvgBuy: Double = 0
+    @State var speedAvgSell: Double = 0
 
     func updateChart(_ list: [BybitRecentTradeRecord]) {
         var p: [BybitChartValue] = []
@@ -35,7 +38,8 @@ struct BybitVolumeChart: View {
         var buys: [String: (Double, Int)] = [:]
         var prevBuyTime = 0
         var prevSellTime = 0
-        for record in list {
+        let last100 = list.suffix(500)
+        for record in last100 {
             if record.side == .buy {
                 if let exb = buys[record.priceStr] {
                     if exb.1 - prevBuyTime < 500 {
@@ -59,18 +63,20 @@ struct BybitVolumeChart: View {
                 }
                 prevSellTime = record.time
             }
-            
         }
-        
+
+        speedAvgSell = vDSP.mean(sells.map { $0.value.0 })
+        speedAvgBuy = vDSP.mean(buys.map { $0.value.0 })
+
         for value in buys {
             p.append(BybitChartValue(pair: book.pair, price: value.key, volume: value.value.0, side: .buy, ts: value.value.1))
         }
         for value in sells {
             p.append(BybitChartValue(pair: book.pair, price: value.key, volume: value.value.0, side: .sell, ts: value.value.1))
         }
-      
+
         p.sort(by: { $0.time < $1.time })
-        
+
         data = p
     }
 
@@ -111,7 +117,7 @@ struct BybitVolumeChart: View {
                             .fill(Color("AskChartColor"))
                             .frame(width: getFrameWidth(volume: book.stats.bestAskVolume))
                     }
-                    
+
                     PointMark(
                         x: .value("Time", Date()),
                         y: .value("Price", book.stats.bestBid)
@@ -121,7 +127,7 @@ struct BybitVolumeChart: View {
                             .fill(Color("BidChartColor"))
                             .frame(width: getFrameWidth(volume: book.stats.bestBidVolume))
                     }
-                    
+
                     ForEach(data) { record in
                         LineMark(
                             x: .value("Time", record.time),
@@ -142,7 +148,7 @@ struct BybitVolumeChart: View {
                         }
                     }
 
-                    ForEach(PriceLevelManager.manager.levels) { mark in
+                    ForEach(PriceLevelManager.manager.levels(pair: book.pair)) { mark in
                         RuleMark(y: .value("Price", Double(mark.price)!))
                             .foregroundStyle(mark.color.0)
                             .lineStyle(.init(lineWidth: mark.color.1))
@@ -166,12 +172,6 @@ struct BybitVolumeChart: View {
                                     alignment: .bottomLeading) {
                             Text("\(book.stats.bestBid)")
                         }
-                    
-                
-
-  
-
-  
                 }
 
                 //        .chartForegroundStyleScale([
@@ -180,7 +180,7 @@ struct BybitVolumeChart: View {
                 //
                 .padding()
                 .onReceive(recentTrades.$list, perform: updateChart)
-                .frame(width: 1200, height: 750)
+                .frame(width: 1200, height: 350)
 //                .fixedSize(horizontal: false, vertical: true)
 //                .chartScrollableAxes(.horizontal)
                 .aspectRatio(1, contentMode: .fit)
@@ -193,7 +193,18 @@ struct BybitVolumeChart: View {
             RoundedRectangle(cornerRadius: 2)
                 .stroke(.gray, lineWidth: 2)
         )
-        VStack {
+        HStack {
+//            VStack {
+//                VStack {
+//                    Text("BUYs / 500 ms").font(.caption)
+//                    Text("\(Int(speedAvgBuy))").font(.title).foregroundStyle(.green)
+//                }
+//                VStack {
+//                    Text("SELLs / 500 ms").font(.caption)
+//                    Text("\(Int(speedAvgSell))").font(.title).foregroundStyle(.red)
+//                }
+//            }
+//            Spacer()
             BybitPriceLevelFormView()
         }
     }

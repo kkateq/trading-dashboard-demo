@@ -10,31 +10,32 @@ import SwiftUI
 struct BybitPriceLevelFormView: View {
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
-
+    @EnvironmentObject var book: BybitOrderBook
+    
     var body: some View {
         VStack {
-            Text("Levels")
+            Text("Levels \(PriceLevelManager.manager.anchor.time)")
             VStack {
-                ForEach(PriceLevelManager.manager.levels) { level in
+                ForEach(PriceLevelManager.manager.levels(pair: book.pair)) { level in
                     HStack {
                         Text(level.price)
                         Spacer()
                         Button(action: {
                             Task {
-                                PriceLevelManager.manager.deleteLevel(id: level.id)
+                                PriceLevelManager.manager.deleteLevel(id: level.id, pair: book.pair)
                             }
                         }) {
                             HStack {
-                                Image(systemName: "trash.fill")
+                                Text("Delete")
                             }
-                            .frame(width: 25, height: 25, alignment: .center)
+                           
                             .foregroundColor(Color.red)
-                            .imageScale(.large)
+                       
                         }
                     }.frame(width: 500, height: 25)
-                        .background(.white)
-                }.padding()
-            }
+                    .background(.white)
+                }
+            }.padding()
             
             HStack(alignment: .top) {
                 VStack {
@@ -53,7 +54,7 @@ struct BybitPriceLevelFormView: View {
                     
                     Button(action: {
                         Task {
-                            PriceLevelManager.manager.addLevel(price: priceMark, type: level)
+                            PriceLevelManager.manager.addLevel(pair: book.pair, price: priceMark, type: level)
                         }
                     }) {
                         HStack {

@@ -28,6 +28,7 @@ struct Level: Identifiable, Equatable {
     var id = UUID()
     var price: String
     var type: PriceLevelType
+    var pair: String
     var color: (Color, CGFloat) {
         switch type {
         case .major:
@@ -40,37 +41,61 @@ struct Level: Identifiable, Equatable {
     }
 }
 
+          
+
+class Anchor {
+    var id = UUID()
+    var time = Date().currentTimeMillis()
+}
+
 class PriceLevelManager: ObservableObject {
-    @Published private(set) var data: [Level] = []
+    @Published private(set) var data: [String: [Level]] = [:]
     static let manager = PriceLevelManager()
-
-    private var cancellable: AnyCancellable?
-    let didChange = PassthroughSubject<Void, Never>()
+    @Published var anchor = Anchor()
+    private let levelsStore = [
+        "AVAXUSDT": [("36.245", PriceLevelType.major)]
+    ]
     
-    @Published var levels: [Level] {
-        didSet {
-            didChange.send()
+    func levels(pair: String) -> [Level] {
+        if let lv = self.data[pair] {
+            return lv
         }
+        return []
     }
-
+            
     init() {
-        self.levels = []
-        cancellable = AnyCancellable($data
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .assign(to: \.levels, on: self))
-    }
-
-    
-    func addLevel(price: String, type: PriceLevelType = .minor) {
-        DispatchQueue.main.async {
-            self.data.append(Level(price: price, type: type))
+        for l in levelsStore {
+            for node in l.value {
+                if var dEx = self.data[l.key] {
+                    dEx.append(Level(price: node.0, type: node.1, pair: l.key))
+                    self.data[l.key] = dEx
+                } else {
+                    self.data[l.key] = [Level(price: node.0, type: node.1, pair: l.key)]
+                }
+            }
         }
     }
 
-    func deleteLevel(id: UUID) {
+    func addLevel(pair: String, price: String, type: PriceLevelType = .minor) {
         DispatchQueue.main.async {
-            self.data.removeAll(where: { $0.id == id })
+            let newLevel = Level(price: price, type: type, pair: pair)
+            if var levEx = self.data[pair] {
+                levEx.append(newLevel)
+                self.data[pair] = levEx
+            } else {
+                self.data[pair] = [newLevel]
+            }
+            self.anchor = Anchor()
+        }
+    }
+
+    func deleteLevel(id: UUID, pair: String) {
+        DispatchQueue.main.async {
+            if var levEx = self.data[pair] {
+                levEx.removeAll(where: { $0.id == id })
+                self.data[pair] = levEx
+            }
+            self.anchor = Anchor()
         }
     }
 }
