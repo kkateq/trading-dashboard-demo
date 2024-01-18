@@ -22,7 +22,7 @@ struct BybitOrderBookView: View {
     @Binding var buyTakeProfit: Double!
 
     let cellWidth = 100
-    let cellHeight = 25
+    let cellHeight = 35
     let layout = [
         GridItem(.fixed(100), spacing: 2),
         GridItem(.fixed(100), spacing: 2),
@@ -41,6 +41,7 @@ struct BybitOrderBookView: View {
 
     var body: some View {
         VStack {
+
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {
                     ForEach(book.allList) { record in
@@ -68,7 +69,11 @@ struct BybitOrderBookView: View {
                                 .background(.white)
                                 .font(.title3)
 
-                            EmptyCell(width: 150)
+                            Text("\(book.stats.bestAsk - book.stats.bestBid)")   
+                                .frame(width: 150, height: 25)
+                                .foregroundStyle(.black)
+                                .background(.white)
+                                .font(.title3)
 
                             Text("\(Int(book.stats.totalAskRawVolumePerc))%")
                                 .frame(width: 100, height: 25)

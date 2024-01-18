@@ -32,16 +32,14 @@ struct Level: Identifiable, Equatable {
     var color: (Color, CGFloat) {
         switch type {
         case .major:
-            return (.black, 4)
+            return (.red, 4)
         case .middle:
-            return (Color("MiddleLevel"), 3)
+            return (.orange, 3)
         case .minor:
-            return (.gray, 2)
+            return (.yellow, 2)
         }
     }
 }
-
-          
 
 class Anchor {
     var id = UUID()
@@ -55,16 +53,16 @@ class PriceLevelManager: ObservableObject {
     private let levelsStore = [
         "AVAXUSDT": [("36.245", PriceLevelType.major)]
     ]
-    
+
     func levels(pair: String) -> [Level] {
         if let lv = self.data[pair] {
             return lv
         }
         return []
     }
-            
+
     init() {
-        for l in levelsStore {
+        for l in self.levelsStore {
             for node in l.value {
                 if var dEx = self.data[l.key] {
                     dEx.append(Level(price: node.0, type: node.1, pair: l.key))
@@ -87,6 +85,16 @@ class PriceLevelManager: ObservableObject {
             }
             self.anchor = Anchor()
         }
+    }
+
+    func getLevel(price: String, pair: String) -> Level! {
+        if let pairL = self.data[pair] {
+            if let lv = pairL.first(where: { $0.price == price }) {
+                return lv
+            }
+        }
+        
+        return nil
     }
 
     func deleteLevel(id: UUID, pair: String) {

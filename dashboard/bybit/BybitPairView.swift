@@ -53,7 +53,8 @@ struct BybitPairView: View {
                     BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
                         
                 
-                    BybitTimesAndSalesView()
+                    BybitTimesAndSalesView(type: .buy)
+                    BybitTimesAndSalesView(type: .sell)
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
                             HStack(alignment: .top) {
@@ -66,12 +67,17 @@ struct BybitPairView: View {
                                 BybitRawVolumeChart()
                                 BybitFilteredVolumeChart()
                             }
+                            BybitPriceLevelFormView()
+                            HStack {
+                                BybitTASAggView(type: .buy, pair: pair)
+                                BybitTASAggView(type: .sell, pair: pair)
+                            }
 //                            BybitBellCurve()
 //                            BybitTickerStats(pair: pair)
 //                            BuySellTransactionsChart()
 //                            BybitImbalanceChart()
 //                            BidAskSellsBuysChart()
-                            BybitVolumeChart()
+//                            BybitVolumeChart()
                           
                         }
                         Spacer()

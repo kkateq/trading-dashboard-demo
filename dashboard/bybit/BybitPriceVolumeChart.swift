@@ -46,42 +46,58 @@ struct BybitPriceVolumeChart: View {
     
     let yValues = stride(from: 0, to: 2, by: 0.0001).map { $0 }
     var body: some View {
-        Chart {
-            ForEach(data) { shape in
-                
-                BarMark(
-                    x: .value("Volume", shape.volume),
-                    y: .value("Price", shape.price),
-                    width: .automatic
-         
-                )  
-//                .annotation(position: .trailing) {
-//                    Text("\(Int(shape.volume))")
-//                        .foregroundColor(.secondary)
-//                        .font(.caption)
-//                }
-                .foregroundStyle(by: .value("Shape Color", shape.color))
-                
+        VStack {
+            Button(action: {
+                Task {
+                    recentTrades.clean()
+                }
+            }) {
+                HStack {
+                    Text("Clear recent")
+                }.frame(width: 200, height: 30)
+                    .foregroundColor(Color.white)
+                    .background(Color.teal)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .imageScale(.large)
+            }.buttonStyle(PlainButtonStyle())
+            Chart {
+                ForEach(data) { shape in
+                    
+                    BarMark(
+                        x: .value("Volume", shape.volume),
+                        y: .value("Price", shape.price),
+                        width: .automatic
+                        
+                    )  
+                    //                .annotation(position: .trailing) {
+                    //                    Text("\(Int(shape.volume))")
+                    //                        .foregroundColor(.secondary)
+                    //                        .font(.caption)
+                    //                }
+                    .foregroundStyle(by: .value("Shape Color", shape.color))
+                    
+                    
+                }
+                RuleMark(y: .value("Ask", formatPrice(price: book.stats.bestAsk, pair: book.pair)))
+                    .foregroundStyle(.red)
+                RuleMark(y: .value("Bid", formatPrice(price: book.stats.bestBid, pair: book.pair)))
+                    .foregroundStyle(.green)
+            }
+            .chartForegroundStyleScale([
+                "Green": Color("BidChartColor"), "Red": Color("AskChartColor"),
+            ])
             
+            .chartYAxis {
+                AxisMarks(preset: .extended, position: .leading) { _ in
+                    AxisValueLabel(horizontalSpacing: 15)
+                        .font(.footnote)
+                }
             }
-            RuleMark(y: .value("Ask", formatPrice(price: book.stats.bestAsk, pair: book.pair)))
-                            .foregroundStyle(.red)
-            RuleMark(y: .value("Bid", formatPrice(price: book.stats.bestBid, pair: book.pair)))
-                            .foregroundStyle(.green)
+            
+            .onReceive(recentTrades.$list, perform: updateChart)
+            .frame(width: 300, height: 1150)
+            .fixedSize(horizontal: true, vertical: false)
         }
-        .chartForegroundStyleScale([
-            "Green": Color("BidChartColor"), "Red": Color("AskChartColor"),
-        ])
-
-        .chartYAxis {
-            AxisMarks(preset: .extended, position: .leading) { _ in
-                AxisValueLabel(horizontalSpacing: 15)
-                    .font(.footnote)
-            }
-        }
-        .onReceive(recentTrades.$list, perform: updateChart)
-        .frame(width: 300, height: 1150)
-        .fixedSize(horizontal: true, vertical: false)
     }
 }
 

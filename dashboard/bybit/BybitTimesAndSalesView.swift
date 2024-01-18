@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BybitTimesAndSalesView: View {
+    var type: BybitTradeSide
     @EnvironmentObject var recentTrades: BybitRecentTradeData
     @State var filterVolume: Double = 0.0
     @State var highlightVolume: Double = 50.0
@@ -41,7 +42,7 @@ struct BybitTimesAndSalesView: View {
     }
     
     func updateData( _ d: [BybitRecentTradeRecord]) {
-        self.data = d.sorted(by: {$0.time > $1.time})
+        self.data = d.filter({$0.side == type }).sorted(by: {$0.time > $1.time})
     }
     
     var body: some View {
@@ -59,19 +60,7 @@ struct BybitTimesAndSalesView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                 }
-                Button(action: {
-                    Task {
-                        recentTrades.clean()
-                    }
-                }) {
-                    HStack {
-                        Text("Clear recent")
-                    }.frame(width: 200, height: 30)
-                        .foregroundColor(Color.white)
-                        .background(Color.teal)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .imageScale(.large)
-                }.buttonStyle(PlainButtonStyle())
+        
             }
             ScrollView {
                 LazyVGrid(columns: layout, spacing: 2) {
@@ -79,11 +68,11 @@ struct BybitTimesAndSalesView: View {
                     
                     ForEach(records) { record in
                         let color = record.side == .sell ? Color("Red") : Color("Blue")
-                        
+                    
                         let shouldHighlight = record.volume > highlightVolume
-                        let bgColor = shouldHighlight ? (record.side == .sell ?Color("AskHover") : Color("BidHover")) : .white
+                        let bgColor = shouldHighlight ? (record.side == .sell ? Color("AskHover") : Color("BidHover")) : .white
                         let direction = returnDirection(direction: record.direction)
-                        Text("\(formatTimestamp(record.time, "hh:mm"))")
+                        Text("\(formatTimestamp(record.time, "hh:mm:ss"))")
                             .frame(width: 50, height: 20, alignment: .center)
                             .foregroundStyle(color)
                             .background(bgColor)
@@ -100,7 +89,7 @@ struct BybitTimesAndSalesView: View {
                          
                             .frame(width: 30, height: 20, alignment: .leading)
                             .background(bgColor)
-                        Text("\(record.side == .buy ? "At Ask" : "At Bid")")
+                        Text("\(record.side == .buy ? "At ASK" : "At BID")")
                             .foregroundStyle(color)
                             .frame(width: 50, height: 20, alignment: .center)
                             .background(bgColor)
@@ -122,5 +111,5 @@ struct BybitTimesAndSalesView: View {
 }
 
 #Preview {
-    BybitTimesAndSalesView()
+    BybitTimesAndSalesView(type: .buy)
 }

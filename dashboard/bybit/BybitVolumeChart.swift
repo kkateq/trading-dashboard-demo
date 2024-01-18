@@ -205,7 +205,7 @@ struct BybitVolumeChart: View {
 //                }
 //            }
 //            Spacer()
-            BybitPriceLevelFormView()
+          
         }
     }
 }
