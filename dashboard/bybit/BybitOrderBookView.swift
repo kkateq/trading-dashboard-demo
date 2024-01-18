@@ -63,7 +63,7 @@ struct BybitOrderBookView: View {
                         if isAskPeg {
                             EmptyCell(width: 100)
 
-                            Text("\(Int(book.stats.totalBidRawVolumePerc))%")
+                            Text("\(Int(book.stats.totalBidVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.blue)
                                 .background(.white)
@@ -75,7 +75,7 @@ struct BybitOrderBookView: View {
                                 .background(.white)
                                 .font(.title3)
 
-                            Text("\(Int(book.stats.totalAskRawVolumePerc))%")
+                            Text("\(Int(book.stats.totalAskVolumePerc))%")
                                 .frame(width: 100, height: 25)
                                 .foregroundStyle(.red)
                                 .background(.white)
