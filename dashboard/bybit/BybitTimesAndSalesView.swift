@@ -98,8 +98,8 @@ struct BybitTimesAndSalesView: View {
                           
                         HStack {
                             Text("\(formatPrice(price: record.price, pair: record.pair))")
-                                .foregroundStyle(.black)
-                                .font(.system(size: 14))
+                                .foregroundStyle(type == .buy ? Color("BlueDarker") : Color("RedDarker"))
+                                .font(.system(size: 12))
                                 
                               
                             Spacer()

@@ -54,6 +54,7 @@ class PriceLevelManager: ObservableObject {
         "AVAXUSDT": [("37.700", PriceLevelType.major),
                      ("34.900", PriceLevelType.middle),
                      ("34.900", PriceLevelType.middle),
+                     ("35.000", PriceLevelType.major),
                      ("30.350", PriceLevelType.major)],
         "SILLYUSDT":[("0.5700", PriceLevelType.major),("0.08106", PriceLevelType.major)]
     ]
