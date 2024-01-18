@@ -30,26 +30,24 @@ struct BybitPriceLevelFormView: View {
                             }
                            
                             .foregroundColor(Color.red)
-                       
                         }
-                    }.frame(width: 500, height: 25)
-                    .background(.white)
+                    }.frame(width: 300, height: 25)
+                        .background(.white)
                 }
             }.padding()
             
             HStack(alignment: .top) {
                 VStack {
                     Text("Add mark:").font(.caption)
-                    HStack {
-                        
+                    VStack {
                         TextField("Mark", text: $priceMark)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                        Spacer()
+    
                         Picker("", selection: $level) {
                             ForEach(PriceLevelType.allCases) { option in
                                 Text(String(describing: option))
                             }
-                        }.frame(width: 200)
+                        }.frame(width: 100)
                     }
                     
                     Button(action: {
@@ -61,11 +59,11 @@ struct BybitPriceLevelFormView: View {
                             Text("Add Mark")
                         }
                     }
+                    Spacer()
                 }
-                
             }
            
-        }.frame(width: 500)
+        }.frame(width: 300)
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(.gray, lineWidth: 2)

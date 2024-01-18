@@ -45,46 +45,37 @@ struct BybitPairView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center) {
+        VStack(alignment: .leading) {
             if isBookSocketReady && isTradesSocketReady {
                 HStack {
                     BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
-                    BybitPriceVolumeChart()
-                    BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
-                        
-                
-                    BybitTimesAndSalesView(type: .buy)
-                    BybitTimesAndSalesView(type: .sell)
-                    VStack(alignment: .leading) {
-                        VStack(alignment: .leading) {
-                            HStack(alignment: .top) {
+//                    BybitPriceVolumeChart()
+                    
+                    VStack {
+                        HStack {
+                            VStack {
+                                
                                 Text(pair)
-                                Spacer()
-                            }.padding([.top], 5)
-                        }
-                        VStack {
-                            HStack {
-                                BybitRawVolumeChart()
-                                BybitFilteredVolumeChart()
+                                
+                                HStack {
+                                    Text(pair)
+                                    BybitRawVolumeChart()
+                                    BybitFilteredVolumeChart()
+                                }
                             }
-                            BybitPriceLevelFormView()
-                            HStack {
-                                BybitTASAggView(type: .buy, pair: pair)
-                                BybitTASAggView(type: .sell, pair: pair)
-                            }
-//                            BybitBellCurve()
-//                            BybitTickerStats(pair: pair)
-//                            BuySellTransactionsChart()
-//                            BybitImbalanceChart()
-//                            BidAskSellsBuysChart()
 //                            BybitVolumeChart()
-                          
                         }
-                        Spacer()
+                       
+                        HStack {
+                            BybitTimesAndSalesView(type: .buy, pair: pair)
+//                            BybitTASAggView(type: .buy, pair: pair)
+                            BybitOrderBookView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
+//                            BybitTASAggView(type: .sell, pair: pair)
+                            BybitTimesAndSalesView(type: .sell, pair: pair)
+                        }.frame(height: 1000)
                     }
-            
-    
-                
+                    BybitPriceLevelFormView()
+                  
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
                     .environmentObject(manager)

@@ -141,7 +141,7 @@ struct BybitTASAggView: View {
                     }
                 }
             }.onReceive(recentTrades.$list, perform: updateData)
-        }.frame(width: 290, height: 500)
+        }.frame(width: 290)
             
             .background(Color("Background"))
             .font(.system(size: 14))
