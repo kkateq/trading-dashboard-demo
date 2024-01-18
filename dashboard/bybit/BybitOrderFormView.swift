@@ -62,6 +62,8 @@ struct BybitOrderFormView: View {
         VStack {
             VStack {
                 HStack {
+                    Text(book.pair)
+                    Spacer()
                     Text("Account balance:")
                         .foregroundColor(.black)
                         .font(.title3)

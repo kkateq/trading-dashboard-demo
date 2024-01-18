@@ -43,7 +43,7 @@ struct BybitTimesAndSalesView: View {
     }
     
     func updateData(_ d: [BybitRecentTradeRecord]) {
-        self.data = d.filter { $0.side == type }.sorted(by: { $0.time > $1.time })
+        self.data = d
     }
     
     func getLevel(_ p: String) -> Level! {
@@ -127,7 +127,7 @@ struct BybitTimesAndSalesView: View {
                             .background(bgColor)
                     }
                 }
-            }.onReceive(recentTrades.$list, perform: updateData)
+            }.onReceive(type == .buy ? recentTrades.$buys : recentTrades.$sells, perform: updateData)
         }.frame(width: 320)
             .background(Color("Background"))
             .font(.caption)

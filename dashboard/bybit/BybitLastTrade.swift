@@ -100,11 +100,11 @@ struct BybitRecentTradeRecord: Identifiable {
     }
 }
 
-
 class BybitRecentTradeData: ObservableObject, Equatable {
     var id = UUID()
 
-    @Published var list: [BybitRecentTradeRecord] = []
+    @Published var buys: [BybitRecentTradeRecord] = []
+    @Published var sells: [BybitRecentTradeRecord] = []
     @Published var lastTrade: BybitRecentTradeRecord!
     @Published var priceDictSells: [String: Double] = [:]
     @Published var priceDictBuys: [String: Double] = [:]
@@ -124,64 +124,83 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     }
 
     init(_ initialData: BybitTradesHistoryResult!) {
-        lastMessageTs = Date().currentTimeMillis()
+        self.lastMessageTs = Date().currentTimeMillis()
         if let data = initialData {
             for item in data.list {
                 let record = BybitRecentTradeRecord(trade: item)
-                
-           
+
                 if record.side == .sell {
+                    sells.append(record)
                     let ecx = priceDictSells[record.priceStr] ?? 0
                     priceDictSells[record.priceStr] = record.volume + ecx
 
                     let temp = priceDictSellsTemp[record.priceStr] ?? 0
                     priceDictSellsTemp[record.priceStr] = record.volume + temp
                 } else {
+                    buys.append(record)
                     let ecx = priceDictBuys[record.priceStr] ?? 0
                     priceDictBuys[record.priceStr] = record.volume + ecx
 
                     let temp = priceDictBuysTemp[record.priceStr] ?? 0
                     priceDictBuysTemp[record.priceStr] = record.volume + temp
                 }
-
-                list.append(record)
+                self.lastTrade = record
             }
-        
-        
-    
-            self.lastTrade = list.last
+
+            sells.sort(by: { $0.time > $1.time })
+            buys.sort(by: { $0.time > $1.time })
+            
+            if sells.count > 50 {
+                sells = sells.dropLast(sells.count - 45)
+            }
+            
+            if buys.count > 50 {
+                buys = buys.dropLast(buys.count - 45)
+            }
         }
     }
 
     func update(_ update: BybitRecentTradeUpdateResponse) {
         let ts = Date().currentTimeMillis()
-        if ts - self.lastMessageTs > 100000 {
+        if ts - lastMessageTs > 100000 {
             lastTradesBatch = [:]
-            self.lastMessageTs = ts
-        
-        } 
+            lastMessageTs = ts
+        }
 
         for upd in update.data {
             let record = BybitRecentTradeRecord(update: upd)
-            list.append(record)
+
             lastTrade = record
             lastTradesBatch[record.priceStr] = (volume: record.volume, side: record.side, ts: record.time)
 
             if record.side == .sell {
+                sells.append(record)
                 let ecx = priceDictSells[record.priceStr] ?? 0
                 priceDictSells[record.priceStr] = record.volume + ecx
 
                 let temp = priceDictSellsTemp[record.priceStr] ?? 0
                 priceDictSellsTemp[record.priceStr] = record.volume + temp
             } else {
+                buys.append(record)
                 let ecx = priceDictBuys[record.priceStr] ?? 0
                 priceDictBuys[record.priceStr] = record.volume + ecx
 
                 let temp = priceDictBuysTemp[record.priceStr] ?? 0
                 priceDictBuysTemp[record.priceStr] = record.volume + temp
             }
+
+            sells.sort(by: { $0.time > $1.time })
+            buys.sort(by: { $0.time > $1.time })
+            
+            
+            if sells.count > 50 {
+                sells = sells.dropLast(sells.count - 45)
+            }
+            
+            if buys.count > 50 {
+                buys = buys.dropLast(buys.count - 45)
+            }
         }
-   
     }
 }
 
@@ -250,7 +269,7 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
     }
 
     func downloadRecentTradesSnapshot() async {
-        let url = "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=\(pair)&limit=1000"
+        let url = "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=\(pair)&limit=500"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)

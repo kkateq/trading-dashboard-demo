@@ -52,19 +52,7 @@ struct BybitPairView: View {
 //                    BybitPriceVolumeChart()
                     
                     VStack {
-                        HStack {
-                            VStack {
-                                
-                                Text(pair)
-                                
-                                HStack {
-                                    Text(pair)
-                                    BybitRawVolumeChart()
-                                    BybitFilteredVolumeChart()
-                                }
-                            }
-//                            BybitVolumeChart()
-                        }
+              
                        
                         HStack {
                             BybitTimesAndSalesView(type: .buy, pair: pair)

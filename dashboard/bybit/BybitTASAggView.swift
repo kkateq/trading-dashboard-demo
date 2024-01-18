@@ -140,7 +140,7 @@ struct BybitTASAggView: View {
                             .background(bgColor)
                     }
                 }
-            }.onReceive(recentTrades.$list, perform: updateData)
+            }.onReceive(type == .sell ? recentTrades.$sells: recentTrades.$buys, perform: updateData)
         }.frame(width: 290)
             
             .background(Color("Background"))

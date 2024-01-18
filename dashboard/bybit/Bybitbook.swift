@@ -101,7 +101,8 @@ class BybitBookRecord: Identifiable, ObservableObject {
 class BybitOrderBook: ObservableObject, Equatable {
     var pair: String
     var lastUpdateId: Int
-    let depth: Int = 25
+    let depth: Int = 20
+ 
 
     var id = UUID()
     static func == (lhs: BybitOrderBook, rhs: BybitOrderBook) -> Bool {
