@@ -51,7 +51,11 @@ class PriceLevelManager: ObservableObject {
     static let manager = PriceLevelManager()
     @Published var anchor = Anchor()
     private let levelsStore = [
-        "AVAXUSDT": [("36.245", PriceLevelType.major)]
+        "AVAXUSDT": [("37.700", PriceLevelType.major),
+                     ("34.900", PriceLevelType.middle),
+                     ("34.900", PriceLevelType.middle),
+                     ("30.350", PriceLevelType.major)],
+        "SILLYUSDT":[("0.5700", PriceLevelType.major),("0.08106", PriceLevelType.major)]
     ]
 
     func levels(pair: String) -> [Level] {

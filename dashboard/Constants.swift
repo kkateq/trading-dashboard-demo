@@ -18,11 +18,12 @@ struct PairSettings {
 let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
 let avaxSettings = PairSettings(leverage: 4, minimumOrderVolume: 5, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10000)
 let aptSettings = PairSettings(leverage: 3, minimumOrderVolume: 5, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
+let sillySettings = PairSettings(leverage: 3, minimumOrderVolume: 100, priceFractionalPoints: 5, volumeFractionalPoints: 2, averageVolume: 10000)
 
 enum Constants {
     static let bookDepth = 25
     static let defaultPair = "MATIC/USDT"
-    static let pairs = ["AVAX/USDT", "APT/USDT", "MATIC/USDT", "MANA/USDT", "ETH/USDT", "ADA/USDT"]
+    static let pairs = ["AVAX/USDT", "APT/USDT", "MATIC/USDT", "MANA/USDT", "ETH/USDT", "ADA/USDT", "SILLY/USDT"]
     static let pairSettings: [String: PairSettings] = [
         "MANA/USDT" :PairSettings(leverage: 4, minimumOrderVolume: 10, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000),
         "MANAUSDT" :PairSettings(leverage: 4, minimumOrderVolume: 10, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000),
@@ -33,7 +34,9 @@ enum Constants {
         "AVAXUSDT": avaxSettings,
         "AVAX/USDT": avaxSettings,
         "APT/USDT" : aptSettings,
-        "APTUSDT": aptSettings
+        "APTUSDT": aptSettings,
+        "SILLY/USDT": sillySettings,
+        "SILLYUSDT": sillySettings
     ]
     static let PAIRS_ISO_NAMES = [
         "MATICUSD": "MATIC/USD",
@@ -41,7 +44,8 @@ enum Constants {
         "ETHUSDT": "ETH/USDT",
         "AVAXUSDT": "AVAX/USDT",
         "ADAUSDT": "ADA/USDT",
-        "APTUSDT": "APT/USDT"
+        "APTUSDT": "APT/USDT",
+        "SILLYUSDT": "SILLY/USDT"
     ]
     
     static let PAIRS_ISO_NAMES_REV = [
@@ -50,7 +54,8 @@ enum Constants {
         "ETH/USDT": "ETHUSDT",
         "ADA/USDT": "ADAUSDT",
         "AVAX/USDT": "AVAXUSDT",
-        "APT/USDT" : "APTUSDT"
+        "APT/USDT" : "APTUSDT",
+        "SILLY/USDT": "SILLYUSDT"
     ]
     static let kraken_fee = 0.02
     static let stop_loss_perc = 0.05
