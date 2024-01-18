@@ -16,7 +16,7 @@ struct RecentTrade: View {
     func getRecentTrade() -> String {
         let dict = side == .sell ? recentTrades.priceDictSellsTemp : recentTrades.priceDictBuysTemp
         if let pr = dict[price] {
-            return formatVolume(volume: pr, pair: pair)
+            return "\(Int(pr))"
         }
         
         return ""
