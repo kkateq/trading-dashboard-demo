@@ -136,7 +136,7 @@ enum BybitRestApi {
                 return
             }
 //
-            let p = String(decoding: data!, as: UTF8.self)
+//            let p = String(decoding: data!, as: UTF8.self)
 
             guard let response = response as? HTTPURLResponse else { return }
 

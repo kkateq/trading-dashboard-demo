@@ -8,27 +8,21 @@
 import SwiftUI
 import SwiftySound
 
-struct PriceLevel: Identifiable {
-    var id = UUID()
     
-    var price: Double
-    var level: Level
-    
-    init(level: Level) {
-        self.level = level
-        self.price = Double(level.price)!
-    }
-}
-
 struct BybitPriceLevelFormView: View {
     var pair: String
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
     @EnvironmentObject var instrumentStats: BybitInstrumentStats
+    @EnvironmentObject var priceLevelManager: PriceLevelManager
+    
+    @Environment(\.managedObjectContext) var moc
+
     @State var tickSize: Double = 0.0001
-    @State var levels: [PriceLevel] = []
+
     @State var bestBid: Double = 0
     @State var bestAsk: Double = 0
+
     
     func playAlert() {
         Sound.play(file: "/sounds/piano", fileExtension: "mp3", numberOfLoops: 2)
@@ -40,39 +34,42 @@ struct BybitPriceLevelFormView: View {
         }
     }
     
-    func updateCurrentPrice(_ p: BybitTickerData!) -> Void {
+    func updateCurrentPrice(_ p: BybitTickerData!) {
         if let pricing = p {
             bestAsk = Double(pricing.ask1Price)!
             bestBid = Double(pricing.bid1Price)!
         }
     }
-    func updateLevels(_ a: Anchor) {
-        var res: [PriceLevel] = []
-        for level in PriceLevelManager.manager.levels(pair: pair) {
-            res.append(PriceLevel(level: level))
-        }
-    }
+
+//    func updateLevels(_ a: Anchor) {
+//        var res: [PriceLevel] = []
+//        for level in PriceLevelManager.manager.levels(pair: pair) {
+//            res.append(PriceLevel(level: level))
+//        }
+//    }
     
     var body: some View {
         VStack {
             VStack {
-                ForEach(PriceLevelManager.manager.levels(pair: pair)) { level in
-                    HStack {
-                        Text(level.price)
-                        Spacer()
-                        Button(action: {
-                            Task {
-                                PriceLevelManager.manager.deleteLevel(id: level.id, pair: pair)
+                ForEach(priceLevelManager.levels) { level in
+                    if level.pair! == pair {
+                        HStack {
+                            Text(level.price!)
+                            Spacer()
+                            Button(action: {
+                                Task {
+                                    priceLevelManager.deleteLevel(id: level.id!)
+                                }
+                            }) {
+                                HStack {
+                                    Text("Delete")
+                                }
+                                
+                                .foregroundColor(Color.red)
                             }
-                        }) {
-                            HStack {
-                                Text("Delete")
-                            }
-                           
-                            .foregroundColor(Color.red)
-                        }
-                    }.frame(width: 300, height: 25)
-                        .background(.white)
+                        }.frame(width: 300, height: 25)
+                            .background(.white)
+                    }
                 }
             }.padding()
             
@@ -92,7 +89,7 @@ struct BybitPriceLevelFormView: View {
                     
                     Button(action: {
                         Task {
-                            PriceLevelManager.manager.addLevel(pair: pair, price: priceMark, type: level)
+                            priceLevelManager.addLevel(pair: pair, price: priceMark, type: level)
                         }
                     }) {
                         HStack {
@@ -124,7 +121,7 @@ struct BybitPriceLevelFormView: View {
                 }
             }.onReceive(instrumentStats.$info, perform: updateTickSize)
                 .onReceive(instrumentStats.$stats, perform: updateCurrentPrice)
-                .onReceive(PriceLevelManager.manager.$anchor, perform: updateLevels)
+//                .onReceive(PriceLevelManager.manager.$anchor, perform: updateLevels)
            
         }.frame(width: 300)
             .overlay(

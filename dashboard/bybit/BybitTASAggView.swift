@@ -20,6 +20,8 @@ struct BybitTASAggView: View {
     @State var total: Double = 0.0
     @State var speed: Double = 0.0
     @EnvironmentObject var recentTrades: BybitRecentTradeData
+    @EnvironmentObject var priceLevelManager: PriceLevelManager
+    
     @State var filterVolume: Double = 0.0
     @State var highlightVolume: Double = 50.0
     let cellWidth = 100
@@ -81,8 +83,8 @@ struct BybitTASAggView: View {
         return ""
     }
 
-    func getLevel(_ p: String) -> Level! {
-        return PriceLevelManager.manager.getLevel(price: p, pair: self.pair)
+    func getLevel(_ p: String) -> PairPriceLevel! {
+        return priceLevelManager.getLevel(price: p)
     }
     
     var body: some View {
@@ -140,7 +142,7 @@ struct BybitTASAggView: View {
                             .background(bgColor)
                     }
                 }
-            }.onReceive(type == .sell ? recentTrades.$sells: recentTrades.$buys, perform: updateData)
+            }.onReceive(type == .sell ? recentTrades.$sells : recentTrades.$buys, perform: updateData)
         }.frame(width: 290)
             
             .background(Color("Background"))
@@ -150,7 +152,6 @@ struct BybitTASAggView: View {
                     .stroke(.gray, lineWidth: 2)
             )
     }
-        
 }
 
 #Preview {

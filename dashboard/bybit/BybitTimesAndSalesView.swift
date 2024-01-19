@@ -11,6 +11,7 @@ struct BybitTimesAndSalesView: View {
     var type: BybitTradeSide
     var pair: String
     @EnvironmentObject var recentTrades: BybitRecentTradeData
+    @EnvironmentObject var priceLevelManager: PriceLevelManager
     @State var filterVolume: Double = 0.0
     @State var highlightVolume: Double = 50.0
     let cellWidth = 100
@@ -46,8 +47,8 @@ struct BybitTimesAndSalesView: View {
         self.data = d
     }
     
-    func getLevel(_ p: String) -> Level! {
-        return PriceLevelManager.manager.getLevel(price: p, pair: self.pair)
+    func getLevel(_ p: String) -> PairPriceLevel! {
+        return priceLevelManager.getLevel(price: p)
     }
     
     var body: some View {
