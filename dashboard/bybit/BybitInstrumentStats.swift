@@ -43,12 +43,12 @@ struct BybitTickerDataResponse: Decodable {
 
 struct PriceFilter: Decodable {
     var minPrice: String
-    var maxLeverage: String
+    var maxPrice: String
     var tickSize: String
 }
 
 struct BybitInstrumentInfo: Decodable {
-    var symbol :String
+    var symbol: String
     var priceScale: String
     var priceFilter: PriceFilter
 }
