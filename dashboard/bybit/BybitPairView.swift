@@ -12,7 +12,8 @@ struct BybitPairView: View {
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
     var manager: BybitPrivateManager
-
+    var instrumentStats: BybitInstrumentStats
+    
     @State private var volume: Double
     @State private var scaleInOut: Bool = false
     @State var stopLossEnabled: Bool = false
@@ -30,6 +31,7 @@ struct BybitPairView: View {
         self.bybittrades_ws = BybitLastTrade(self.pair)
         self.manager = BybitPrivateManager(self.pair)
         self.volume = Constants.pairSettings[pair]!.minimumOrderVolume
+        self.instrumentStats = BybitInstrumentStats(self.pair)
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -51,9 +53,9 @@ struct BybitPairView: View {
                     BybitOrderFormView(volume: $volume, scaleInOut: $scaleInOut, stopLossEnabled: $stopLossEnabled, takeProfitEnabled: $takeProfitEnabled, sellStopLoss: $sellStopLoss, buyStopLoss: $buyStopLoss, sellTakeProfit: $sellTakeProfit, buyTakeProfit: $buyTakeProfit)
 //                    BybitPriceVolumeChart()
                     
-                    VStack {
+                    VStack(alignment: .leading) {
               
-                       
+                        BybitTickerStats()
                         HStack {
                             BybitTimesAndSalesView(type: .buy, pair: pair)
 //                            BybitTASAggView(type: .buy, pair: pair)
@@ -62,11 +64,12 @@ struct BybitPairView: View {
                             BybitTimesAndSalesView(type: .sell, pair: pair)
                         }.frame(height: 1000)
                     }
-                    BybitPriceLevelFormView()
+                    BybitPriceLevelFormView(pair: pair)
                   
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
                     .environmentObject(manager)
+                    .environmentObject(instrumentStats)
                 
             } else {
                 Text("Connecting...")

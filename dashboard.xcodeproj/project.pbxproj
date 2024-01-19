@@ -53,7 +53,6 @@
 		34E3391C2B501E300013F17D /* BybitBellCurve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3391B2B501E300013F17D /* BybitBellCurve.swift */; };
 		34E3391E2B501FA80013F17D /* BybitImbalanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3391D2B501FA80013F17D /* BybitImbalanceChart.swift */; };
 		34E339222B5547460013F17D /* BybitInstrumentStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339212B5547460013F17D /* BybitInstrumentStats.swift */; };
-		34E339242B554F800013F17D /* BybitTickerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339232B554F800013F17D /* BybitTickerStats.swift */; };
 		34E339262B5555320013F17D /* BybitKline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339252B5555320013F17D /* BybitKline.swift */; };
 		34E339282B5678010013F17D /* RecentTrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339272B5678010013F17D /* RecentTrade.swift */; };
 		34E3392A2B568AF60013F17D /* BybitPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339292B568AF60013F17D /* BybitPriceCell.swift */; };
@@ -61,6 +60,10 @@
 		34E3392E2B57E5530013F17D /* PriceLevelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392D2B57E5530013F17D /* PriceLevelManager.swift */; };
 		34E339302B57E8630013F17D /* BybitPriceLevelFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */; };
 		34E339342B5930100013F17D /* BybitTASAggView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339332B5930100013F17D /* BybitTASAggView.swift */; };
+		34E3393A2B5A6E7B0013F17D /* SwiftySound in Frameworks */ = {isa = PBXBuildFile; productRef = 34E339392B5A6E7B0013F17D /* SwiftySound */; };
+		34E3393E2B5A6FE60013F17D /* piano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 34E3393C2B5A6FE50013F17D /* piano.mp3 */; };
+		34E3393F2B5A6FE60013F17D /* guitar.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 34E3393D2B5A6FE60013F17D /* guitar.mp3 */; };
+		34E339412B5A7DDB0013F17D /* BybitTickerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339402B5A7DDB0013F17D /* BybitTickerStats.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -157,7 +160,6 @@
 		34E3391B2B501E300013F17D /* BybitBellCurve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitBellCurve.swift; sourceTree = "<group>"; };
 		34E3391D2B501FA80013F17D /* BybitImbalanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitImbalanceChart.swift; sourceTree = "<group>"; };
 		34E339212B5547460013F17D /* BybitInstrumentStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitInstrumentStats.swift; sourceTree = "<group>"; };
-		34E339232B554F800013F17D /* BybitTickerStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitTickerStats.swift; sourceTree = "<group>"; };
 		34E339252B5555320013F17D /* BybitKline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitKline.swift; sourceTree = "<group>"; };
 		34E339272B5678010013F17D /* RecentTrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrade.swift; sourceTree = "<group>"; };
 		34E339292B568AF60013F17D /* BybitPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPriceCell.swift; sourceTree = "<group>"; };
@@ -165,6 +167,9 @@
 		34E3392D2B57E5530013F17D /* PriceLevelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLevelManager.swift; sourceTree = "<group>"; };
 		34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPriceLevelFormView.swift; sourceTree = "<group>"; };
 		34E339332B5930100013F17D /* BybitTASAggView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitTASAggView.swift; sourceTree = "<group>"; };
+		34E3393C2B5A6FE50013F17D /* piano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = piano.mp3; sourceTree = "<group>"; };
+		34E3393D2B5A6FE60013F17D /* guitar.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = guitar.mp3; sourceTree = "<group>"; };
+		34E339402B5A7DDB0013F17D /* BybitTickerStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BybitTickerStats.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -203,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34905C452B2A003F00A5A649 /* Collections in Frameworks */,
+				34E3393A2B5A6E7B0013F17D /* SwiftySound in Frameworks */,
 				34905C3E2B29C18300A5A649 /* Starscream in Frameworks */,
 				34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */,
 			);
@@ -257,6 +263,7 @@
 		34905C0E2B29C12A00A5A649 /* dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				34E3393B2B5A6F330013F17D /* sounds */,
 				34905C182B29C12C00A5A649 /* dashboard.entitlements */,
 				34905C612B2C53F700A5A649 /* ButtonStyles.swift */,
 				34F401452B3ADCDE00E0DC4A /* Commons.swift */,
@@ -316,6 +323,15 @@
 			path = rest;
 			sourceTree = "<group>";
 		};
+		34E3393B2B5A6F330013F17D /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				34E3393D2B5A6FE60013F17D /* guitar.mp3 */,
+				34E3393C2B5A6FE50013F17D /* piano.mp3 */,
+			);
+			path = sounds;
+			sourceTree = "<group>";
+		};
 		34F401632B443A6300E0DC4A /* binance */ = {
 			isa = PBXGroup;
 			children = (
@@ -360,13 +376,13 @@
 				34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */,
 				34E339292B568AF60013F17D /* BybitPriceCell.swift */,
 				34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */,
+				34E339402B5A7DDB0013F17D /* BybitTickerStats.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */,
 				34E339172B501CBF0013F17D /* BybitRawVolumeChart.swift */,
 				34E339152B4D75F00013F17D /* BybitRestApi.swift */,
 				34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */,
 				34E338E82B4708860013F17D /* BybitStats.swift */,
-				34E339232B554F800013F17D /* BybitTickerStats.swift */,
 				34E338F02B484AF10013F17D /* BybitTimesAndSalesView.swift */,
 				34E339332B5930100013F17D /* BybitTASAggView.swift */,
 				34E3392B2B56A4DE0013F17D /* BybitVolumeChart.swift */,
@@ -424,6 +440,7 @@
 				34905C3D2B29C18300A5A649 /* Starscream */,
 				34905C442B2A003F00A5A649 /* Collections */,
 				34905C4D2B2B05D700A5A649 /* CryptoSwift */,
+				34E339392B5A6E7B0013F17D /* SwiftySound */,
 			);
 			productName = dashboard;
 			productReference = 34905C0C2B29C12A00A5A649 /* dashboard.app */;
@@ -501,6 +518,7 @@
 				34905C3C2B29C18300A5A649 /* XCRemoteSwiftPackageReference "Starscream" */,
 				34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */,
 			);
 			productRefGroup = 34905C0D2B29C12A00A5A649 /* Products */;
 			projectDirPath = "";
@@ -518,8 +536,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34E3393F2B5A6FE60013F17D /* guitar.mp3 in Resources */,
 				34905C172B29C12C00A5A649 /* Preview Assets.xcassets in Resources */,
 				34905C142B29C12C00A5A649 /* Assets.xcassets in Resources */,
+				34E3393E2B5A6FE60013F17D /* piano.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +576,7 @@
 				34F4013E2B35D9A000E0DC4A /* RecentTradeCell.swift in Sources */,
 				34F4016F2B45C1F200E0DC4A /* BinanceLastTradeCell.swift in Sources */,
 				34E339182B501CBF0013F17D /* BybitRawVolumeChart.swift in Sources */,
+				34E339412B5A7DDB0013F17D /* BybitTickerStats.swift in Sources */,
 				34905C5E2B2B684700A5A649 /* PositionsView.swift in Sources */,
 				34E339282B5678010013F17D /* RecentTrade.swift in Sources */,
 				34E338EF2B4813480013F17D /* BybitLastTrade.swift in Sources */,
@@ -566,7 +587,6 @@
 				34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */,
 				34F4017C2B46D7D000E0DC4A /* BinancePairView.swift in Sources */,
 				34E338F32B4BF2800013F17D /* BybitPriceVolumeChart.swift in Sources */,
-				34E339242B554F800013F17D /* BybitTickerStats.swift in Sources */,
 				34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* KrakenPairView.swift in Sources */,
 				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
@@ -954,6 +974,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adamcichy/SwiftySound";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -971,6 +999,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
+		};
+		34E339392B5A6E7B0013F17D /* SwiftySound */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */;
+			productName = SwiftySound;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

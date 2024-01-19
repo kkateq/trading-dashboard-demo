@@ -189,9 +189,10 @@ enum BybitRestApi {
         await fetchPublic(cb: cb, route: "/market/open-interest", params: ["symbol": symbol, "category": "linear", "interval": "5min"])
     }
     
-    static func getKline(cb: @escaping (Data) -> Void, symbol: String) async {
-        LogManager.shared.action("Fetch historical data...")
+    static func instrumentInfo(cb: @escaping (Data) -> Void, symbol: String) async {
+        LogManager.shared.action("Fetch instrument info...")
 
-        await fetchPublic(cb: cb, route: "/market/open-interest", params: ["symbol": symbol, "category": "linear", "interval": "1"])
+        await fetchPublic(cb: cb, route: "/market/instruments-info", params: ["symbol": symbol, "category": "linear"])
     }
+    
 }
