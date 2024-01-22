@@ -16,9 +16,6 @@ struct DashboardView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-           
-           
-
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
                     PairHomeView(pair: self.pair)

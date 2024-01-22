@@ -26,7 +26,6 @@ struct BybitPairView: View {
     @State var isBookSocketReady: Bool = false
     @State var isTradesSocketReady: Bool = false
     
-    
     init(pair: String) {
         self.pair = pair
         self.bybitbook_ws = Bybitbook(self.pair)
@@ -57,7 +56,6 @@ struct BybitPairView: View {
 //                    BybitPriceVolumeChart()
                     
                     VStack(alignment: .leading) {
-              
                         BybitTickerStats()
                         HStack {
                             BybitTimesAndSalesView(type: .buy, pair: pair)
@@ -67,15 +65,12 @@ struct BybitPairView: View {
                             BybitTimesAndSalesView(type: .sell, pair: pair)
                         }.frame(height: 1000)
                     }
-                    BybitPriceLevelFormView(pair: pair)
-                  
+       
                 }.environmentObject(bybittrades_ws.recentTrades)
                     .environmentObject(bybitbook_ws.book)
                     .environmentObject(manager)
                     .environmentObject(instrumentStats)
                     .environmentObject(priceLevelManager)
-                
-                 
                 
             } else {
                 Text("Connecting...")

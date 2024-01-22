@@ -8,20 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedPair = ""
     var body: some View {
-        VStack(alignment: .leading) {
-            if selectedPair == "" {
-                Picker("Pair", selection: $selectedPair) {
-                    ForEach([""]+Constants.pairs, id: \.self) {
-                        Text($0)
-                    }
-                }.frame(width: 200)
-              
-            }
+        NavigationView {
+            List {
+                Spacer()
 
-            else {
-                DashboardView(pair: selectedPair)
+                Text("NOTIFICATIONS")
+                    .font(.system(size: 10))
+                    .fontWeight(.bold)
+                Group {
+                    NavigationLink(destination: NotificationsView(pair: "AVAXUSDT")) {
+                        Label("AVAXUSDT", systemImage: "mail")
+                    }
+                    NavigationLink(destination: NotificationsView(pair: "MATICUSDT")) {
+                        Label("MATICUSDT", systemImage: "mail")
+                    }
+                }
+                Spacer()
+                
+                Text("TRADING")
+                Group {
+                    NavigationLink(destination: DashboardView(pair: "AVAXUSDT")) {
+                        Label("AVAXUSDT", systemImage: "book.closed.fill")
+                    }
+                    NavigationLink(destination: DashboardView(pair: "MATICUSDT")) {
+                        Label("MATICUSDT", systemImage: "book.closed.fill")
+                    }
+                }
             }
         }
     }

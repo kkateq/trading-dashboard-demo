@@ -66,6 +66,7 @@
 		34E3394D2B5AAAEE0013F17D /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E3394C2B5AAAEE0013F17D /* DataController.swift */; };
 		34E339522B5ABD0B0013F17D /* PriceLevelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */; };
 		34E339552B5AC1900013F17D /* DashboardDataController.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34E339532B5AC1900013F17D /* DashboardDataController.xcdatamodeld */; };
+		34E339B52B5E81790013F17D /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339B42B5E81790013F17D /* NotificationsView.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -174,6 +175,7 @@
 		34E3394C2B5AAAEE0013F17D /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceLevelManager.swift; sourceTree = "<group>"; };
 		34E339542B5AC1900013F17D /* DashboardDataController.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DashboardDataController.xcdatamodel; sourceTree = "<group>"; };
+		34E339B42B5E81790013F17D /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				34F4016A2B456A0100E0DC4A /* DashboardView.swift */,
 				34E3394C2B5AAAEE0013F17D /* DataController.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
+				34E339B42B5E81790013F17D /* NotificationsView.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
@@ -591,6 +594,7 @@
 				34E338EB2B480E2B0013F17D /* BybitOrderBookView.swift in Sources */,
 				34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */,
 				34F4017C2B46D7D000E0DC4A /* BinancePairView.swift in Sources */,
+				34E339B52B5E81790013F17D /* NotificationsView.swift in Sources */,
 				34E338F32B4BF2800013F17D /* BybitPriceVolumeChart.swift in Sources */,
 				34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* KrakenPairView.swift in Sources */,

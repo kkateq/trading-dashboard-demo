@@ -43,11 +43,11 @@ extension PairPriceLevel {
 
 class PriceLevelManager: ObservableObject {
     private var container: NSPersistentContainer
-    var pair: String
+    var pair: String!
 
     @Published var levels: [PairPriceLevel] = []
     
-    init(_ p: String) {
+    init(_ p: String! = nil) {
         pair = p
         container = NSPersistentContainer(name: "DashboardDataController")
         container.loadPersistentStores { _, error in
@@ -60,7 +60,9 @@ class PriceLevelManager: ObservableObject {
 
     func fetchLevels() {
         let fetchRequest = NSFetchRequest<PairPriceLevel>(entityName: "PairPriceLevel")
-        fetchRequest.predicate = NSPredicate(format: "pair = %@", pair)
+        if let p = self.pair {
+            fetchRequest.predicate = NSPredicate(format: "pair = %@", pair)
+        }
         do {
             levels = try container.viewContext.fetch(fetchRequest)
         } catch {
