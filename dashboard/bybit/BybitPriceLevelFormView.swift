@@ -58,12 +58,12 @@ struct BybitPriceLevelFormView: View {
             
             let priceBid = bestBid - threshhold * tickSize
             let levels = priceLevelManager.getLevels()
-            if let f = levels.first(where: { bestBid > $0 && $0 > priceBid }) {
+            if let _ = levels.first(where: { bestBid > $0 && $0 > priceBid }) {
                 playAlert()
             } else {
                 let priceAsk = bestAsk + threshhold * tickSize
                 let levels = priceLevelManager.getLevels()
-                if let f = levels.first(where: { bestAsk < $0 && $0 < priceAsk }) {
+                if let _ = levels.first(where: { bestAsk < $0 && $0 < priceAsk }) {
                     playAlert()
                 }
             }
@@ -77,6 +77,10 @@ struct BybitPriceLevelFormView: View {
                     VStack(alignment: .leading) {
                         Text(pair).font(.title)
                         Text("\(tickSize)").font(.caption)
+                    }
+                    HStack {
+                        Text("\(formatPrice(price: bestAsk, pair: pair))").font(.title).foregroundStyle(.red)
+                        Text("\(formatPrice(price: bestBid, pair: pair))").font(.title).foregroundStyle(.green)
                     }
                     Spacer()
                     HStack {
@@ -111,6 +115,9 @@ struct BybitPriceLevelFormView: View {
                     }
                     TableColumn("Price") { level in
                         Text("\((level.price != nil) ? level.price! : "")")
+                    }
+                    TableColumn("Created") { level in
+                        Text(level.added!, style: .date)
                     }
                     TableColumn("Note") { level in
                         Text("\((level.note != nil) ? level.note! : "")")

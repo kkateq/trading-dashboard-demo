@@ -61,7 +61,7 @@ class PriceLevelManager: ObservableObject {
     func fetchLevels() {
         let fetchRequest = NSFetchRequest<PairPriceLevel>(entityName: "PairPriceLevel")
         if let p = self.pair {
-            fetchRequest.predicate = NSPredicate(format: "pair = %@", pair)
+            fetchRequest.predicate = NSPredicate(format: "pair = %@", p)
         }
         do {
             levels = try container.viewContext.fetch(fetchRequest)
@@ -94,6 +94,7 @@ class PriceLevelManager: ObservableObject {
         newLevel.price = price
         newLevel.type = type.rawValue
         newLevel.note = note
+        newLevel.added = Date()
         saveData()
     }
 
