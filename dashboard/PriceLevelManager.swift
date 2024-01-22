@@ -46,7 +46,7 @@ class PriceLevelManager: ObservableObject {
     var pair: String
 
     @Published var levels: [PairPriceLevel] = []
-
+    
     init(_ p: String) {
         pair = p
         container = NSPersistentContainer(name: "DashboardDataController")
@@ -70,6 +70,10 @@ class PriceLevelManager: ObservableObject {
 
     func getLevel(price: String) -> PairPriceLevel! {
         return levels.first(where: { $0.price == price })
+    }
+    
+    func getLevels() -> [Double] {
+        return levels.map({ Double($0.price!)! })
     }
 
     func saveData() {
