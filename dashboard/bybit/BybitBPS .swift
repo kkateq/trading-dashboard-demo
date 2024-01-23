@@ -13,8 +13,12 @@ struct BybitBPS: View {
     @State var totalBuys: Double = 0.0
     @State var sellSpeed: Double = 0.0
     @State var buySpeed: Double = 0.0
-  
-    @EnvironmentObject var recentTrades: BybitRecentTradeData
+    var bybittrades_ws: BybitLastTrade
+    
+    init(pair: String) {
+        self.pair = pair
+        self.bybittrades_ws = BybitLastTrade(self.pair)
+    }
     
     func prevMinute() -> Int {
         let now = Date()
@@ -26,7 +30,7 @@ struct BybitBPS: View {
 
     }
     
-    func updateData(_ d: [BybitRecentTradeRecord], _ type: BybitTradeSide) {
+    func updateAllData(_ d: [BybitRecentTradeRecord], _ type: BybitTradeSide) {
         let data = d
         var records: [String: Double] = [:]
         let prevMinute = prevMinute()
@@ -50,27 +54,33 @@ struct BybitBPS: View {
         }
     }
     
-    func updateSellData(_ d: [BybitRecentTradeRecord]) {
-        self.updateData(d, .sell)
-    }
-    
-    
-    func updateBuyData(_ d: [BybitRecentTradeRecord]) {
-        self.updateData(d, .buy)
+    func updateData(_ d: BybitRecentTradeData!) {
+        if let data = d {
+            self.updateAllData(data.sells, .sell)
+            
+            self.updateAllData(data.buys, .buy)
+        }
     }
     
     var body: some View {
         HStack {
             VStack {
-                Text("\(Int(self.sellSpeed)) sells/sec")
-                Text("\(Int(self.buySpeed)) buys/sec")
+                HStack {
+                    Text("\(Int(self.sellSpeed))").font(.title).foregroundStyle(.pink)
+                    Text("sells/sec").font(.caption)
+                }
+                HStack {
+                    Text("\(Int(self.buySpeed))").font(.title).foregroundStyle(.blue)
+                    Text("buys/sec").font(.caption)
+                }
             }
             VStack {
                 Text("total sells \(Int(self.totalSells))")
                 Text("total buys \(Int(self.totalBuys))")
             }
-        }.onReceive(recentTrades.$sells, perform: updateSellData)
-            .onReceive(recentTrades.$buys, perform: updateBuyData)
+        }.onReceive(self.bybittrades_ws.$recentTrades, perform: updateData)
+            .padding()
+          
 
     }
 }

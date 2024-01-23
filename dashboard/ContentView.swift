@@ -14,6 +14,15 @@ struct ContentView: View {
             List {
                 Spacer()
 
+
+                Group {
+                    NavigationLink(destination: PairsCardsView()) {
+                        Label("Home", systemImage: "house")
+                    }
+                    
+                }
+                Spacer()
+                
                 Text("NOTIFICATIONS")
                     .font(.system(size: 10))
                     .fontWeight(.bold)
@@ -37,9 +46,7 @@ struct ContentView: View {
                     }
                 }
             }
-            VStack {
-                PairsCardsView()
-            }
+           
         }
     }
 }

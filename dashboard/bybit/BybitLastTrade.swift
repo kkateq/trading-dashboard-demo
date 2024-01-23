@@ -110,7 +110,7 @@ class BybitRecentTradeData: ObservableObject, Equatable {
     @Published var priceDictBuys: [String: Double] = [:]
     @Published var priceDictSellsTemp: [String: Double] = [:]
     @Published var priceDictBuysTemp: [String: Double] = [:]
-
+    @Published var anchor: Date = Date()
     @Published var lastTradesBatch: [String: (Double, BybitTradeSide, Int)] = [:]
     var lastMessageTs: Int64
 
@@ -149,13 +149,13 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
             sells.sort(by: { $0.time > $1.time })
             buys.sort(by: { $0.time > $1.time })
-            
+
             if sells.count > 50 {
-                sells = sells.dropLast(sells.count - 45)
+                self.sells = sells.dropLast(sells.count - 45)
             }
-            
+
             if buys.count > 50 {
-                buys = buys.dropLast(buys.count - 45)
+                self.buys = buys.dropLast(buys.count - 45)
             }
         }
     }
@@ -191,12 +191,11 @@ class BybitRecentTradeData: ObservableObject, Equatable {
 
             sells.sort(by: { $0.time > $1.time })
             buys.sort(by: { $0.time > $1.time })
-            
-            
+
             if sells.count > 50 {
                 sells = sells.dropLast(sells.count - 45)
             }
-            
+
             if buys.count > 50 {
                 buys = buys.dropLast(buys.count - 45)
             }
@@ -255,9 +254,13 @@ class BybitLastTrade: BybitSocketDelegate, ObservableObject {
                 if message.contains("\(BybitRecentTradeUpdateResponse.name).\(pair)") {
                     let update = try JSONDecoder().decode(BybitRecentTradeUpdateResponse.self, from: Data(message.utf8))
 
-                    DispatchQueue.main.async {
-                        if self.data != nil {
-                            self.data.update(update)
+//
+                    if data != nil {
+                        self.data.update(update)
+                        DispatchQueue.main.async {
+                     
+                      
+                            self.data.anchor = Date()
                         }
                     }
                 }

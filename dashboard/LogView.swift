@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LogView: View {
-    @EnvironmentObject var logger: LogManager
+
 
     func getColor(level: LogLevel) -> Color {
         var color = Color.black
@@ -32,7 +32,7 @@ struct LogView: View {
                 Spacer()
             }
            
-            List(logger.logMessages.reversed()) { log in
+            List(LogManager.shared.logMessages.reversed()) { log in
                 Text(log.text)
                     .font(.caption)
                     .foregroundColor(getColor(level: log.level))

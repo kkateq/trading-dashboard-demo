@@ -14,6 +14,7 @@ struct PairAlertCard: View {
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
     var instrumentStats: BybitInstrumentStats
+
     @State private var selection: PairPriceLevel.ID?
     let threshhold: Double = 15
     @State var isSoundPLaying: Bool = false
@@ -24,9 +25,10 @@ struct PairAlertCard: View {
     @State var bestBid: Double = 0
     @State var bestAsk: Double = 0
     
-    init(_ pair: String) {
+    init(pair: String) {
         self.pair = pair
         self.instrumentStats = BybitInstrumentStats(self.pair)
+ 
  
     }
     
@@ -95,9 +97,10 @@ struct PairAlertCard: View {
             }
         } .onReceive(instrumentStats.$info, perform: updateTickSize)
             .onReceive(instrumentStats.$stats, perform: updateCurrentPrice)
+            .padding()
     }
 }
 
 #Preview {
-    PairAlertCard("AVAXUSDT")
+    PairAlertCard(pair: "AVAXUSDT")
 }

@@ -277,7 +277,6 @@
 		34905C0E2B29C12A00A5A649 /* dashboard */ = {
 			isa = PBXGroup;
 			children = (
-				34E3393B2B5A6F330013F17D /* sounds */,
 				34905C182B29C12C00A5A649 /* dashboard.entitlements */,
 				34905C612B2C53F700A5A649 /* ButtonStyles.swift */,
 				34F401452B3ADCDE00E0DC4A /* Commons.swift */,
@@ -287,20 +286,22 @@
 				34F4016A2B456A0100E0DC4A /* DashboardView.swift */,
 				34E3394C2B5AAAEE0013F17D /* DataController.swift */,
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
-				34E339B42B5E81790013F17D /* NotificationsView.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
+				34E339B42B5E81790013F17D /* NotificationsView.swift */,
 				34066F522B31B4B30090C78A /* PairHomeView.swift */,
 				34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */,
+				34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */,
 				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34905C132B29C12C00A5A649 /* Assets.xcassets */,
 				34F401632B443A6300E0DC4A /* binance */,
 				34F401742B46C5BA00E0DC4A /* bybit */,
+				34E339532B5AC1900013F17D /* DashboardDataController.xcdatamodeld */,
 				34F401692B45697100E0DC4A /* kraken */,
 				34066F4D2B30DDC60090C78A /* log */,
 				34905C152B29C12C00A5A649 /* Preview Content */,
-				34E339532B5AC1900013F17D /* DashboardDataController.xcdatamodeld */,
+				34E3393B2B5A6F330013F17D /* sounds */,
 			);
 			path = dashboard;
 			sourceTree = "<group>";
@@ -389,7 +390,6 @@
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
 				34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
-				34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */,
 				34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
 				34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */,
