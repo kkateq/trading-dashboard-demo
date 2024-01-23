@@ -13,24 +13,18 @@ struct BybitBPS: View {
     @State var totalBuys: Double = 0.0
     @State var sellSpeed: Double = 0.0
     @State var buySpeed: Double = 0.0
-    var bybittrades_ws: BybitLastTrade
-    
-    init(pair: String) {
-        self.pair = pair
-        self.bybittrades_ws = BybitLastTrade(self.pair)
-    }
-    
+    @EnvironmentObject var recentTrades: BybitRecentTradeData
+
     func prevMinute() -> Int {
         let now = Date()
 
         let components = DateComponents(minute: -1)
         let oneMinute = Calendar.current.date(byAdding: components, to: now)
-        
-        return Int(oneMinute!.timeIntervalSince1970)
 
+        return Int(oneMinute!.timeIntervalSince1970)
     }
-    
-    func updateAllData(_ d: [BybitRecentTradeRecord], _ type: BybitTradeSide) {
+
+    func updateData(_ d: [BybitRecentTradeRecord], _ type: BybitTradeSide) {
         let data = d
         var records: [String: Double] = [:]
         let prevMinute = prevMinute()
@@ -47,21 +41,21 @@ struct BybitBPS: View {
 
         if type == .sell {
             self.totalSells = records.reduce(0) { $0 + $1.value }
-            self.sellSpeed =  self.totalSells / Double(records.count)
+            self.sellSpeed = self.totalSells / Double(records.count)
         } else {
             self.totalBuys = records.reduce(0) { $0 + $1.value }
-            self.buySpeed =  self.totalBuys / Double(records.count)
+            self.buySpeed = self.totalBuys / Double(records.count)
         }
     }
-    
-    func updateData(_ d: BybitRecentTradeData!) {
-        if let data = d {
-            self.updateAllData(data.sells, .sell)
-            
-            self.updateAllData(data.buys, .buy)
-        }
+
+    func updateBuysData(_ data: [BybitRecentTradeRecord]) {
+        self.updateData(data, .buy)
     }
-    
+
+    func updateSellsData(_ data: [BybitRecentTradeRecord]) {
+        self.updateData(data, .sell)
+    }
+
     var body: some View {
         HStack {
             VStack {
@@ -78,10 +72,9 @@ struct BybitBPS: View {
                 Text("total sells \(Int(self.totalSells))")
                 Text("total buys \(Int(self.totalBuys))")
             }
-        }.onReceive(self.bybittrades_ws.$recentTrades, perform: updateData)
+        }.onReceive(self.recentTrades.$sells, perform: updateSellsData)
+            .onReceive(self.recentTrades.$buys, perform: updateBuysData)
             .padding()
-          
-
     }
 }
 

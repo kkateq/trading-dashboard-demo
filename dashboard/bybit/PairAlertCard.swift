@@ -13,30 +13,32 @@ struct PairAlertCard: View {
     @State var playAlerts: Bool = true
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
-    var instrumentStats: BybitInstrumentStats
-
+    
+    @EnvironmentObject var book: BybitOrderBook
+    @EnvironmentObject var info: BybitInstrumentInfo
+    
     @State private var selection: PairPriceLevel.ID?
     let threshhold: Double = 15
     @State var isSoundPLaying: Bool = false
-    @Environment(\.managedObjectContext) var moc
+//    @State var tickSize: Double = info != nil ? info.priceFilter.tickSize :0.0001
+
     let mySound = Sound(url: Bundle.main.url(forResource: "piano", withExtension: "mp3")!)
-    @State var tickSize: Double = 0.0001
 
     @State var bestBid: Double = 0
     @State var bestAsk: Double = 0
     
-    init(pair: String) {
-        self.pair = pair
-        self.instrumentStats = BybitInstrumentStats(self.pair)
- 
- 
-    }
-    
-    func updateCurrentPrice(_ p: BybitTickerData!) {
-        if let pricing = p {
-            bestAsk = Double(pricing.ask1Price)!
-            bestBid = Double(pricing.bid1Price)!
-            
+//    func updateTickSize(_ i: BybitInstrumentInfo!) {
+//        if let info = i {
+//            self.tickSize = Double(info.priceFilter.tickSize)!
+//        }
+//    }
+//
+    func updateCurrentPrice(_ s: BybitStats!) {
+        if let stats = s {
+            bestAsk = stats.bestAsk
+            bestBid = stats.bestBid
+
+            let tickSize = Double(info.priceFilter.tickSize)!
             let priceBid = bestBid - threshhold * tickSize
             let levels = PriceLevelManager.shared.getLevelPrices(pair: pair)
             if let level = levels.first(where: { bestBid > $0 && $0 > priceBid }) {
@@ -50,7 +52,6 @@ struct PairAlertCard: View {
             }
         }
     }
-    
     
     func percentFromTarget(level: String) -> String {
         let priceLevel = Double(level)!
@@ -66,7 +67,7 @@ struct PairAlertCard: View {
     func playSound() {
         if !isSoundPLaying && playAlerts {
             isSoundPLaying = true
-            mySound!.play { completed in
+            mySound!.play { _ in
                 isSoundPLaying = false
             }
         }
@@ -78,26 +79,20 @@ struct PairAlertCard: View {
         SlackNotification.instance.sendAlert(pair: pair, price: price, bestBid: formatPrice(price: bestBid, pair: pair), bestAsk: formatPrice(price: bestAsk, pair: pair))
     }
     
-    func updateTickSize(_ info: BybitInstrumentInfo!) {
-        if let i = info {
-            tickSize = Double(i.priceFilter.tickSize)!
-        }
-    }
-    
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
                 Text(pair).font(.title)
-                Text("\(tickSize)").font(.caption)
             }
             BybitBPS(pair: pair)
             HStack {
                 Text("\(formatPrice(price: bestAsk, pair: pair))").font(.title).foregroundStyle(.red)
                 Text("\(formatPrice(price: bestBid, pair: pair))").font(.title).foregroundStyle(.green)
             }
-        } .onReceive(instrumentStats.$info, perform: updateTickSize)
-            .onReceive(instrumentStats.$stats, perform: updateCurrentPrice)
-            .padding()
+        }
+        .onReceive(book.$stats, perform: updateCurrentPrice)
+//        .onReceive(bybitbook_ws.$info, perform: updateTickSize)
+        .padding()
     }
 }
 

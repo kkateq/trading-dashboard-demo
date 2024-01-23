@@ -185,34 +185,53 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
     var bybitSocket: BybitSocketTemplate
     var isSubscribed: Bool = false
     let req_id = "10001"
+    let depth: Int
     @Published var data: BybitOrderBook!
     let didChange = PassthroughSubject<Void, Never>()
+    let didChangeInfo = PassthroughSubject<Void, Never>()
     private var cancellable: AnyCancellable?
+    private var cancellableInfo: AnyCancellable?
+    @Published var instrumentInfo: BybitInstrumentInfo!
 
+    @Published var info: BybitInstrumentInfo! {
+        didSet {
+            didChangeInfo.send()
+        }
+    }
+    
     @Published var book: BybitOrderBook! {
         didSet {
             didChange.send()
         }
     }
+    
+    
 
-    init(_ p: String) {
+    init(_ p: String, _ d: Int = 50) {
         pair = p
-
+        depth = d
         bybitSocket = BybitSocketTemplate()
         bybitSocket.delegate = self
 
         Task {
             await downloadInitialBookSnapshot()
+            await downloadInstrumentInfo()
         }
 
         cancellable = AnyCancellable($data
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
             .assign(to: \.book, on: self))
+        
+        
+        self.cancellableInfo = AnyCancellable($instrumentInfo
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .assign(to: \.info, on: self))
+        
     }
 
     func subscribe(socket: WebSocket) {
-        let msg = "{\"req_id\":\"\(req_id)\", \"op\": \"subscribe\", \"args\": [ \"orderbook.50.\(pair)\" ]}"
+        let msg = "{\"req_id\":\"\(req_id)\", \"op\": \"subscribe\", \"args\": [ \"orderbook.\(depth).\(pair)\" ]}"
 
         socket.write(string: msg)
     }
@@ -246,6 +265,25 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
         }
 
         dataTask.resume()
+    }
+    
+    func downloadInstrumentInfo() async {
+        await BybitRestApi.instrumentInfo(cb: {
+            do {
+                let res = try JSONDecoder().decode(BybitListRestBase<BybitInstrumentInfo>.self, from: $0)
+
+                if res.retCode == 0 && res.result.list.count > 0 {
+                    DispatchQueue.main.async {
+                        self.instrumentInfo = res.result.list[0]
+                    }
+                } else {
+                    LogManager.shared.error("retCode \(res.retMsg)")
+                }
+            } catch {
+                LogManager.shared.error("error is \(error.localizedDescription)")
+                print(String(decoding: $0, as: UTF8.self))
+            }
+        }, symbol: pair)
     }
 
     func parseMessage(message: String) {

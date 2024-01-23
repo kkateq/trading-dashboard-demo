@@ -47,7 +47,7 @@ struct PriceFilter: Decodable {
     var tickSize: String
 }
 
-struct BybitInstrumentInfo: Decodable {
+class BybitInstrumentInfo: Decodable, ObservableObject {
     var symbol: String
     var priceScale: String
     var priceFilter: PriceFilter

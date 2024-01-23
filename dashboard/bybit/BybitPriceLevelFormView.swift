@@ -12,25 +12,17 @@ struct BybitPriceLevelFormView: View {
     var pair: String
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
-    @EnvironmentObject var instrumentStats: BybitInstrumentStats
+    @EnvironmentObject var book: BybitOrderBook
 
     @State private var selection: PairPriceLevel.ID?
-
-    @State var tickSize: Double = 0.0001
 
     @State var bestBid: Double = 0
     @State var bestAsk: Double = 0
 
-    func updateTickSize(_ info: BybitInstrumentInfo!) {
-        if let i = info {
-            tickSize = Double(i.priceFilter.tickSize)!
-        }
-    }
-
-    func updateCurrentPrice(_ p: BybitTickerData!) {
-        if let pricing = p {
-            bestAsk = Double(pricing.ask1Price)!
-            bestBid = Double(pricing.bid1Price)!
+    func updateCurrentPrice(_ s: BybitStats!) {
+        if let stats = s {
+            bestAsk = stats.bestAsk
+            bestBid = stats.bestBid
         }
     }
 
@@ -51,9 +43,8 @@ struct BybitPriceLevelFormView: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading) {
                         Text(pair).font(.title)
-                        Text("\(tickSize)").font(.caption)
                     }
-                    BybitBPS(pair: pair)
+                    
                     HStack {
                         Text("\(formatPrice(price: bestAsk, pair: pair))").font(.title).foregroundStyle(.red)
                         Text("\(formatPrice(price: bestBid, pair: pair))").font(.title).foregroundStyle(.green)
@@ -106,8 +97,7 @@ struct BybitPriceLevelFormView: View {
                 })
 
             }.padding()
-                .onReceive(instrumentStats.$info, perform: updateTickSize)
-                .onReceive(instrumentStats.$stats, perform: updateCurrentPrice)
+                .onReceive(book.$stats, perform: updateCurrentPrice)
         }
     }
 }

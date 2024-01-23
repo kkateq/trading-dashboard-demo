@@ -10,8 +10,9 @@ import SwiftUI
 struct PairsCardsView: View {
     var body: some View {
         VStack {
-            PairAlertCard(pair: "AVAXUSDT")
-            PairAlertCard(pair: "MATICUSDT")
+            PairAlertWrapper(pair: "AVAXUSDT")
+            
+            PairAlertWrapper(pair: "MATICUSDT")
         }
     }
 }

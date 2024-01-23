@@ -72,6 +72,7 @@
 		34E339BC2B5ECCB40013F17D /* BybitBPS .swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BB2B5ECCB40013F17D /* BybitBPS .swift */; };
 		34E339BE2B5FA1AB0013F17D /* PairAlertCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */; };
 		34E339C02B5FA5E60013F17D /* PairsCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */; };
+		34E339C22B5FBF560013F17D /* PairAlertWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339C12B5FBF560013F17D /* PairAlertWrapper.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -185,6 +186,7 @@
 		34E339BB2B5ECCB40013F17D /* BybitBPS .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BybitBPS .swift"; sourceTree = "<group>"; };
 		34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairAlertCard.swift; sourceTree = "<group>"; };
 		34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairsCardsView.swift; sourceTree = "<group>"; };
+		34E339C12B5FBF560013F17D /* PairAlertWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairAlertWrapper.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				34066F522B31B4B30090C78A /* PairHomeView.swift */,
 				34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */,
 				34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */,
+				34E339C12B5FBF560013F17D /* PairAlertWrapper.swift */,
 				34F401392B35B15200E0DC4A /* VolumeCell.swift */,
 				34905C132B29C12C00A5A649 /* Assets.xcassets */,
 				34F401632B443A6300E0DC4A /* binance */,
@@ -588,6 +591,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */,
+				34E339C22B5FBF560013F17D /* PairAlertWrapper.swift in Sources */,
 				34F401662B446AA900E0DC4A /* KrakenVolumeCard.swift in Sources */,
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
