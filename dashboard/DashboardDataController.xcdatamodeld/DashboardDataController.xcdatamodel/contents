@@ -3,6 +3,7 @@
     <entity name="PairPriceLevel" representedClassName="PairPriceLevel" syncable="YES" codeGenerationType="class">
         <attribute name="added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastAlertTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="note" optional="YES" attributeType="String"/>
         <attribute name="pair" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="String"/>

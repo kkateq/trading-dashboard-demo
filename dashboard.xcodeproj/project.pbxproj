@@ -67,6 +67,11 @@
 		34E339522B5ABD0B0013F17D /* PriceLevelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */; };
 		34E339552B5AC1900013F17D /* DashboardDataController.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34E339532B5AC1900013F17D /* DashboardDataController.xcdatamodeld */; };
 		34E339B52B5E81790013F17D /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339B42B5E81790013F17D /* NotificationsView.swift */; };
+		34E339B72B5EA5070013F17D /* SlackNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339B62B5EA5070013F17D /* SlackNotification.swift */; };
+		34E339BA2B5EA8350013F17D /* SwiftySlack in Frameworks */ = {isa = PBXBuildFile; productRef = 34E339B92B5EA8350013F17D /* SwiftySlack */; };
+		34E339BC2B5ECCB40013F17D /* BybitBPS .swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BB2B5ECCB40013F17D /* BybitBPS .swift */; };
+		34E339BE2B5FA1AB0013F17D /* PairAlertCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */; };
+		34E339C02B5FA5E60013F17D /* PairsCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -176,6 +181,10 @@
 		34E339512B5ABD0B0013F17D /* PriceLevelManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceLevelManager.swift; sourceTree = "<group>"; };
 		34E339542B5AC1900013F17D /* DashboardDataController.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DashboardDataController.xcdatamodel; sourceTree = "<group>"; };
 		34E339B42B5E81790013F17D /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		34E339B62B5EA5070013F17D /* SlackNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlackNotification.swift; sourceTree = "<group>"; };
+		34E339BB2B5ECCB40013F17D /* BybitBPS .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BybitBPS .swift"; sourceTree = "<group>"; };
+		34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairAlertCard.swift; sourceTree = "<group>"; };
+		34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairsCardsView.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -212,6 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34E339BA2B5EA8350013F17D /* SwiftySlack in Frameworks */,
 				34905C452B2A003F00A5A649 /* Collections in Frameworks */,
 				34E3393A2B5A6E7B0013F17D /* SwiftySound in Frameworks */,
 				34905C3E2B29C18300A5A649 /* Starscream in Frameworks */,
@@ -379,11 +389,15 @@
 				34E338EC2B480F140013F17D /* BybitLastTradeCell.swift */,
 				34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
+				34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */,
 				34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
+				34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */,
 				34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */,
 				34E339292B568AF60013F17D /* BybitPriceCell.swift */,
 				34E3392F2B57E8630013F17D /* BybitPriceLevelFormView.swift */,
+				34E339BB2B5ECCB40013F17D /* BybitBPS .swift */,
+				34E339B62B5EA5070013F17D /* SlackNotification.swift */,
 				34E339402B5A7DDB0013F17D /* BybitTickerStats.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */,
@@ -448,6 +462,7 @@
 				34905C442B2A003F00A5A649 /* Collections */,
 				34905C4D2B2B05D700A5A649 /* CryptoSwift */,
 				34E339392B5A6E7B0013F17D /* SwiftySound */,
+				34E339B92B5EA8350013F17D /* SwiftySlack */,
 			);
 			productName = dashboard;
 			productReference = 34905C0C2B29C12A00A5A649 /* dashboard.app */;
@@ -526,6 +541,7 @@
 				34905C432B2A003F00A5A649 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */,
+				34E339B82B5EA8350013F17D /* XCRemoteSwiftPackageReference "SwiftySlack" */,
 			);
 			productRefGroup = 34905C0D2B29C12A00A5A649 /* Products */;
 			projectDirPath = "";
@@ -576,6 +592,7 @@
 				34905C122B29C12A00A5A649 /* ContentView.swift in Sources */,
 				34F4013A2B35B15200E0DC4A /* VolumeCell.swift in Sources */,
 				34F401402B36F2DD00E0DC4A /* LastTradeCell.swift in Sources */,
+				34E339B72B5EA5070013F17D /* SlackNotification.swift in Sources */,
 				34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */,
 				34F4016B2B456A0100E0DC4A /* DashboardView.swift in Sources */,
 				34905C622B2C53F700A5A649 /* ButtonStyles.swift in Sources */,
@@ -595,6 +612,7 @@
 				34E338FD2B4C4ED80013F17D /* BybitPositionsView.swift in Sources */,
 				34F4017C2B46D7D000E0DC4A /* BinancePairView.swift in Sources */,
 				34E339B52B5E81790013F17D /* NotificationsView.swift in Sources */,
+				34E339BC2B5ECCB40013F17D /* BybitBPS .swift in Sources */,
 				34E338F32B4BF2800013F17D /* BybitPriceVolumeChart.swift in Sources */,
 				34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* KrakenPairView.swift in Sources */,
@@ -611,6 +629,7 @@
 				34905C5A2B2B64B800A5A649 /* NoteCell.swift in Sources */,
 				34E338F72B4C049C0013F17D /* BybitOrderFormView.swift in Sources */,
 				34E338F92B4C04B80013F17D /* BybitPrivateManager.swift in Sources */,
+				34E339C02B5FA5E60013F17D /* PairsCardsView.swift in Sources */,
 				34905C602B2C4A1800A5A649 /* KrakenOrderForm.swift in Sources */,
 				34E338ED2B480F140013F17D /* BybitLastTradeCell.swift in Sources */,
 				34E3391E2B501FA80013F17D /* BybitImbalanceChart.swift in Sources */,
@@ -632,6 +651,7 @@
 				34066F4C2B309E3B0090C78A /* LogView.swift in Sources */,
 				34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */,
 				34F4015C2B3F24CE00E0DC4A /* RawVolumeChart.swift in Sources */,
+				34E339BE2B5FA1AB0013F17D /* PairAlertCard.swift in Sources */,
 				34E3392C2B56A4DE0013F17D /* BybitVolumeChart.swift in Sources */,
 				34E338F12B484AF10013F17D /* BybitTimesAndSalesView.swift in Sources */,
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
@@ -992,6 +1012,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		34E339B82B5EA8350013F17D /* XCRemoteSwiftPackageReference "SwiftySlack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mbarnach/SwiftySlack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1014,6 +1042,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */;
 			productName = SwiftySound;
+		};
+		34E339B92B5EA8350013F17D /* SwiftySlack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34E339B82B5EA8350013F17D /* XCRemoteSwiftPackageReference "SwiftySlack" */;
+			productName = SwiftySlack;
 		};
 /* End XCSwiftPackageProductDependency section */
 

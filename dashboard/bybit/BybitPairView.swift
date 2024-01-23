@@ -13,7 +13,6 @@ struct BybitPairView: View {
     var bybittrades_ws: BybitLastTrade
     var manager: BybitPrivateManager
     var instrumentStats: BybitInstrumentStats
-    var priceLevelManager: PriceLevelManager
     
     @State private var volume: Double
     @State private var scaleInOut: Bool = false
@@ -33,7 +32,6 @@ struct BybitPairView: View {
         self.manager = BybitPrivateManager(self.pair)
         self.volume = Constants.pairSettings[pair]!.minimumOrderVolume
         self.instrumentStats = BybitInstrumentStats(self.pair)
-        self.priceLevelManager = PriceLevelManager(self.pair)
     }
     
     func setBookReady(_ publishedBook: BybitOrderBook!) {
@@ -70,7 +68,6 @@ struct BybitPairView: View {
                     .environmentObject(bybitbook_ws.book)
                     .environmentObject(manager)
                     .environmentObject(instrumentStats)
-                    .environmentObject(priceLevelManager)
                 
             } else {
                 Text("Connecting...")

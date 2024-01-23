@@ -48,7 +48,7 @@ struct BybitTimesAndSalesView: View {
     }
     
     func getLevel(_ p: String) -> PairPriceLevel! {
-        return priceLevelManager.getLevel(price: p)
+        return PriceLevelManager.shared.getLevel(pair: pair, price: p)
     }
     
     var body: some View {

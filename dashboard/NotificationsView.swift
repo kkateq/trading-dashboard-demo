@@ -7,26 +7,25 @@
 
 import SwiftUI
 
-struct NotificationsView: View {
+struct ConfigurationView: View {
     var pair: String
-    var priceLevelManager: PriceLevelManager
     var instrumentStats: BybitInstrumentStats
-
+    var bybittrades_ws: BybitLastTrade
     
     init(pair: String) {
         self.pair = pair
         self.instrumentStats = BybitInstrumentStats(self.pair)
-        self.priceLevelManager = PriceLevelManager(self.pair)
+        self.bybittrades_ws = BybitLastTrade(self.pair)
     }
     
     var body: some View {
         BybitPriceLevelFormView(pair: self.pair)
             .environmentObject(instrumentStats)
-            .environmentObject(priceLevelManager)
+            .environmentObject(bybittrades_ws.recentTrades)
         
     }
 }
 
 #Preview {
-    NotificationsView(pair: "")
+    ConfigurationView(pair: "")
 }

@@ -43,12 +43,13 @@ extension PairPriceLevel {
 
 class PriceLevelManager: ObservableObject {
     private var container: NSPersistentContainer
-    var pair: String!
 
     @Published var levels: [PairPriceLevel] = []
     
-    init(_ p: String! = nil) {
-        pair = p
+    static let shared = PriceLevelManager()
+    
+    init() {
+     
         container = NSPersistentContainer(name: "DashboardDataController")
         container.loadPersistentStores { _, error in
             if let error = error {
@@ -60,9 +61,9 @@ class PriceLevelManager: ObservableObject {
 
     func fetchLevels() {
         let fetchRequest = NSFetchRequest<PairPriceLevel>(entityName: "PairPriceLevel")
-        if let p = self.pair {
-            fetchRequest.predicate = NSPredicate(format: "pair = %@", p)
-        }
+//        if let p = self.pair {
+//            fetchRequest.predicate = NSPredicate(format: "pair = %@", p)
+//        }
         do {
             levels = try container.viewContext.fetch(fetchRequest)
         } catch {
@@ -70,14 +71,24 @@ class PriceLevelManager: ObservableObject {
         }
     }
 
-    func getLevel(price: String) -> PairPriceLevel! {
-        return levels.first(where: { $0.price == price })
+    func getLevel(pair: String, price: String) -> PairPriceLevel! {
+        return levels.first(where: { $0.price == price && $0.pair == pair })
     }
     
-    func getLevels() -> [Double] {
-        return levels.map({ Double($0.price!)! })
+    func getLevelPrices(pair: String) -> [Double] {
+        return levels.filter({$0.pair == pair}).map({ Double($0.price!)! })
     }
 
+    func getLevels(pair: String) -> [PairPriceLevel] {
+        return levels.filter({$0.pair == pair})
+    }
+    
+    func updateAlertTime(id: UUID, ts: Date) {
+        if let l = levels.first(where: { $0.id == id }) {
+            l.lastAlertTime = ts
+            saveData()
+        }
+    }
     func saveData() {
         do {
             try container.viewContext.save()

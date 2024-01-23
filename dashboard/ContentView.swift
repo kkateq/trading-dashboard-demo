@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
+           
             List {
                 Spacer()
 
@@ -17,10 +18,10 @@ struct ContentView: View {
                     .font(.system(size: 10))
                     .fontWeight(.bold)
                 Group {
-                    NavigationLink(destination: NotificationsView(pair: "AVAXUSDT")) {
+                    NavigationLink(destination: ConfigurationView(pair: "AVAXUSDT")) {
                         Label("AVAXUSDT", systemImage: "mail")
                     }
-                    NavigationLink(destination: NotificationsView(pair: "MATICUSDT")) {
+                    NavigationLink(destination: ConfigurationView(pair: "MATICUSDT")) {
                         Label("MATICUSDT", systemImage: "mail")
                     }
                 }
@@ -35,6 +36,9 @@ struct ContentView: View {
                         Label("MATICUSDT", systemImage: "book.closed.fill")
                     }
                 }
+            }
+            VStack {
+                PairsCardsView()
             }
         }
     }
