@@ -25,6 +25,12 @@ struct BybitTimesAndSalesView: View {
     ]
     @State var data: [BybitRecentTradeRecord] = []
     
+    init(type: BybitTradeSide, pair: String) {
+        self.type = type
+        self.pair = pair
+        highlightVolume = Constants.pairSettings[pair]!.highlightVolume
+    }
+    
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PairAlertWrapper: View {
     var pair: String
+  
     var bybitbook_ws: Bybitbook
     var bybittrades_ws: BybitLastTrade
     

@@ -75,19 +75,19 @@ enum BybitRestApi {
         dataTask.resume()
     }
     
-    private static func fetchPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:]) async {
+    private static func fetchPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: String] = [:], accountName: String!) async {
         let query = encode(params: params)
         let url = "https://api.bybit.com/v5\(route)?\(query)"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
         let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
         let recv_window = 5000
-        let str = "\(timestamp)\(KeychainHandler.BybitApiKey)\(recv_window)\(query)"
-        let signature = generateSignature(api_secret: KeychainHandler.BybitApiSecret, value: str)
+        let str = "\(timestamp)\(KeychainHandler.getAccountKey(accountName: accountName))\(recv_window)\(query)"
+        let signature = generateSignature(api_secret: KeychainHandler.getAccountSecret(accountName: accountName), value: str)
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("2", forHTTPHeaderField: "X-BAPI-SIGN-TYPE")
         urlRequest.setValue(signature, forHTTPHeaderField: "X-BAPI-SIGN")
-        urlRequest.setValue(KeychainHandler.BybitApiKey, forHTTPHeaderField: "X-BAPI-API-KEY")
+        urlRequest.setValue(KeychainHandler.getAccountKey(accountName: accountName), forHTTPHeaderField: "X-BAPI-API-KEY")
         urlRequest.setValue(timestamp, forHTTPHeaderField: "X-BAPI-TIMESTAMP")
         urlRequest.setValue("\(recv_window)", forHTTPHeaderField: "X-BAPI-RECV-WINDOW")
 
@@ -111,19 +111,19 @@ enum BybitRestApi {
         dataTask.resume()
     }
 
-    private static func postPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: Any] = [:]) async {
+    private static func postPrivate(cb: @escaping (Data) -> Void, route: String, params: [String: Any] = [:], accountName: String!) async {
         let url = "https://api.bybit.com/v5\(route)"
         guard let url = URL(string: url) else { fatalError("Missing URL") }
         let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
         let recv_window = 5000
         let urlParams = paramsToJson(params: params)
-        let str = "\(timestamp)\(KeychainHandler.BybitApiKey)\(recv_window)\(urlParams)"
-        let signature = generateSignature(api_secret: KeychainHandler.BybitApiSecret, value: str)
+        let str = "\(timestamp)\(KeychainHandler.getAccountKey(accountName: accountName))\(recv_window)\(urlParams)"
+        let signature = generateSignature(api_secret: KeychainHandler.getAccountSecret(accountName: accountName), value: str)
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("2", forHTTPHeaderField: "X-BAPI-SIGN-TYPE")
         urlRequest.setValue(signature, forHTTPHeaderField: "X-BAPI-SIGN")
-        urlRequest.setValue(KeychainHandler.BybitApiKey, forHTTPHeaderField: "X-BAPI-API-KEY")
+        urlRequest.setValue(KeychainHandler.getAccountKey(accountName: accountName), forHTTPHeaderField: "X-BAPI-API-KEY")
         urlRequest.setValue(timestamp, forHTTPHeaderField: "X-BAPI-TIMESTAMP")
         urlRequest.setValue("\(recv_window)", forHTTPHeaderField: "X-BAPI-RECV-WINDOW")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -149,38 +149,50 @@ enum BybitRestApi {
         dataTask.resume()
     }
 
-    static func fetchPositions(cb: @escaping (Data) -> Void, symbol: String) async {
+    static func fetchPositions(cb: @escaping (Data) -> Void, symbol: String!, accountName: String!) async {
         LogManager.shared.action("Refetch positions...")
 
-        await fetchPrivate(cb: cb, route: "/position/list", params: ["category": "linear", "symbol": symbol])
+        if let s = symbol {
+            await fetchPrivate(cb: cb, route: "/position/list", params: ["category": "linear", "symbol": s], accountName: accountName)
+        } else  {
+            await fetchPrivate(cb: cb, route: "/position/list", params: ["category": "linear", "settleCoin": "USDT"], accountName: accountName)
+        }
     }
 
-    static func fetchOrders(cb: @escaping (Data) -> Void, symbol: String) async {
+    static func fetchOrders(cb: @escaping (Data) -> Void, symbol: String!, accountName: String!) async {
         LogManager.shared.action("Refetch orders...")
 
-        await fetchPrivate(cb: cb, route: "/order/realtime", params: ["category": "linear", "symbol": symbol])
+        if let s = symbol {
+            await fetchPrivate(cb: cb, route: "/order/realtime", params: ["category": "linear", "symbol": s], accountName: accountName)
+        } else {
+            await fetchPrivate(cb: cb, route: "/order/realtime", params: ["category": "linear"], accountName: accountName)
+        }
     }
 
-    static func fetchTradingBalance(cb: @escaping (Data) -> Void) async {
+    static func fetchTradingBalance(cb: @escaping (Data) -> Void, accountName: String!) async {
         LogManager.shared.action("Refetch trading account balance...")
 
-        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType": "UNIFIED", "coin": "USDT"])
+        await fetchPrivate(cb: cb, route: "/account/wallet-balance", params: ["accountType": "UNIFIED", "coin": "USDT"], accountName: accountName)
     }
 
-    static func cancelAllOrders(cb: @escaping (Data) -> Void, symbol: String) async {
+    static func cancelAllOrders(cb: @escaping (Data) -> Void, symbol: String!, accountName: String!) async {
         LogManager.shared.action("Cancel all orders...")
 
-        await postPrivate(cb: cb, route: "/order/cancel-all", params: ["category": "linear", "symbol": symbol])
+        if let s = symbol {
+            await postPrivate(cb: cb, route: "/order/cancel-all", params: ["category": "linear", "symbol": s], accountName: accountName)
+        } else {
+            await postPrivate(cb: cb, route: "/order/cancel-all", params: ["category": "linear"], accountName: accountName)
+        }
     }
 
-    static func cancelOrder(cb: @escaping (Data) -> Void, orderId: String, symbol: String) async {
+    static func cancelOrder(cb: @escaping (Data) -> Void, orderId: String, symbol: String, accountName: String!) async {
         LogManager.shared.action("Cancel order \(orderId)")
 
-        await postPrivate(cb: cb, route: "/order/cancel", params: ["category": "linear", "symbol": symbol, "orderId": orderId])
+        await postPrivate(cb: cb, route: "/order/cancel", params: ["category": "linear", "symbol": symbol, "orderId": orderId], accountName: accountName)
     }
 
-    static func createOrder(cb: @escaping (Data) -> Void, params: [String: Any]) async {
-        await postPrivate(cb: cb, route: "/order/create", params: params)
+    static func createOrder(cb: @escaping (Data) -> Void, params: [String: Any], accountName: String!) async {
+        await postPrivate(cb: cb, route: "/order/create", params: params, accountName: accountName)
     }
     
     static func openInterest(cb: @escaping (Data) -> Void, symbol: String) async {
@@ -195,4 +207,9 @@ enum BybitRestApi {
         await fetchPublic(cb: cb, route: "/market/instruments-info", params: ["symbol": symbol, "category": "linear"])
     }
     
+    static func transactionInfo(cb: @escaping (Data) -> Void, accountName: String!) async {
+        LogManager.shared.action("Fetch transactions log...")
+
+        await fetchPrivate(cb: cb, route: "/account/transaction-log", params: ["category": "linear", "limit": "50"], accountName: accountName)
+    }
 }

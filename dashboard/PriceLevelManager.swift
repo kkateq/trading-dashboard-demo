@@ -30,11 +30,11 @@ extension PairPriceLevel {
     var color: (Color, CGFloat) {
         switch self.type {
         case 3:
-            return (.red, 4)
+            return (.purple, 4)
         case 2:
-            return (.orange, 3)
+            return (.teal, 3)
         case 1:
-            return (.yellow, 2)
+            return (.gray, 2)
         default:
             return (.black, 1)
         }
@@ -61,9 +61,6 @@ class PriceLevelManager: ObservableObject {
 
     func fetchLevels() {
         let fetchRequest = NSFetchRequest<PairPriceLevel>(entityName: "PairPriceLevel")
-//        if let p = self.pair {
-//            fetchRequest.predicate = NSPredicate(format: "pair = %@", p)
-//        }
         do {
             levels = try container.viewContext.fetch(fetchRequest)
         } catch {
@@ -83,9 +80,9 @@ class PriceLevelManager: ObservableObject {
         return levels.filter({$0.pair == pair})
     }
     
-    func updateAlertTime(id: UUID, ts: Date) {
+    func updateAlertTime(id: UUID) {
         if let l = levels.first(where: { $0.id == id }) {
-            l.lastAlertTime = ts
+            l.lastAlertTime = Date()
             saveData()
         }
     }

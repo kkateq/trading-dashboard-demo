@@ -13,38 +13,42 @@ struct ContentView: View {
            
             List {
                 Spacer()
-
-
-                Group {
-                    NavigationLink(destination: PairsCardsView()) {
-                        Label("Home", systemImage: "house")
-                    }
-                    
-                }
-                Spacer()
                 
-                Text("NOTIFICATIONS")
-                    .font(.system(size: 10))
-                    .fontWeight(.bold)
                 Group {
-                    NavigationLink(destination: ConfigurationView(pair: "AVAXUSDT")) {
-                        Label("AVAXUSDT", systemImage: "mail")
-                    }
-                    NavigationLink(destination: ConfigurationView(pair: "MATICUSDT")) {
-                        Label("MATICUSDT", systemImage: "mail")
-                    }
+                    NavigationLink(destination: BybitPositions()){
+                                                Label("All Positions", systemImage: "house")
+                                            }
                 }
-                Spacer()
-                
-                Text("TRADING")
-                Group {
-                    NavigationLink(destination: DashboardView(pair: "AVAXUSDT")) {
-                        Label("AVAXUSDT", systemImage: "book.closed.fill")
-                    }
-                    NavigationLink(destination: DashboardView(pair: "MATICUSDT")) {
-                        Label("MATICUSDT", systemImage: "book.closed.fill")
-                    }
-                }
+
+//
+//                Group {
+//                    NavigationLink(destination: PairsCardsView(list: list)) {
+//                        Label("Home", systemImage: "house")
+//                    }
+//                    
+//                }
+//                Spacer()
+//                
+//                Text("NOTIFICATIONS")
+//                    .font(.system(size: 10))
+//                    .fontWeight(.bold)
+//                Group {
+//                    ForEach(list, id: \.self) { pair in
+//                        NavigationLink(destination: ConfigurationView(pair: pair)) {
+//                            Label(pair, systemImage: "mail")
+//                        }
+//                    }
+//                }
+//                Spacer()
+//                
+//                Text("TRADING")
+//                Group {
+//                    ForEach(list, id: \.self) { pair in
+//                        NavigationLink(destination: DashboardView(pair: pair)) {
+//                            Label(pair, systemImage: "book.closed.fill")
+//                        }
+//                    }
+//                }
             }
            
         }

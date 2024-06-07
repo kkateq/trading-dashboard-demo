@@ -9,14 +9,17 @@ import Foundation
 import SwiftySlack
 
 class SlackNotification {
-    private let webAPI = WebAPI(token: "xoxb-876704705971-6531916734240-vCRxpjELgeFaxm5sqddC2yhD")
+    private let webAPI = WebAPI(token: "XYZ")
     static let instance = SlackNotification()
 
     func sendAlert(pair: String, price: String, bestBid: String, bestAsk: String) {
         // Create a block:
-        let title = SectionBlock(text: MarkdownText("*Pair level \(pair) - \(price)*"))
+        let title = SectionBlock(text: MarkdownText("*Pair level <https://www.bybit.com/trade/usdt/\(pair)|\(pair)> - \(price)*"), accessory: ImageElement(image_url:
+            URL(string:
+                    Constants.pairSettings[pair]!.imageLink)!,
+            alt_text: "calendar thumbnail"))
         let section = SectionBlock(text: MarkdownText("*Bid* \(bestBid) - *Ask* \(bestAsk)"))
-      
+
         // Create the message:
         let message = Message(blocks: [title, section], to: "#dashboard", alternateText: "A message.")
 

@@ -7,6 +7,7 @@
         <attribute name="note" optional="YES" attributeType="String"/>
         <attribute name="pair" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="String"/>
+        <attribute name="threshhold" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
 </model>

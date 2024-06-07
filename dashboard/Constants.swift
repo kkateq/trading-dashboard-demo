@@ -13,30 +13,50 @@ struct PairSettings {
     var priceFractionalPoints: Int
     var volumeFractionalPoints: Int
     var averageVolume: Double
+    var highlightVolume: Double
+    var priceThreshholdPercent: Double
+    var imageLink: String
 }
 
-let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
-let avaxSettings = PairSettings(leverage: 4, minimumOrderVolume: 5, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10000)
-let aptSettings = PairSettings(leverage: 3, minimumOrderVolume: 5, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000)
-let sillySettings = PairSettings(leverage: 3, minimumOrderVolume: 100, priceFractionalPoints: 5, volumeFractionalPoints: 2, averageVolume: 10000)
+let maticSettings = PairSettings(leverage: 4, minimumOrderVolume: 100, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000, highlightVolume: 100, priceThreshholdPercent: 2, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png")
+let avaxSettings = PairSettings(leverage: 4, minimumOrderVolume: 5, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10000, highlightVolume: 100, priceThreshholdPercent: 2, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png")
+let aptSettings = PairSettings(leverage: 3, minimumOrderVolume: 5, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000, highlightVolume: 100, priceThreshholdPercent: 2, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png")
+
+let adaSettings = PairSettings(leverage: 3, minimumOrderVolume: 100, priceFractionalPoints: 6, volumeFractionalPoints: 0, averageVolume: 100000, highlightVolume: 5000, priceThreshholdPercent: 2, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png")
+
+let manaSettings = PairSettings(leverage: 4, minimumOrderVolume: 10, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000, highlightVolume: 100, priceThreshholdPercent: 2, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/1966.png")
+
+let ethSettings = PairSettings(leverage: 5, minimumOrderVolume: 0.04, priceFractionalPoints: 2, volumeFractionalPoints: 2, averageVolume: 10, highlightVolume: 10, priceThreshholdPercent: 1, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/1966.png")
+
+let solSettings = PairSettings(leverage: 5, minimumOrderVolume: 2, priceFractionalPoints: 3, volumeFractionalPoints: 1, averageVolume: 10, highlightVolume: 50, priceThreshholdPercent: 1, imageLink: "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png")
+
 
 enum Constants {
     static let bookDepth = 25
     static let defaultPair = "MATIC/USDT"
-    static let pairs = ["AVAX/USDT", "APT/USDT", "MATIC/USDT", "MANA/USDT", "ETH/USDT", "ADA/USDT", "SILLY/USDT"]
+    static let pairs = ["AVAX/USDT", "APT/USDT", "MATIC/USDT", "MANA/USDT", "ETH/USDT", "ADA/USDT", "SILLY/USDT", "SOL/USDT"]
     static let pairSettings: [String: PairSettings] = [
-        "MANA/USDT" :PairSettings(leverage: 4, minimumOrderVolume: 10, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000),
-        "MANAUSDT" :PairSettings(leverage: 4, minimumOrderVolume: 10, priceFractionalPoints: 4, volumeFractionalPoints: 0, averageVolume: 10000),
+        "MANA/USDT" :manaSettings,
+        "MANAUSDT" :manaSettings,
+        
         "MATIC/USDT": maticSettings,
         "MATICUSDT": maticSettings,
-        "ETH/USDT": PairSettings(leverage: 5, minimumOrderVolume: 0.04, priceFractionalPoints: 2, volumeFractionalPoints: 2, averageVolume: 10),
-        "ADA/USDT": PairSettings(leverage: 3, minimumOrderVolume: 100, priceFractionalPoints: 6, volumeFractionalPoints: 0, averageVolume: 100000),
+        
+        "ETH/USDT": ethSettings,
+        "ETHUSDT": ethSettings,
+        
+        "ADA/USDT": adaSettings,
+        "ADAUSDT":adaSettings,
+        
         "AVAXUSDT": avaxSettings,
         "AVAX/USDT": avaxSettings,
+        
         "APT/USDT" : aptSettings,
         "APTUSDT": aptSettings,
-        "SILLY/USDT": sillySettings,
-        "SILLYUSDT": sillySettings
+        
+        
+        "SOL/USDT": solSettings,
+        "SOLUSDT": solSettings
     ]
     static let PAIRS_ISO_NAMES = [
         "MATICUSD": "MATIC/USD",
@@ -45,7 +65,8 @@ enum Constants {
         "AVAXUSDT": "AVAX/USDT",
         "ADAUSDT": "ADA/USDT",
         "APTUSDT": "APT/USDT",
-        "SILLYUSDT": "SILLY/USDT"
+
+        "SOLUSDT": "SOL/USDT"
     ]
     
     static let PAIRS_ISO_NAMES_REV = [
@@ -55,7 +76,8 @@ enum Constants {
         "ADA/USDT": "ADAUSDT",
         "AVAX/USDT": "AVAXUSDT",
         "APT/USDT" : "APTUSDT",
-        "SILLY/USDT": "SILLYUSDT"
+  
+        "SOL/USDT": "SOLUSDT"
     ]
     static let kraken_fee = 0.02
     static let stop_loss_perc = 0.05

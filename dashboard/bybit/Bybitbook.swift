@@ -102,7 +102,6 @@ class BybitOrderBook: ObservableObject, Equatable {
     var pair: String
     var lastUpdateId: Int
     let depth: Int = 20
- 
 
     var id = UUID()
     static func == (lhs: BybitOrderBook, rhs: BybitOrderBook) -> Bool {
@@ -198,14 +197,12 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
             didChangeInfo.send()
         }
     }
-    
+
     @Published var book: BybitOrderBook! {
         didSet {
             didChange.send()
         }
     }
-    
-    
 
     init(_ p: String, _ d: Int = 50) {
         pair = p
@@ -222,12 +219,10 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .removeDuplicates()
             .assign(to: \.book, on: self))
-        
-        
-        self.cancellableInfo = AnyCancellable($instrumentInfo
+
+        cancellableInfo = AnyCancellable($instrumentInfo
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .assign(to: \.info, on: self))
-        
     }
 
     func subscribe(socket: WebSocket) {
@@ -255,7 +250,7 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
                 DispatchQueue.main.async {
                     do {
                         let v = try JSONDecoder().decode(BybitOrderBookRecord.self, from: data)
-        
+
                         self.data = BybitOrderBook(v.result)
                     } catch {
                         print("Error decoding: ", error)
@@ -266,13 +261,13 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
 
         dataTask.resume()
     }
-    
+
     func downloadInstrumentInfo() async {
         await BybitRestApi.instrumentInfo(cb: {
             do {
                 let res = try JSONDecoder().decode(BybitListRestBase<BybitInstrumentInfo>.self, from: $0)
 
-                if res.retCode == 0 && res.result.list.count > 0 {
+                if res.retCode == 0, res.result.list.count > 0 {
                     DispatchQueue.main.async {
                         self.instrumentInfo = res.result.list[0]
                     }
@@ -290,7 +285,7 @@ class Bybitbook: BybitSocketDelegate, ObservableObject {
         do {
             if message == "{\"event\":\"heartbeat\"}" {
                 return
-            } else if !isSubscribed && message.contains("\"op\":\"subscribe\""){
+            } else if !isSubscribed && message.contains("\"op\":\"subscribe\"") {
                 let subscriptionStatus = try JSONDecoder().decode(BybitSubscriptionStatus.self, from: Data(message.utf8))
                 if subscriptionStatus.success && subscriptionStatus.req_id == req_id {
                     isSubscribed = true

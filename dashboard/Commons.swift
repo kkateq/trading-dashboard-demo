@@ -76,3 +76,9 @@ func generateSignature(api_secret: String, value: String) -> String {
     let hash = try? HMAC(key: api_secret, variant: .sha2(.sha256)).authenticate(Array(inputData))
     return hash?.toHexString() ?? ""
 }
+
+func formatDate(date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy/MM/dd HH:mm"
+    return formatter.string(from: date)
+}

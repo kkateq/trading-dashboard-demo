@@ -10,88 +10,106 @@ import SwiftySound
 
 struct PairAlertCard: View {
     var pair: String
-    @State var playAlerts: Bool = true
+    @State var isAlerting: Bool = true
     @State var priceMark: String = "0"
     @State var level: PriceLevelType = .minor
-    
     @EnvironmentObject var book: BybitOrderBook
     @EnvironmentObject var info: BybitInstrumentInfo
-    
+    @State var closestLevel: PairPriceLevel! = nil
     @State private var selection: PairPriceLevel.ID?
-    let threshhold: Double = 15
-    @State var isSoundPLaying: Bool = false
-//    @State var tickSize: Double = info != nil ? info.priceFilter.tickSize :0.0001
 
-    let mySound = Sound(url: Bundle.main.url(forResource: "piano", withExtension: "mp3")!)
-
+    @State var levels: [PairPriceLevel] = []
     @State var bestBid: Double = 0
     @State var bestAsk: Double = 0
-    
-//    func updateTickSize(_ i: BybitInstrumentInfo!) {
-//        if let info = i {
-//            self.tickSize = Double(info.priceFilter.tickSize)!
-//        }
-//    }
-//
+
     func updateCurrentPrice(_ s: BybitStats!) {
         if let stats = s {
             bestAsk = stats.bestAsk
             bestBid = stats.bestBid
 
-            let tickSize = Double(info.priceFilter.tickSize)!
-            let priceBid = bestBid - threshhold * tickSize
-            let levels = PriceLevelManager.shared.getLevelPrices(pair: pair)
-            if let level = levels.first(where: { bestBid > $0 && $0 > priceBid }) {
+            if let level = PriceLevelManager.shared.getLevels(pair: pair).first(where: { checkPrice(price: $0.price!, bestBid: bestBid, bestAsk: bestAsk) == true }) {
+                closestLevel = level
                 sendAlert(level: level)
             } else {
-                let priceAsk = bestAsk + threshhold * tickSize
-                let levels = PriceLevelManager.shared.getLevelPrices(pair: pair)
-                if let level = levels.first(where: { bestAsk < $0 && $0 < priceAsk }) {
-                    sendAlert(level: level)
-                }
+                isAlerting = false
+                closestLevel = nil
             }
         }
     }
-    
+
+    func checkPrice(price: String, bestBid: Double, bestAsk: Double) -> Bool {
+        let priceLevel = Double(price)!
+        let peg = (bestBid + bestAsk) / 2
+        let delta = abs(((priceLevel - peg) / priceLevel) * 100)
+        return delta < Constants.pairSettings[pair]!.priceThreshholdPercent
+    }
+
     func percentFromTarget(level: String) -> String {
         let priceLevel = Double(level)!
         let peg = (bestBid + bestAsk) / 2
-   
+
         if priceLevel > peg {
             return "-\(formatPrice(price: ((priceLevel - peg) / priceLevel) * 100, pair: pair))"
         } else {
             return "+\(formatPrice(price: ((peg - priceLevel) / priceLevel) * 100, pair: pair))"
         }
     }
-    
+
     func playSound() {
-        if !isSoundPLaying && playAlerts {
-            isSoundPLaying = true
-            mySound!.play { _ in
-                isSoundPLaying = false
-            }
+        SoundHandler.shared.playSound()
+    }
+
+    func intervalSince(_ previous: Date, isMoreThan minutes: Int) -> Bool {
+        return Date() > previous.advanced(by: Double(minutes) * 60.0)
+    }
+
+    func sendAlert(level: PairPriceLevel) {
+        if level.lastAlertTime == nil || intervalSince(level.lastAlertTime!, isMoreThan: 5) {
+            playSound()
+
+            SlackNotification.instance.sendAlert(pair: pair, price: level.price!, bestBid: formatPrice(price: bestBid, pair: pair), bestAsk: formatPrice(price: bestAsk, pair: pair))
+            isAlerting = true
+            PriceLevelManager.shared.updateAlertTime(id: level.id!)
         }
     }
-   
-    func sendAlert(level: Double) {
-        playSound()
-        let price = formatPrice(price: level, pair: pair)
-        SlackNotification.instance.sendAlert(pair: pair, price: price, bestBid: formatPrice(price: bestBid, pair: pair), bestAsk: formatPrice(price: bestAsk, pair: pair))
-    }
-    
+
     var body: some View {
-        VStack {
-            VStack(alignment: .leading) {
-                Text(pair).font(.title)
-            }
-            BybitBPS(pair: pair)
-            HStack {
-                Text("\(formatPrice(price: bestAsk, pair: pair))").font(.title).foregroundStyle(.red)
-                Text("\(formatPrice(price: bestBid, pair: pair))").font(.title).foregroundStyle(.green)
+        HStack(alignment: .top) {
+
+            VStack(alignment: .leading, spacing: 5) {
+                
+                VStack(alignment: .leading) {
+                    if let cl = self.closestLevel {
+                        HStack {
+                            Text("Closest level").font(.caption)
+                            Text(cl.price!).font(.subheadline)
+                        }
+                    } else {
+                        Text("No alerts")
+                    }
+                    
+                }
+                HStack {
+                    
+                    VStack(alignment: .leading) {
+                        Text(pair).font(.title).foregroundStyle(Color("BidTextColor"))
+                    }
+                    HStack {
+                        Text("\(formatPrice(price: bestAsk, pair: pair))").font(.title).foregroundStyle(.red)
+                        Text("\(formatPrice(price: bestBid, pair: pair))").font(.title).foregroundStyle(.green)
+                    }
+                }
+                
+                BybitBPS(pair: pair)
             }
         }
+        .frame(width: 300, height: 200)
+        .padding()
         .onReceive(book.$stats, perform: updateCurrentPrice)
-//        .onReceive(bybitbook_ws.$info, perform: updateTickSize)
+        .overlay(
+            RoundedRectangle(cornerRadius: 2)
+                .stroke(isAlerting ? Color("Alert") : .gray, lineWidth: 4)
+        )
         .padding()
     }
 }

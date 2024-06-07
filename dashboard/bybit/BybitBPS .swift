@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BybitBPS: View {
     var pair: String
+    var sendAlert: Bool = false
     @State var totalSells: Double = 0.0
     @State var totalBuys: Double = 0.0
     @State var sellSpeed: Double = 0.0
@@ -46,6 +47,8 @@ struct BybitBPS: View {
             self.totalBuys = records.reduce(0) { $0 + $1.value }
             self.buySpeed = self.totalBuys / Double(records.count)
         }
+        
+    
     }
 
     func updateBuysData(_ data: [BybitRecentTradeRecord]) {
@@ -55,26 +58,70 @@ struct BybitBPS: View {
     func updateSellsData(_ data: [BybitRecentTradeRecord]) {
         self.updateData(data, .sell)
     }
+    
+    func getSellFr() -> Int {
+        if sellSpeed > 0 && totalSells > 0 {
+            return Int(self.totalSells/self.sellSpeed)
+        } else {
+            return 0
+        }
+    }
+    
+    func getBuyFr() -> Int {
+        if buySpeed > 0 && totalBuys > 0 {
+            return Int(self.totalBuys/self.buySpeed)
+        } else {
+            return 0
+        }
+    }
+
 
     var body: some View {
-        HStack {
-            VStack {
-                HStack {
-                    Text("\(Int(self.sellSpeed))").font(.title).foregroundStyle(.pink)
-                    Text("sells/sec").font(.caption)
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Speed").font(.caption).foregroundStyle(.gray)
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("sells/sec").font(.caption)
+                            Text("\(Int(self.sellSpeed))").font(.title).foregroundStyle(.pink)
+                        }
+                        VStack(alignment: .leading) {
+                            Text("buys/sec").font(.caption)
+                            Text("\(Int(self.buySpeed))").font(.title).foregroundStyle(.blue)
+                        }
+                    }
                 }
-                HStack {
-                    Text("\(Int(self.buySpeed))").font(.title).foregroundStyle(.blue)
-                    Text("buys/sec").font(.caption)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Total").font(.caption).foregroundStyle(.gray)
+                    HStack {
+                        VStack(alignment: .leading){
+                            Text("Sells").font(.caption)
+                            Text("\(Int(self.totalSells))").font(.title).foregroundStyle(.black)
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Buys").font(.caption)
+                            Text("\(Int(self.totalBuys))").font(.title).foregroundStyle(.black)
+                        }
+                    }
                 }
             }
-            VStack {
-                Text("total sells \(Int(self.totalSells))")
-                Text("total buys \(Int(self.totalBuys))")
+            VStack(alignment: .leading) {
+                Text("Experimental").font(.caption).foregroundStyle(.gray)
+                HStack {
+                    VStack(alignment: .leading){
+                        Text("Sells prop").font(.caption)
+                        Text("\(getSellFr())").font(.title).foregroundStyle(.black)
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Buys prop").font(.caption)
+                        Text("\(getBuyFr())").font(.title).foregroundStyle(.black)
+                    }
+                }
             }
         }.onReceive(self.recentTrades.$sells, perform: updateSellsData)
             .onReceive(self.recentTrades.$buys, perform: updateBuysData)
-            .padding()
+          
     }
 }
 

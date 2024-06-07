@@ -10,6 +10,10 @@
 		34066F4C2B309E3B0090C78A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4B2B309E3B0090C78A /* LogView.swift */; };
 		34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F4E2B30DDDC0090C78A /* LogManager.swift */; };
 		34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34066F522B31B4B30090C78A /* PairHomeView.swift */; };
+		34105F2A2B6E50930020E5FC /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 34105F292B6E50930020E5FC /* CodableCSV */; };
+		346F08802B73F15D005A42F2 /* BybitAccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F087F2B73F15D005A42F2 /* BybitAccountManager.swift */; };
+		3479DF912B6BC65400579C89 /* BybitPositions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3479DF902B6BC65400579C89 /* BybitPositions.swift */; };
+		3479DF932B6BC8B200579C89 /* PositionsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3479DF922B6BC8B200579C89 /* PositionsTable.swift */; };
 		349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349044952B330DE800975B95 /* KrakenOHLC.swift */; };
 		34905C102B29C12A00A5A649 /* dashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C0F2B29C12A00A5A649 /* dashboardApp.swift */; };
 		34905C122B29C12A00A5A649 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34905C112B29C12A00A5A649 /* ContentView.swift */; };
@@ -73,6 +77,7 @@
 		34E339BE2B5FA1AB0013F17D /* PairAlertCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */; };
 		34E339C02B5FA5E60013F17D /* PairsCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */; };
 		34E339C22B5FBF560013F17D /* PairAlertWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339C12B5FBF560013F17D /* PairAlertWrapper.swift */; };
+		34E339C42B5FE2560013F17D /* SoundHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E339C32B5FE2560013F17D /* SoundHandler.swift */; };
 		34F401342B345DB600E0DC4A /* VolumeProfileChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */; };
 		34F401362B3582B700E0DC4A /* GridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401352B3582B700E0DC4A /* GridOverlay.swift */; };
 		34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */; };
@@ -125,6 +130,9 @@
 		34066F4B2B309E3B0090C78A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		34066F4E2B30DDDC0090C78A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		34066F522B31B4B30090C78A /* PairHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairHomeView.swift; sourceTree = "<group>"; };
+		346F087F2B73F15D005A42F2 /* BybitAccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitAccountManager.swift; sourceTree = "<group>"; };
+		3479DF902B6BC65400579C89 /* BybitPositions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitPositions.swift; sourceTree = "<group>"; };
+		3479DF922B6BC8B200579C89 /* PositionsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionsTable.swift; sourceTree = "<group>"; };
 		349044952B330DE800975B95 /* KrakenOHLC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrakenOHLC.swift; sourceTree = "<group>"; };
 		34905C0C2B29C12A00A5A649 /* dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34905C0F2B29C12A00A5A649 /* dashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dashboardApp.swift; sourceTree = "<group>"; };
@@ -187,6 +195,7 @@
 		34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairAlertCard.swift; sourceTree = "<group>"; };
 		34E339BF2B5FA5E60013F17D /* PairsCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairsCardsView.swift; sourceTree = "<group>"; };
 		34E339C12B5FBF560013F17D /* PairAlertWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairAlertWrapper.swift; sourceTree = "<group>"; };
+		34E339C32B5FE2560013F17D /* SoundHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundHandler.swift; sourceTree = "<group>"; };
 		34F401332B345DB600E0DC4A /* VolumeProfileChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeProfileChart.swift; sourceTree = "<group>"; };
 		34F401352B3582B700E0DC4A /* GridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlay.swift; sourceTree = "<group>"; };
 		34F401372B35A78C00E0DC4A /* IndicatorPanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPanView.swift; sourceTree = "<group>"; };
@@ -227,6 +236,7 @@
 				34905C452B2A003F00A5A649 /* Collections in Frameworks */,
 				34E3393A2B5A6E7B0013F17D /* SwiftySound in Frameworks */,
 				34905C3E2B29C18300A5A649 /* Starscream in Frameworks */,
+				34105F2A2B6E50930020E5FC /* CodableCSV in Frameworks */,
 				34905C4E2B2B05D700A5A649 /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +300,8 @@
 				34905C572B2B648400A5A649 /* EmptyCell.swift */,
 				34F401352B3582B700E0DC4A /* GridOverlay.swift */,
 				34F4016C2B456C2B00E0DC4A /* KeychainHandler.swift */,
+				3479DF902B6BC65400579C89 /* BybitPositions.swift */,
+				3479DF922B6BC8B200579C89 /* PositionsTable.swift */,
 				34066F4B2B309E3B0090C78A /* LogView.swift */,
 				34E339B42B5E81790013F17D /* NotificationsView.swift */,
 				34066F522B31B4B30090C78A /* PairHomeView.swift */,
@@ -394,6 +406,7 @@
 				34E338EA2B480E2B0013F17D /* BybitOrderBookView.swift */,
 				34E338F62B4C049C0013F17D /* BybitOrderFormView.swift */,
 				34E338FA2B4C4ECF0013F17D /* BybitOrdersView.swift */,
+				34E339C32B5FE2560013F17D /* SoundHandler.swift */,
 				34E338E62B46FA990013F17D /* BybitPairView.swift */,
 				34E339BD2B5FA1AB0013F17D /* PairAlertCard.swift */,
 				34E338FC2B4C4ED80013F17D /* BybitPositionsView.swift */,
@@ -404,6 +417,7 @@
 				34E339402B5A7DDB0013F17D /* BybitTickerStats.swift */,
 				34E338F22B4BF2800013F17D /* BybitPriceVolumeChart.swift */,
 				34E338F82B4C04B80013F17D /* BybitPrivateManager.swift */,
+				346F087F2B73F15D005A42F2 /* BybitAccountManager.swift */,
 				34E339172B501CBF0013F17D /* BybitRawVolumeChart.swift */,
 				34E339152B4D75F00013F17D /* BybitRestApi.swift */,
 				34F401772B46C5EF00E0DC4A /* BybitSocketTemplate.swift */,
@@ -466,6 +480,7 @@
 				34905C4D2B2B05D700A5A649 /* CryptoSwift */,
 				34E339392B5A6E7B0013F17D /* SwiftySound */,
 				34E339B92B5EA8350013F17D /* SwiftySlack */,
+				34105F292B6E50930020E5FC /* CodableCSV */,
 			);
 			productName = dashboard;
 			productReference = 34905C0C2B29C12A00A5A649 /* dashboard.app */;
@@ -545,6 +560,7 @@
 				34905C4C2B2B05D700A5A649 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				34E339382B5A6E7B0013F17D /* XCRemoteSwiftPackageReference "SwiftySound" */,
 				34E339B82B5EA8350013F17D /* XCRemoteSwiftPackageReference "SwiftySlack" */,
+				34105F282B6E50930020E5FC /* XCRemoteSwiftPackageReference "CodableCSV" */,
 			);
 			productRefGroup = 34905C0D2B29C12A00A5A649 /* Products */;
 			projectDirPath = "";
@@ -620,9 +636,11 @@
 				34E338F32B4BF2800013F17D /* BybitPriceVolumeChart.swift in Sources */,
 				34E338FB2B4C4ECF0013F17D /* BybitOrdersView.swift in Sources */,
 				34F401542B3D9BB100E0DC4A /* KrakenPairView.swift in Sources */,
+				346F08802B73F15D005A42F2 /* BybitAccountManager.swift in Sources */,
 				34F4014C2B3B2F6200E0DC4A /* VolumeChart.swift in Sources */,
 				34905C6B2B2C7EA700A5A649 /* KrakenNetwork.swift in Sources */,
 				34F401502B3C37B000E0DC4A /* ImbalanceLevelsChart.swift in Sources */,
+				3479DF932B6BC8B200579C89 /* PositionsTable.swift in Sources */,
 				34F401382B35A78C00E0DC4A /* IndicatorPanView.swift in Sources */,
 				34F401602B44170300E0DC4A /* RecentTradeUnifiedCell.swift in Sources */,
 				34F401762B46C5D700E0DC4A /* Bybitbook.swift in Sources */,
@@ -638,6 +656,7 @@
 				34E338ED2B480F140013F17D /* BybitLastTradeCell.swift in Sources */,
 				34E3391E2B501FA80013F17D /* BybitImbalanceChart.swift in Sources */,
 				34CF57FA2B32F97800226F7A /* PriceChartView.swift in Sources */,
+				34E339C42B5FE2560013F17D /* SoundHandler.swift in Sources */,
 				34066F4F2B30DDDC0090C78A /* LogManager.swift in Sources */,
 				34E339342B5930100013F17D /* BybitTASAggView.swift in Sources */,
 				34E3391A2B501D850013F17D /* BybitFilteredVolumeChart.swift in Sources */,
@@ -661,6 +680,7 @@
 				34F401482B3AF8BC00E0DC4A /* ImbalanceChart.swift in Sources */,
 				349044962B330DE800975B95 /* KrakenOHLC.swift in Sources */,
 				34E339262B5555320013F17D /* BybitKline.swift in Sources */,
+				3479DF912B6BC65400579C89 /* BybitPositions.swift in Sources */,
 				34F4013C2B35CE2300E0DC4A /* KrakenRecentTrades.swift in Sources */,
 				34066F532B31B4B30090C78A /* PairHomeView.swift in Sources */,
 				34F4015E2B3F28BA00E0DC4A /* PositionRecomendation.swift in Sources */,
@@ -984,6 +1004,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		34105F282B6E50930020E5FC /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 		34905C3C2B29C18300A5A649 /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream";
@@ -1027,6 +1055,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		34105F292B6E50930020E5FC /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34105F282B6E50930020E5FC /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
+		};
 		34905C3D2B29C18300A5A649 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 34905C3C2B29C18300A5A649 /* XCRemoteSwiftPackageReference "Starscream" */;

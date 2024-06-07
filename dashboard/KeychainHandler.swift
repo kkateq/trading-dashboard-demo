@@ -6,10 +6,10 @@
 //
 
 import Foundation
-//import Security
-
+// import Security
 
 class KeychainHandler {
+//    TODO: implementation 
 //    internal static func retrievePrivateKey(tag: Data) throws -> SecKey {
 //        // Create a query with key type and tag
 //        let getQuery: [String: Any] = [kSecClass as String: kSecClassKey,
@@ -37,9 +37,28 @@ class KeychainHandler {
 //        return try retrievePrivateKey(tag: tag)
 //    }
 
-    static var KrakenApiKey: String = "AlzaknI1O2d0SUrox8+mG0rCTqeftlzljly2PFdqNUTQcSOkS9mDa30y"
-    static var KrakenApiSecret: String = "YPscpvwDwcHa37pAH8ttN4GiWfi8LVo6wDNVGyE1qbBHxosAmCjZCM1aURKHKFSMqMaLDxP7uvUPVmo7hLoQwA=="
+    static var KrakenApiKey: String = "X"
+    static var KrakenApiSecret: String = "X"
+
+    static var BybitApiKey = "X"
+    static var BybitApiSecret = "X"
+
+
+    static var accounts = ["main": (BybitApiKey, BybitApiSecret)]
     
-    static var BybitApiKey = "bHX1fkSPFxdbgdwpsu"
-    static var BybitApiSecret = "554nPbYQUZcHx5F59iwP4x4YhJu0fLLTz13l"
+    static func getAccountKey(accountName: String!) -> String {
+        if let name = accountName {
+            return accounts[name]!.0
+        } else {
+            return BybitApiKey
+        }
+    }
+    
+    static func getAccountSecret(accountName: String!) -> String {
+        if let name = accountName {
+            return accounts[name]!.1
+        } else {
+            return BybitApiSecret
+        }
+    }
 }

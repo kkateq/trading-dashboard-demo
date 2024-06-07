@@ -125,11 +125,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
     private var cancellableWallet: AnyCancellable?
 
     @Published var dataPositions: [BybitPositionData] = []
-    @Published var positions: [BybitPositionData] {
-        didSet {
-            didChangePositions.send()
-        }
-    }
+    @Published var positions: [BybitPositionData]
 
     @Published var dataOrders: [BybitOrderData] = []
     @Published var orders: [BybitOrderData] {
@@ -183,10 +179,10 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
         self.bybitSocket = BybitSocketTemplate(true)
         bybitSocket.delegate = self
 
-        self.cancellablePositions = AnyCancellable($dataPositions
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .assign(to: \.positions, on: self))
+//        self.cancellablePositions = AnyCancellable($dataPositions
+//            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+//            .removeDuplicates()
+//            .assign(to: \.positions, on: self))
 
         self.cancellableOrders = AnyCancellable($dataOrders
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -220,7 +216,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
 
                 if res.retCode == 0 {
                     DispatchQueue.main.async {
-                        self.dataPositions = res.result.list
+                        self.positions = res.result.list
                     }
                 } else {
                     LogManager.shared.error("retCode \(res.retMsg)")
@@ -229,7 +225,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 LogManager.shared.error("error is \(error.localizedDescription)")
                 print(String(decoding: $0, as: UTF8.self))
             }
-        }, symbol: pair)
+        }, symbol: pair, accountName: "main")
     }
 
     func cancelAllOrders() async {
@@ -250,7 +246,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
-        }, symbol: pair)
+        }, symbol: pair, accountName: "main")
     }
 
     func cancelOrder(id: String, symbol: String) async {
@@ -270,7 +266,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
-        }, orderId: id, symbol: symbol)
+        }, orderId: id, symbol: symbol, accountName: "main")
         await fetchOrders()
     }
 
@@ -329,7 +325,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 LogManager.shared.error("error is \(error.localizedDescription)")
                 print(String(decoding: $0, as: UTF8.self))
             }
-        }, symbol: pair)
+        }, symbol: pair, accountName: "main")
     }
 
     func fetchBalance() async {
@@ -348,7 +344,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
                 LogManager.shared.error("error is \(error.localizedDescription)")
                 print(String(decoding: $0, as: UTF8.self))
             }
-        })
+        }, accountName: "main")
     }
 
     func createOrder(params: [String: Any]) async {
@@ -368,7 +364,7 @@ class BybitPrivateManager: BybitSocketDelegate, ObservableObject {
             } catch {
                 LogManager.shared.error("error is \(error.localizedDescription)")
             }
-        }, params: params)
+        }, params: params, accountName: "main")
         await fetchPositions()
     }
 
